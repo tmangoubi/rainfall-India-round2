@@ -1,0 +1,90 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionN_Hazards_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 Jun 2016, 15:26:19
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section L1
+> keep Id q1301_HHunusnotfood-q1305_oth_copethirstrat_3
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. /*
+> loc vars        q1102_recgiftKha11 q1103_totvalallgiftrs q1104_totvalmarrgift q1105_recloankha11 q1106_amtloanrec ///
+>                         q1107_totmonownloan q1108_1_totMMloanper q1108_numpayloanper q1109_1_totvalcol q1109_totpaidwitint
+> foreach var of loc vars {c -(}
+>         order `var'_10-`var'_14, after(`var'_9)
+> {c )-}
+> *                       
+> */
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}q1301_HHunusnotfood already numeric; no {res}replace
+{txt}q1302_oth_topthrshock_1 contains nonnumeric bytes; no {res}replace
+{txt}q1302_oth_topthrshock_2 contains nonnumeric bytes; no {res}replace
+{txt}q1302_oth_topthrshock_3 contains nonnumeric bytes; no {res}replace
+{txt}q1302_topthreeshock_1 already numeric; no {res}replace
+{txt}q1302_topthreeshock_2 already numeric; no {res}replace
+{txt}q1302_topthreeshock_3 already numeric; no {res}replace
+{txt}q1303_croppristrat_1 already numeric; no {res}replace
+{txt}q1303_croppristrat_2 already numeric; no {res}replace
+{txt}q1303_croppristrat_3 already numeric; no {res}replace
+{txt}q1303_oth_copepristra_1 contains nonnumeric bytes; no {res}replace
+{txt}q1303_oth_copepristra_2 already numeric; no {res}replace
+{txt}q1303_oth_copepristra_3 already numeric; no {res}replace
+{txt}q1304_cropsecstrat_1 already numeric; no {res}replace
+{txt}q1304_cropsecstrat_2 already numeric; no {res}replace
+{txt}q1304_cropsecstrat_3 already numeric; no {res}replace
+{txt}q1304_oth_copesecstra_1 contains nonnumeric bytes; no {res}replace
+{txt}q1304_oth_copesecstra_2 contains nonnumeric bytes; no {res}replace
+{txt}q1304_oth_copesecstra_3 already numeric; no {res}replace
+{txt}q1305_cropthistrat_1 already numeric; no {res}replace
+{txt}q1305_cropthistrat_2 already numeric; no {res}replace
+{txt}q1305_cropthistrat_3 already numeric; no {res}replace
+{txt}q1305_oth_copethirstrat_1 contains nonnumeric bytes; no {res}replace
+{txt}q1305_oth_copethirstrat_2 already numeric; no {res}replace
+{txt}q1305_oth_copethirstrat_3 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1301_HHun~d{col 15}q1302_topt~3{col 29}q1303_crop~3{col 43}q1304_crop~1{col 57}q1304_oth_~3{col 71}q1305_crop~3
+{col 1}q1302_topt~1{col 15}q1303_crop~1{col 29}q1303_oth_~2{col 43}q1304_crop~2{col 57}q1305_crop~1{col 71}q1305_oth_~2
+{col 1}q1302_topt~2{col 15}q1303_crop~2{col 29}q1303_oth_~3{col 43}q1304_crop~3{col 57}q1305_crop~2{col 71}q1305_oth_~3
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionN_Hazards_cleaned.dta", replace
+{txt}(note: file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionN_Hazards_cleaned.dta not found)
+file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionN_Hazards_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

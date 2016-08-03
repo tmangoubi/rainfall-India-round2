@@ -1,0 +1,369 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionA_HHRoster_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}12 Apr 2016, 18:00:59
+{txt}
+{com}. 
+. 
+. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // A1: q101 ~ q110 //
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionAHouseholdRoster_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionAHouseholdRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q102_relHH_oth was 
+str20, now str22 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q104_1_subcaste was 
+str23, now str24 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q110_hlthexpkha was 
+str6, now str7 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionAHouseholdRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q102_relHH_oth was 
+str22, now str32 to accommodate using data's values)
+{p_end}
+
+{com}. 
+. // Drop duplicates subid within a household
+. 
+. /// There are couple of observations with duplicate subid within a household.
+> /// We can distinguish proper member from improper member by observing ages, name, etc.
+> duplicates tag Id subid, gen(dup)
+
+{p 0 4}{txt}Duplicates in terms of {res} Id subid{p_end}
+{txt}
+{com}. browse if dup==1
+{txt}
+{com}. 
+. drop if (Id=="F1285" & q101_Hhmemnam=="GJHGHG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & q101_Hhmemnam=="HGJGJH") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="EYTWGW") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="YFG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. 
+. /// Household "P4537" has duplicates obs which cannot be distinguished easily.
+> /// However, since "P4537" does not exist in the base dataset, it can be dropped.
+> drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. 
+. isid Id subid
+{txt}
+{com}. drop dup
+{txt}
+{com}. 
+. // Gender
+. /// Both had missing values, I've assumed genders based on the names of the individuals
+> replace q103_gender = "2" if Id == "P1773" & subid == "4"
+{txt}(1 real change made)
+
+{com}. replace q103_gender = "2" if Id == "P2613" & subid == "2"
+{txt}(1 real change made)
+
+{com}. 
+. // Year of birth
+. replace q105_1_ageYYYY="" if (q105_1_ageYYYY=="-")
+{txt}(1 real change made)
+
+{com}. 
+. /// Kharif Health Expenditure
+> replace q110_hlthexpkha="0" if (q110_hlthexpkha=="-0")
+{txt}(3 real changes made)
+
+{com}. replace q110_hlthexpkha="" if (q110_hlthexpkha=="-")
+{txt}(2 real changes made)
+
+{com}. 
+. // Destring & recode variables
+. destring subid q102_relHH q103_gender q105_ageYY q105_1_ageYYYY q106_engdlywageemp q107_prioccup q108_indinvwork q109_curresHH q110_hlthexpkha, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q102_relHH has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q103_gender has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q105_ageYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q105_1_ageYYYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(21020 missing values generated)
+q106_engdlywageemp has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q107_prioccup has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q108_indinvwork has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q109_curresHH has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q110_hlthexpkha has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(2 missing values generated)
+
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q103_gender{col 29}q105_1_age~Y{col 43}q107_prioc~p{col 57}q109_curre~H
+{col 1}q102_relHH{col 15}q105_ageYY{col 29}q106_engdl~p{col 43}q108_indin~k{col 57}q110_hlthe~a
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. //Label Variables
+. label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id    "Household ID"
+{txt}
+{com}. label var subid "Household Roster ID"
+{txt}
+{com}. label var  q101_Hhmemnam "Name of HH Member"
+{txt}
+{com}. label var  q102_relHH "Relationship to HH Head"
+{txt}
+{com}. label define relationship 1 "HH Head" 2 "Spouse" 3 "Son/Daughter" 4 "Daughter-in-law / Son-in-law" 5 "Grandson/daughter" 6 "Parents" 7 "Father/Mother-in-law" 8 "Brother/Sister" 9 "Brother/Sister-in-law" 10 "Uncle/Aunt" 11 "Nephew/Neice" 12 "Foster/step child" 13 "Other" 14 "Grandparent" -666 "NA" -777 "Refuse" -888 "Others" -999 "Don't Know"
+{txt}
+{com}. label value q102_relHH relationship
+{txt}
+{com}. label var  q102_relHH_oth "Other Relationship to HH Head"
+{txt}
+{com}. label var  q103_gender "Gender"
+{txt}
+{com}. label define gender 1 "Male" 2 "Female"
+{txt}
+{com}. label value q103_gender gender
+{txt}
+{com}. label var  q104_caste "Caste"
+{txt}
+{com}. label var  q104_1_subcaste "Sub-Caste"
+{txt}
+{com}. label var q105_ageYY "Age"
+{txt}
+{com}. label var q105_1_ageYYYY "Year of Birth"
+{txt}
+{com}. 
+. label var q106_engdlywageemp "Daily Wage Employment?"
+{txt}
+{com}. label value q106_engdlywageemp yesno
+{txt}
+{com}. *label define dailywage 1 "Yes" 2 "No" -999 "Do not Know" -666 "Not Applicable"
+. *label value q106_engdlywageemp dailywag
+. 
+. label var  q107_prioccup "Primary Occupation"
+{txt}
+{com}. #delimit ;
+{txt}delimiter now ;
+{com}. label define occupation 1 "Agricultural work on own farm" 2 "Supervisory work on agricultural activity on own farm" 3 "Share cropper / cultivate plot owned by others" 4 "Agricultural wage labor" 11 "Fisherman (Fishing)" 12 "Fish culture"
+> 13 "Look after live stocks" 14 "Look after Poultry (Duck, Chicken,Pigeons)" 15 "Cultivation and other works on fruits" 16 "Agricultural wage labor (Off Farm)" 17 "Nursery/forestry" 18 "Other agricultural activities (excluding 11-17)"
+> 21 "Processing of crops" 22 "Family labor in Enterprise" 23 "Family labor in Tailoring" 24 "Family labor in Sewing" 25 "Family labor in Pottery" 26 "Family labor in Blacksmith" 27 "Family labor in Goldsmith" 28 "Repairing of manufactured products/mechanics" 29 "Carpenter" 30 "Non-agri. wage labor" 
+> 41 "Petty Trade (Small retail shop)" 42 "Medium Trader (Retail and insignificant wholesale)" 43 "Wholesale Trader" 44 "Contractor" 45 "Labor supplier" 51 "Rickshaw/ Van Pulling"
+> 52 "Boat man" 53 "Wage labor in transport" 54 "Other transport workers" 55 "Driver (motorized vehicle)" 56 "Helper" 61 "Mason" 62 "Helper" 63 "Other construction worker"
+> 64 "Earthen work" 65 "House Repairing (fixing)" 71 "Doctor" 73 "Advocate" 74 "Barber" 75 "Washerman" 76 "Full time house tutor" 77 "Imam/ Purohit" 79 "Kutir Shilpi (Handicrafts)"
+> 81 "Others self employment" 82 "Service ( govt/employee)" 83 "Pension" 84 "Service worker in NGO" 85 "Servant in house (Maid/ Male)" 89 "Beggar";
+{txt}
+{com}. #delimit cr
+{txt}delimiter now cr
+{com}. *****************ADD REMAINING OCCUPATION CODES
+. label value q107_prioccup occupation
+{txt}
+{com}. label var  q107_prioccup_oth "Other Primary Occupation"
+{txt}
+{com}. 
+. label var  q108_indinvwork "Industry"
+{txt}
+{com}. label define industry 1 "Food Processing" 2 "Manufacturing of Textile Products" 3 "Manufacturing of Wooden Products, Furniture" 4 "Manufacturing of Paper Products, Printing, Publishing" 5 "Other Manufacturing of Industry" 6 "Agriculture" 7 "Livestock" 8 "Fisheries" 9 "Forestry" 10 "Wholesale Trade" 11 "Retail Trade" 12 "Other Business" 13 "Hotel/ Restaurants" 14 "Electricity/gas/water" 15 "Transportation" 16 "Communication" 17 "Army/Police" 18 "Science/ Education" 19 "Arts and Culture" 20 "Health care" 21 "Sport/ tourism/ retirement" 22 "Banking, finance and credit" 23 "Management and administration" 24 "Religious activities" 25 "Non-agricultural workers" 26 "Others" -888 "Others"
+{txt}
+{com}. label value q108_indinvwork industry
+{txt}
+{com}. label var  q108_indinvwork_oth "Other Industry"
+{txt}
+{com}. 
+. label var  q109_curresHH "Currently Residing in HH?"
+{txt}
+{com}. label define residing 1 "Yes" 2 "No, temporary migrant worker" 3 "No, permanent migrant worker" 4 "No, attending school" 5 "No, away for marriage, ceremony,festival" 6 "No, away because of illness" 7 "No, away for family reasons" 8 "Passed Away" -888 "Other(SPECIFY)"
+{txt}
+{com}. label value q109_curresHH residing 
+{txt}
+{com}. 
+. label var q109_curresHH_oth "Other Currently Residing"
+{txt}
+{com}. label var q110_hlthexpkha "Health Expenditure since the start of Kharif Season"
+{txt}
+{com}. 
+. // Save (Section A1)
+. tempfile SectionA1
+{txt}
+{com}. save `SectionA1'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. 
+. 
+. 
+. // A2: q111 ~ q115 //
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionAHouseholdRoster2_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionAHouseholdRoster2_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionAHouseholdRoster2_1.dta" 
+{txt}
+{com}. 
+. // Like SectionA1, there are duplicates subid within a household.
+. // Duplicates in this dataset are more difficult (and sometimes impossible) to be distinguished, unfortunately.
+. duplicates drop // This drops one of the duplicates
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & subid=="2" & q112_2esttotschfeeyear=="454") // Improper school fee (last year's fee is lower than Kharif school fee)
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q111_highedulev=="1") // For duplicates impossible to be distingushed, drop "Not eeducated" observation (This is a random criteria, so can be modified later)
+{txt}(2 observations deleted)
+
+{com}. drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Destring & recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q111_highedulev has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q111_highedulev_oth contains nonnumeric characters; no {res}replace
+{txt}q112_schlastyr has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q112_2esttotschfeeyear has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q113_esttotschfeekhar has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q114_absschoillkhar has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q115_absschoworkkhar has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q112_schla~r{col 29}q113_estto~r{col 43}q115_abssc~r
+{col 1}q111_highe~v{col 15}q112_2estt~r{col 29}q114_abssc~r
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. 
+. //Label Variables
+. label var  q111_highedulev "Highest Educ Level"
+{txt}
+{com}. label define education 1 "Not Educated" 2 "Primary Education (Incomplete)" 3 "Primary Education (Complete)" 4 "Secondary Education (Incomplete)" 5 "Secondary Education (Complete)" 6 "Higher Secondary (Incomplete)" 7 "Higher Secondary (Complete)" 8 "Technical Diploma" 9 "Bachelors Degree (Incomplete)" 10 "Bachelors Degree (Complete)" 11 "Child under 7 years" -888 "Other" -999 "Don’t Know" 12 "Madarsa  education" 13 "Senior secondary (incomplete)" 14 "Senior secondary (complete)" 15 "Post graduate degree (complete)" 16 "Post graduate degree (incomplete)"
+{txt}
+{com}. label value q111_highedulev education
+{txt}
+{com}. 
+. label var  q111_highedulev_oth "Other Highest Educ Level"
+{txt}
+{com}. label var  q112_schlastyr "In school last year?"
+{txt}
+{com}. label var  q112_2esttotschfeeyear "School Fees Last Year"
+{txt}
+{com}. label var  q113_esttotschfeekhar "School Fees Kharif"
+{txt}
+{com}. label var  q114_absschoillkhar "School Days Missed - Illness"
+{txt}
+{com}. label var  q115_absschoworkkhar "School Days Missed - Work"
+{txt}
+{com}. 
+. 
+. // Merge A1 and A2 //
+. tempfile SectionA2
+{txt}
+{com}. save `SectionA2'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. use `SectionA1', clear
+{txt}
+{com}. merge 1:1 Id subid using `SectionA2', keep(1 3) gen(SecA1_A2) // Drop observations with missing q101 ~ q110.
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               1
+{txt}{col 9}from master{col 30}{res}               1{txt}  (SecA1_A2==1)
+{col 9}from using{col 30}{res}               0{txt}  (SecA1_A2==2)
+
+{col 5}matched{col 30}{res}          24,153{txt}  (SecA1_A2==3)
+{col 5}{hline 41}
+
+{com}. 
+. // Replace missing A2 values as "blank" for those who answerd q101~q110 only.
+. ds q111_highedulev-q115_absschoworkkhar
+{txt}{col 1}q111_highe~v{col 15}q112_schla~r{col 29}q113_estto~r{col 43}q115_abssc~r
+{col 1}q111_highe~h{col 15}q112_2estt~r{col 29}q114_abssc~r
+
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q105_ageYY{col 29}q107_prioc~p{col 43}q110_hlthe~a{col 57}q112_2estt~r{col 71}q115_abssc~r
+{col 1}q102_relHH{col 15}q105_1_age~Y{col 29}q108_indin~k{col 43}q111_highe~v{col 57}q113_estto~r{col 71}SecA1_A2
+{col 1}q103_gender{col 15}q106_engdl~p{col 29}q109_curre~H{col 43}q112_schla~r{col 57}q114_abssc~r
+
+{com}. local A2_var `r(varlist)'
+{txt}
+{com}. foreach var of local A2_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if (SecA1_A2==1)
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *
+. drop SecA1_A2
+{txt}
+{com}. 
+. /*
+> // Generate variables for analyses
+> bys Id: egen NumberOfHHmembers = count(subid) // # of household member
+> notes NumberOfHHmembers: bys Id: egen NumberOfHHmembers = count(subid)
+> bys Id: egen Health_Expenditure_Kharif = sum(q110_hlthexpkha) // Total household health expenditure
+> notes Health_Expenditure_Kharif: bys Id: egen Health_Expenditure_Kharif = sum(q110_hlthexpkha)
+> gen Health_Expenditure_pc_Kharif = (Health_Expenditure_Kharif/NumberOfHHmembers) // Per capita household health expenditure
+> notes Health_Expenditure_pc_Kharif: gen Health_Expenditure_pc_Kharif = (Health_Expenditure_Kharif/NumberOfHHmembers)
+> 
+> label var NumberOfHHmembers "Number of HH members"
+> label var Health_Expenditure_Kharif "Total household health expenditure since the beginning of Kharif season"
+> label var Health_Expenditure_pc_Kharif "Per capita household health expenditure since the beginning of Kharif season"
+> */
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q102_relHH was {res}int{txt} now {res}byte
+  {txt}q103_gender was {res}int{txt} now {res}byte
+  {txt}q106_engdlywageemp was {res}int{txt} now {res}byte
+  {txt}q112_schlastyr was {res}int{txt} now {res}byte
+  {txt}q104_caste was {res}str21{txt} now {res}str20
+{txt}  (120,770 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionA1_HHroster_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionA1_HHroster_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

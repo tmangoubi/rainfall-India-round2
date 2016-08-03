@@ -1,0 +1,286 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM1_LeanPeriod_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 3 Jun 2016, 17:07:20
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM1Roster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q222_3_industry_oth was 
+str17, now str20 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_avgdailywage was 
+str4, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_1_avgmonthwage was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_2_homeearning was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+qM1_BHID was 
+str4, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q221_primaryactivity_oth was 
+str24, now str26 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_2_homeearning was 
+str6, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q224_1_homesaving was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q225_relationship_oth was 
+str15, now str24 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Variable cleaning
+. 
+. /// q224_1_homesaving
+> replace q224_1_homesaving = "0" if (q224_1_homesaving=="-0")
+{txt}(1 real change made)
+
+{com}. replace q224_1_homesaving = "" if (q224_1_homesaving=="-")
+{txt}(1 real change made)
+
+{com}. 
+. 
+. // Destring and recode variables
+. destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}qM1_BHID contains nonnumeric characters; no {res}replace
+{txt}qM1_HHRID contains nonnumeric characters; no {res}replace
+{txt}q222_3_industry has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q222_3_industry_oth contains nonnumeric characters; no {res}replace
+{txt}q221_primaryactivity has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q221_primaryactivity_oth contains nonnumeric characters; no {res}replace
+{txt}q223_avgdailywage has all characters numeric; {res}replaced {txt}as {res}double
+{txt}q223_1_avgmonthwage has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q223_2_homeearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q224_destearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q224_1_homesaving has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(1 missing value generated)
+q225_relationship has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q225_relationship_oth contains nonnumeric characters; no {res}replace
+{txt}q225_1_knowanybody has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q225_2_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2073 missing values generated)
+q225_3_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2131 missing values generated)
+q225_4_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2144 missing values generated)
+q225_5_mnrega has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2394 missing values generated)
+q225_6_daysempl has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2394 missing values generated)
+q225_7_totmnrgaearning has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2394 missing values generated)
+
+{com}. qui ds, has(type numeric)
+{txt}
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}.         if ("`var'" == "q224_destearning") {c -(}
+{txt}  5{com}.                 qui recode `var' (-222=.n)
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /*
+> ***** q224_destearning *****
+> * There are over 1K observation who responded "0" destination income. This does NOT make sense, so I assumed those who answered "0" migration income did not actually migrate.
+> * However, there are many observations which answered "NO" in the question "did anyone migrate during Kharif(Lean) season?" (q218), but have non-zero positive migration income (q224_destearning)
+> * I(SL) do NOT know the reason of this discrepancy. India field team is not answering my questions.
+> * Maybe this variable is not migration income, since we have q213.25 (Total income of migrant) <- but this section (M2B) data is missing!
+> 
+> (update(2016/6/3) - I will replace those 1K obs with "0" migration income as "missing")
+> */
+. clonevar q224_destearning_c = q224_destearning
+{txt}(549 missing values generated)
+
+{com}. replace q224_destearning_c =. if (q224_destearning==0)
+{txt}(1015 real changes made, 1015 to missing)
+
+{com}. order q224_destearning_c, after(q224_destearning)
+{txt}
+{com}. 
+. // Tag outliers
+. loc money_vars q223_avgdailywage q223_1_avgmonthwage q223_2_homeearning q224_destearning_c q224_1_homesaving
+{txt}
+{com}. foreach var of loc money_vars {c -(}
+{txt}  2{com}.         gen byte `var'_outlier=0
+{txt}  3{com}.         order `var'_outlier, after(`var')
+{txt}  4{com}.         qui sum `var', detail
+{txt}  5{com}.         scalar `var'_IQR = r(p75)-r(p25)
+{txt}  6{com}.         replace `var'_outlier=1 if !inrange(`var',r(p25)-(3*`var'_IQR),r(p75)+(3*`var'_IQR))
+{txt}  7{com}.         label var `var'_outlier "=1: this obs is an outlier"
+{txt}  8{com}.         scalar drop `var'_IQR
+{txt}  9{com}. {c )-}
+{txt}(179 real changes made)
+(116 real changes made)
+(77 real changes made)
+(1604 real changes made)
+(226 real changes made)
+
+{com}. *
+. 
+. // Label variables
+. note: Lean period is from April to July in UP and AP, and from June to September in TN
+{res}{txt}
+{com}. label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var qM1_BHID "Baseline HH Roster ID"
+{txt}
+{com}. label var qM1_HHRID "Current HH Roster ID"
+{txt}
+{com}. 
+. label var q222_3_industry "Industry - Find work"
+{txt}
+{com}. label define industry 1 "Food Processing" 2 "Manufacturing of Textile Products" 3 "Manufacturing of Wooden Products, Furniture" 4 "Manufacturing of Paper Products, Printing, Publishing" 5 "Other Manufacturing of Industry" 6 "Agriculture" 7 "Livestock" 8 "Fisheries" 9 "Forestry" 10 "Wholesale Trade" 11 "Retail Trade" 12 "Other Business" 13 "Hotel/ Restaurants" 14 "Electricity/gas/water" 15 "Transportation" 16 "Communication" 17 "Army/Police" 18 "Science/ Education" 19 "Arts and Culture" 20 "Health care" 21 "Sport/ tourism/ retirement" 22 "Banking, finance and credit" 23 "Management and administration" 24 "Religious activities" 25 "Non-agricultural workers" 26 "Others" -888 "Others"
+{txt}
+{com}. label value q222_3_industry industry
+{txt}
+{com}. label var q222_3_industry_oth "Industry - Find work - Other"
+{txt}
+{com}. 
+. label var q221_primaryactivity "Activities for work"
+{txt}
+{com}. #delimit ;
+{txt}delimiter now ;
+{com}. label define occupation 1 "Agricultural work on own farm" 2 "Supervisory work on agricultural activity on own farm" 3 "Share cropper / cultivate plot owned by others" 4 "Agricultural wage labor" 11 "Fisherman (Fishing)" 12 "Fish culture"
+> 13 "Look after live stocks" 14 "Look after Poultry (Duck, Chicken,Pigeons)" 15 "Cultivation and other works on fruits" 16 "Agricultural wage labor (Off Farm)" 17 "Nursery/forestry" 18 "Other agricultural activities (excluding 11-17)"
+> 21 "Processing of crops" 22 "Family labor in Enterprise" 23 "Family labor in Tailoring" 24 "Family labor in Sewing" 25 "Family labor in Pottery" 26 "Family labor in Blacksmith" 27 "Family labor in Goldsmith" 28 "Repairing of manufactured products/mechanics" 29 "Carpenter" 30 "Non-agri. wage labor" 
+> 41 "Petty Trade (Small retail shop)" 42 "Medium Trader (Retail and insignificant wholesale)" 43 "Wholesale Trader" 44 "Contractor" 45 "Labor supplier" 51 "Rickshaw/ Van Pulling"
+> 52 "Boat man" 53 "Wage labor in transport" 54 "Other transport workers" 55 "Driver (motorized vehicle)" 56 "Helper" 61 "Mason" 62 "Helper" 63 "Other construction worker"
+> 64 "Earthen work" 65 "House Repairing (fixing)" 71 "Doctor" 73 "Advocate" 74 "Barber" 75 "Washerman" 76 "Full time house tutor" 77 "Imam/ Purohit" 79 "Kutir Shilpi (Handicrafts)"
+> 81 "Others self employment" 82 "Service ( govt/employee)" 83 "Pension" 84 "Service worker in NGO" 85 "Servant in house (Maid/ Male)" 89 "Beggar";
+{txt}
+{com}. #delimit cr
+{txt}delimiter now cr
+{com}. label value q221_primaryactivity occupation
+{txt}
+{com}. 
+. label var q221_primaryactivity_oth "Activities for work - Other"
+{txt}
+{com}. label var q223_avgdailywage "Average daily wage"
+{txt}
+{com}. label var q223_1_avgmonthwage "Average monthly income"
+{txt}
+{com}. label var q223_2_homeearning "Earnings at home during lean period"
+{txt}
+{com}. label var q224_destearning "Earnings at destination during lean period"
+{txt}
+{com}. label var q224_destearning_c "Earnings at destination during lean period (cleaned)"
+{txt}
+{com}. label var q224_1_homesaving "Savings at home during lean period"
+{txt}
+{com}. label var q225_relationship "Relationship to employer"
+{txt}
+{com}. label var q225_relationship_oth "Relationship to employer - Other"
+{txt}
+{com}. label var q225_1_knowanybody "Know anybody at migration destination?"
+{txt}
+{com}. label var q225_2_newplace "Relationship with people at migration destination_1"
+{txt}
+{com}. label var q225_3_newplace "Relationship with people at migration destination_2"
+{txt}
+{com}. label var q225_4_newplace "Relationship with people at migration destination_3"
+{txt}
+{com}. label var q225_5_mnrega "Employed under MNREGA"
+{txt}
+{com}. label var q225_6_daysempl "Days employed under MNREGA"
+{txt}
+{com}. label var q225_7_totmnrgaearning "Total earnings - MNREGA"
+{txt}
+{com}. 
+. label define people 1 "Parents" 2 "Siblings" 3 "Children" 4 "Spouse / fiancŽe" 5 "Other relatives" 6 "Friends" 7 "Neighbours" 8 "Unknown" 9 "Living alone"
+{txt}
+{com}. label value q225_2_newplace q225_3_newplace q225_4_newplace people
+{txt}
+{com}. label value q225_5_mnrega yesno
+{txt}
+{com}. 
+. /*
+> // Generate variables for analyses
+> egen Tot_earning_lean_indiv = rowtotal (q223_2_homeearning q224_destearning q225_7_totmnrgaearning)
+> bys Id: egen Tot_earning_lean_HH = sum (Tot_earning_lean_indiv)
+> bys Id: egen Avg_monthly_income_lean_HH = sum(q223_1_avgmonthwage)
+> bys Id: egen Tot_saving_lean_HH = sum(q224_1_homesaving)
+> 
+> notes Tot_earning_lean_indiv: egen Tot_earning_indiv = rowtotal (q223_2_homeearning q224_destearning q225_7_totmnrgaearning)
+> notes Tot_earning_lean_indiv: earning at home + earning at destination + earning via MNREGA
+> notes Tot_earning_lean_HH: bys Id: egen Tot_earning_HH = sum (Tot_earning_lean_indiv)
+> notes Avg_monthly_income_lean_HH:bys Id: egen Avg_monthly_income_lean_HH = sum(q223_1_avgmonthwage)
+> notes Tot_saving_lean_HH: bys Id: egen Tot_saving_lean_HH = sum(q224_1_homesaving)
+> 
+> label var Tot_earning_lean_indiv "Total individual earning during lean period"
+> label var Tot_earning_lean_HH "Total household earning during lean period "
+> label var Avg_monthly_income_lean_HH "Average household monthly income during lean period"
+> label var Tot_saving_lean_HH "Total household saving during lean period"
+> 
+> foreach var in Tot_earning_lean_indiv Tot_earning_lean_HH Avg_monthly_income_lean_HH Tot_saving_lean_HH {c -(}
+>         notes `var': Lean period is from April to July in UP and AP, and from June to September in TN
+> {c )-}
+> */
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q225_2_newplace was {res}int{txt} now {res}byte
+  {txt}q225_3_newplace was {res}int{txt} now {res}byte
+  {txt}q225_4_newplace was {res}int{txt} now {res}byte
+  {txt}q225_6_daysempl was {res}int{txt} now {res}byte
+{txt}  (9,624 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionM1_LeanPeriod_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionM1_LeanPeriod_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

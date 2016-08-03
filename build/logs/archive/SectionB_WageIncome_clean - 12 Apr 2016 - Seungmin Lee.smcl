@@ -1,0 +1,204 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionB_WageIncome_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}12 Apr 2016, 18:30:24
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q213_nonagrwageempkha11
+{txt}
+{com}. tempfile Id_q213
+{txt}
+{com}. save `Id_q213'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. // Section B2
+. use "${c -(}followup_data{c )-}/AP Raw/SectionBWageIncomeP4_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionBWageIncomeP4_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q216_occprim_oth was 
+str17, now str20 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionBWageIncomeP4_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q213_1_baseHHrosid was 
+str4, now str28 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. 
+. // Clean variables
+. 
+. /// q213_2_Hhrosid
+> /// In the dataset it is NOT ID, but actually name of wage earners. Rename variable as "wage earner"
+> rename q213_2_Hhrosid q213_2_wagearname
+{res}{txt}
+{com}. 
+. // Destring and recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q213_1_baseHHrosid contains nonnumeric characters; no {res}replace
+{txt}q213_2_wagearname contains nonnumeric characters; no {res}replace
+{txt}q214_totdaynonagriwork has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_totearnlocnonagr has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q215_indnonagriworkprim has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q215_indnonagriworkprim_oth contains nonnumeric characters; no {res}replace
+{txt}q216_occprim has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q216_occprim_oth contains nonnumeric characters; no {res}replace
+{txt}q217_avdaiwag has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q218_1_relempl has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_1_relempl_oth contains nonnumeric characters; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q218_totea~r{col 29}q216_occprim{col 43}q218_1_rel~l
+{col 1}q214_totda~k{col 15}q215_indno~m{col 29}q217_avdai~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Daily Wage & # of days worked & Total earning
+. // There are observations where total earning and daily wage are mistakenly swapped. Need to detect them and correct them.
+. gen swapped = 1 if (q214_totdaynonagriwork * q218_totearnlocnonagr == q217_avdaiwag)
+{txt}(2071 missing values generated)
+
+{com}. gen temp = q218_totearnlocnonagr
+{txt}(48 missing values generated)
+
+{com}. replace q218_totearnlocnonagr = q217_avdaiwag if (swapped==1)
+{txt}(16 real changes made)
+
+{com}. replace q217_avdaiwag = temp if (swapped==1)
+{txt}(16 real changes made)
+
+{com}. drop swapped temp
+{txt}
+{com}. 
+. 
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "Roster ID"
+{txt}
+{com}. 
+. label var  q213_1_baseHHrosid "Baseline HH Roster ID"
+{txt}
+{com}. label var  q213_2_wagearname "HH Roster ID"
+{txt}
+{com}. label var  q214_totdaynonagriwork "Total Days - Non-Agriculture Work"
+{txt}
+{com}. label var  q218_totearnlocnonagr "Total Earnings - Non-Agricultural Work"
+{txt}
+{com}. 
+. label var  q215_indnonagriworkprim "Industry - Non-Agriculture Work"
+{txt}
+{com}. label define industry 1 "Food Processing" 2 "Manufacturing of Textile Products" 3 "Manufacturing of Wooden Products, Furniture" 4 "Manufacturing of Paper Products, Printing, Publishing" 5 "Other Manufacturing of Industry" 6 "Agriculture" 7 "Livestock" 8 "Fisheries" 9 "Forestry" 10 "Wholesale Trade" 11 "Retail Trade" 12 "Other Business" 13 "Hotel/ Restaurants" 14 "Electricity/gas/water" 15 "Transportation" 16 "Communication" 17 "Army/Police" 18 "Science/ Education" 19 "Arts and Culture" 20 "Health care" 21 "Sport/ tourism/ retirement" 22 "Banking, finance and credit" 23 "Management and administration" 24 "Religious activities" 25 "Non-agricultural workers" 26 "Others" -888 "Others"
+{txt}
+{com}. label value q215_indnonagriworkprim industry
+{txt}
+{com}. 
+. label var  q215_indnonagriworkprim_oth "Industry - Non-Agriculture Work - Other"
+{txt}
+{com}. label var  q216_occprim "Primary Occupation"
+{txt}
+{com}. label var  q216_occprim_oth "Primary Occupation - Other"
+{txt}
+{com}. label var q217_avdaiwag "Average Daily Wage"
+{txt}
+{com}. label var  q218_1_relempl "Relationship to Employer"
+{txt}
+{com}. label define relationship 1 "Immediate family" 2 "Same sub-caste" 3 "Same caste" 4 "Friend" 5 "No Relation" -666 "NA" -777 "Refuse" -888 "Others" -999 "Don't Know" -333 "Missing" -555 "Valid Skip"
+{txt}
+{com}. label value q218_1_relempl relationship
+{txt}
+{com}. label var  q218_1_relempl_oth "Relationship to Employer - Other"
+{txt}
+{com}. 
+. #delimit ;
+{txt}delimiter now ;
+{com}. label define occupation 1 "Agricultural work on own farm" 2 "Supervisory work on agricultural activity on own farm" 3 "Share cropper / cultivate plot owned by others" 4 "Agricultural wage labor" 11 "Fisherman (Fishing)" 12 "Fish culture"
+> 13 "Look after live stocks" 14 "Look after Poultry (Duck, Chicken,Pigeons)" 15 "Cultivation and other works on fruits" 16 "Agricultural wage labor (Off Farm)" 17 "Nursery/forestry" 18 "Other agricultural activities (excluding 11-17)"
+> 21 "Processing of crops" 22 "Family labor in Enterprise" 23 "Family labor in Tailoring" 24 "Family labor in Sewing" 25 "Family labor in Pottery" 26 "Family labor in Blacksmith" 27 "Family labor in Goldsmith" 28 "Repairing of manufactured products/mechanics" 29 "Carpenter" 30 "Non-agri. wage labor" 
+> 41 "Petty Trade (Small retail shop)" 42 "Medium Trader (Retail and insignificant wholesale)" 43 "Wholesale Trader" 44 "Contractor" 45 "Labor supplier" 51 "Rickshaw/ Van Pulling"
+> 52 "Boat man" 53 "Wage labor in transport" 54 "Other transport workers" 55 "Driver (motorized vehicle)" 56 "Helper" 61 "Mason" 62 "Helper" 63 "Other construction worker"
+> 64 "Earthen work" 65 "House Repairing (fixing)" 71 "Doctor" 73 "Advocate" 74 "Barber" 75 "Washerman" 76 "Full time house tutor" 77 "Imam/ Purohit" 79 "Kutir Shilpi (Handicrafts)"
+> 81 "Others self employment" 82 "Service ( govt/employee)" 83 "Pension" 84 "Service worker in NGO" 85 "Servant in house (Maid/ Male)" 89 "Beggar";
+{txt}
+{com}. #delimit cr
+{txt}delimiter now cr
+{com}. 
+. label value q216_occprim occupation
+{txt}
+{com}. 
+. /*
+> // Generate variables for analyses
+> gen Tot_Nonag_earn_Kharif_indiv_est = q214_totdaynonagriwork * q217_avdaiwag // Total individual earning (estimated)
+> bys Id: egen Tot_Nonag_earn_Kharif_HH = sum(q218_totearnlocnonagr) // Total household earning
+> bys Id: egen Tot_Nonag_earn_Kharif_HH_est = sum(Tot_Nonag_earn_Kharif_indiv_est) // Total household earning (estimated)
+> bys Id: egen Tot_Nonag_worksdays_HH = sum(q214_totdaynonagriwork) // Total number of days worked - HH level
+> gen Daily_Nonagr_wage_kharif_HH = (Tot_Nonag_earn_Kharif_HH_est / Tot_Nonag_worksdays_HH) // Average daily wage - Household level.
+> 
+> label var Tot_Nonag_earn_Kharif_indiv_est "Total individual non-agricultural earning (estimated)"
+> notes Tot_Nonag_earn_Kharif_indiv_est: gen Tot_Nonagri_earning_Kharif_indiv_est = q214_totdaynonagriwork * q217_avdaiwag
+> label var Tot_Nonag_earn_Kharif_HH "Total household non-agricultural earning - Kharif"
+> label var Tot_Nonag_earn_Kharif_HH_est "Total household non-agricultural earning (estimated)"
+> label var Tot_Nonag_worksdays_HH "Total household non-agricultural workdays - Kharif"
+> label var Daily_Nonagr_wage_kharif_HH "Daily non-agricultural wage in Kharif (Household-average)"
+> notes Daily_Nonagr_wage_kharif_HH: gen Daily_Nonagr_earn_kharif_HH = (Tot_Nonag_earn_Kharif_HH_est / Tot_Nonag_worksdays_HH)
+> */
+. 
+. tempfile SecB2
+{txt}
+{com}. save `SecB2'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. // Merge q201 with B1
+. use `Id_q213', clear
+{txt}
+{com}. merge 1:m Id using `SecB2', keep(3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           2,080{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q217_avdaiwag was {res}long{txt} now {res}int
+{txt}  (4,160 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionB2_NonAgri_WageIncome_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionB2_NonAgri_WageIncome_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

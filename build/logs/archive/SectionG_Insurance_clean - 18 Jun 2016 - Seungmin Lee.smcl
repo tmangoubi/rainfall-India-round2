@@ -1,0 +1,307 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionG_Insurance_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Jun 2016, 21:15:42
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section G
+> keep Id q1401_indculcropkha11-q1406_amt_6
+{txt}
+{com}. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1401_indculcropkha11 already numeric; no {res}replace
+{txt}q1402_hrdschename_1 already numeric; no {res}replace
+{txt}q1403_purcscheme_1 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_1 already numeric; no {res}replace
+{txt}q1405_purins_1 already numeric; no {res}replace
+{txt}q1406_amt_1 already numeric; no {res}replace
+{txt}q1402_hrdschename_2 already numeric; no {res}replace
+{txt}q1403_purcscheme_2 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_2 already numeric; no {res}replace
+{txt}q1405_purins_2 already numeric; no {res}replace
+{txt}q1406_amt_2 already numeric; no {res}replace
+{txt}q1402_hrdschename_3 already numeric; no {res}replace
+{txt}q1403_purcscheme_3 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_3 already numeric; no {res}replace
+{txt}q1405_purins_3 already numeric; no {res}replace
+{txt}q1406_amt_3 already numeric; no {res}replace
+{txt}q1402_hrdschename_4 already numeric; no {res}replace
+{txt}q1403_purcscheme_4 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_4 already numeric; no {res}replace
+{txt}q1405_purins_4 already numeric; no {res}replace
+{txt}q1406_amt_4 already numeric; no {res}replace
+{txt}q1402_hrdschename_5 already numeric; no {res}replace
+{txt}q1403_purcscheme_5 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_5 already numeric; no {res}replace
+{txt}q1405_purins_5 already numeric; no {res}replace
+{txt}q1406_amt_5 already numeric; no {res}replace
+{txt}q1402_hrdschename_6 already numeric; no {res}replace
+{txt}q1402_hrdschename_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q1403_purcscheme_6 already numeric; no {res}replace
+{txt}q1403_purcscheme_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q1404_totprempaidlastyear_6 already numeric; no {res}replace
+{txt}q1405_purins_6 already numeric; no {res}replace
+{txt}q1406_amt_6 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1401_ind~11{col 15}q1406_amt_1{col 29}q1406_amt_2{col 43}q1406_amt_3{col 57}q1406_amt_4{col 71}q1406_amt_5{col 85}q1406_amt_6
+{col 1}q1402_hrds~1{col 15}q1402_hrds~2{col 29}q1402_hrds~3{col 43}q1402_hrds~4{col 57}q1402_hrds~5{col 71}q1402_hr~e_6
+{col 1}q1403_purc~1{col 15}q1403_purc~2{col 29}q1403_purc~3{col 43}q1403_purc~4{col 57}q1403_purc~5{col 71}q1403_pu~e_6
+{col 1}q1404_totp~1{col 15}q1404_totp~2{col 29}q1404_totp~3{col 43}q1404_totp~4{col 57}q1404_totp~5{col 71}q1404_totp~6
+{col 1}q1405_puri~1{col 15}q1405_puri~2{col 29}q1405_puri~3{col 43}q1405_puri~4{col 57}q1405_puri~5{col 71}q1405_puri~6
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Clean variables
+. 
+. /// Varsha Bhima
+> /// Some households answered q1402 and onward which they should have skipped.
+> /// They did not seem to purcahse, so we can replace their answers to q1402, ... as "missing"
+> 
+. tab q1402_hrdschename_1 q1403_purcscheme_1, m
+
+    {txt}Varsha {c |}
+   Bhima - {c |}
+     Heard {c |}          Varsha Bhima - Purchased?
+    about? {c |}       Yes         No          .         .b {c |}     Total
+{hline 11}{c +}{hline 44}{c +}{hline 10}
+       Yes {c |}{res}        41        714          4          0 {txt}{c |}{res}       759 
+{txt}        No {c |}{res}         2          5      3,062          0 {txt}{c |}{res}     3,069 
+{txt}         . {c |}{res}         0          0      1,144          0 {txt}{c |}{res}     1,144 
+{txt}        .b {c |}{res}         0          0          0         62 {txt}{c |}{res}        62 
+{txt}        .r {c |}{res}         0          0          1          0 {txt}{c |}{res}         1 
+{txt}{hline 11}{c +}{hline 44}{c +}{hline 10}
+     Total {c |}{res}        43        719      4,211         62 {txt}{c |}{res}     5,035 
+
+{txt}
+{com}. list Id q1403_purcscheme_1 q1404_totprempaidlastyear_1 q1405_purins_1 q1406_amt_1 if (q1402_hrdschename_1==2 & inlist(q1403_purcscheme_1,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1403_~1   q1404_~1   q1405_~1   q1406_~1 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+ 850. {c |} {res}F1526         No          .         No          . {txt}{c |}
+3208. {c |} {res}P3018         No          .         No          . {txt}{c |}
+3276. {c |} {res}P3120         No          .        Yes          . {txt}{c |}
+3921. {c |} {res}P4057        Yes          1          .          . {txt}{c |}
+4507. {c |} {res}P4812         No          .         No          . {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+4913. {c |} {res} P730         No          .         No          . {txt}{c |}
+5021. {c |} {res} P966        Yes          .          .          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. foreach var in q1403_purcscheme_1 q1404_totprempaidlastyear_1 q1405_purins_1 q1406_amt_1 {c -(}
+{txt}  2{com}.         replace `var'=. if q1402_hrdschename_1==2
+{txt}  3{com}. {c )-}
+{txt}(7 real changes made, 7 to missing)
+(1 real change made, 1 to missing)
+(6 real changes made, 6 to missing)
+(1 real change made, 1 to missing)
+
+{com}. *
+. replace q1403_purcscheme_1=1 if (Id=="P562")
+{txt}(1 real change made)
+
+{com}. replace q1406_amt_1=. if (q1405_purins_1==2)
+{txt}(4 real changes made, 4 to missing)
+
+{com}. replace q1406_amt_1=.m if (q1406_amt_1<10) 
+{txt}(2 real changes made, 2 to missing)
+
+{com}. 
+. 
+. /// NAIS
+> list Id q1403_purcscheme_2 q1404_totprempaidlastyear_2 q1405_purins_2 q1406_amt_2 if (q1402_hrdschename_2==2 & inlist(q1403_purcscheme_2,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1403_~2   q1404_~2   q1405_~2   q1406_~2 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+  47. {c |} {res}A1050         No          .         No          . {txt}{c |}
+ 752. {c |} {res}F1409         No          .         No          . {txt}{c |}
+4441. {c |} {res}P4735         No          .         No          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. foreach var in q1403_purcscheme_2 q1404_totprempaidlastyear_2 q1405_purins_2 q1406_amt_2 {c -(}
+{txt}  2{com}.         replace `var'=. if inlist(q1402_hrdschename_2,.,2)
+{txt}  3{com}. {c )-}
+{txt}(4 real changes made, 4 to missing)
+(0 real changes made)
+(4 real changes made, 4 to missing)
+(0 real changes made)
+
+{com}. *
+. replace q1406_amt_2=. if (q1405_purins_2==2)
+{txt}(1 real change made, 1 to missing)
+
+{com}. 
+. 
+. /// MNAIS
+> list Id q1403_purcscheme_3 q1404_totprempaidlastyear_3 q1405_purins_3 q1406_amt_3 if (q1402_hrdschename_3==2 & inlist(q1403_purcscheme_3,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1403_~3   q1404_~3   q1405_~3   q1406_~3 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+  47. {c |} {res}A1050         No          .         No          . {txt}{c |}
+ 688. {c |} {res}F1337         No          .          .          . {txt}{c |}
+ 752. {c |} {res}F1409         No          .         No          . {txt}{c |}
+2124. {c |} {res}P1090         No          .         No          . {txt}{c |}
+2607. {c |} {res}P1878         No          .         No          . {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+4441. {c |} {res}P4735         No          .         No          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. foreach var in q1403_purcscheme_3 q1404_totprempaidlastyear_3 q1405_purins_3 q1406_amt_3 {c -(}
+{txt}  2{com}.         replace `var'=. if inlist(q1402_hrdschename_3,.,2)
+{txt}  3{com}. {c )-}
+{txt}(6 real changes made, 6 to missing)
+(0 real changes made)
+(5 real changes made, 5 to missing)
+(0 real changes made)
+
+{com}. *
+. 
+. /// WBCIS
+> list Id q1403_purcscheme_4 q1404_totprempaidlastyear_4 q1405_purins_4 q1406_amt_4 if (q1402_hrdschename_4==2 & inlist(q1403_purcscheme_4,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1403_~4   q1404_~4   q1405_~4   q1406_~4 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+ 752. {c |} {res}F1409         No          .         No          . {txt}{c |}
+2126. {c |} {res}P1092        Yes          .          .          . {txt}{c |}
+4414. {c |} {res}P4707         No          .         No          . {txt}{c |}
+4441. {c |} {res}P4735         No          .         No          . {txt}{c |}
+4634. {c |} {res}P4972        Yes         75         No          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. replace q1402_hrdschename_4=1 if (Id=="P4972")
+{txt}(1 real change made)
+
+{com}. foreach var in q1403_purcscheme_4 q1404_totprempaidlastyear_4 q1405_purins_4 q1406_amt_4 {c -(}
+{txt}  2{com}.         replace `var'=. if inlist(q1402_hrdschename_4,.,2)
+{txt}  3{com}. {c )-}
+{txt}(4 real changes made, 4 to missing)
+(0 real changes made)
+(3 real changes made, 3 to missing)
+(0 real changes made)
+
+{com}. *
+. 
+. /// Delayed Monsoon Onset Scheme
+> list Id q1403_purcscheme_5 q1404_totprempaidlastyear_5 q1405_purins_5 q1406_amt_5 if (q1402_hrdschename_5==2 & inlist(q1403_purcscheme_5,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1403_~5   q1404_~5   q1405_~5   q1406_~5 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+3192. {c |} {res}P2997         No          .         No          . {txt}{c |}
+4209. {c |} {res}P4425         No          .         No          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. foreach var in q1403_purcscheme_5 q1404_totprempaidlastyear_5 q1405_purins_5 q1406_amt_5 {c -(}
+{txt}  2{com}.         replace `var'=. if inlist(q1402_hrdschename_5,.,2)
+{txt}  3{com}. {c )-}
+{txt}(2 real changes made, 2 to missing)
+(0 real changes made)
+(2 real changes made, 2 to missing)
+(0 real changes made)
+
+{com}. *
+. replace q1406_amt_5=. if (q1405_purins_5==2)
+{txt}(1 real change made, 1 to missing)
+
+{com}. 
+. /// Others
+> /// Only one observation who purchased "HBM" is the valid observation. None of the observation (household) purchased other insurance scheme
+> 
+. list Id q1403_purcscheme_6 q1403_purcscheme_oth_6 q1404_totprempaidlastyear_6 q1405_purins_6 q1406_amt_6 if (q1402_hrdschename_6==2 & inlist(q1403_purcscheme_6,1,2))
+{txt}
+      {c TLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+      {c |} {res}   Id   q1~eme_6   q1403_..   q1404_~6   q1405_~6   q1406_~6 {txt}{c |}
+      {c LT}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+ 606. {c |} {res}F1247         No       -555          0         No          . {txt}{c |}
+4449. {c |} {res}P4745         No       -555          0         No          . {txt}{c |}
+      {c BLC}{hline 7}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+
+{com}. foreach var in q1403_purcscheme_6 q1404_totprempaidlastyear_6 q1405_purins_6 q1406_amt_6 {c -(}
+{txt}  2{com}.         replace `var'=. if inlist(q1402_hrdschename_6,.,2)
+{txt}  3{com}. {c )-}
+{txt}(2 real changes made, 2 to missing)
+(3 real changes made, 3 to missing)
+(4 real changes made, 4 to missing)
+(0 real changes made)
+
+{com}. *
+. replace q1402_hrdschename_6=2 if (!mi(q1403_purcscheme_6) & q1402_hrdschename_oth_6!="HBM")
+{txt}(4 real changes made)
+
+{com}. replace q1402_hrdschename_oth_6="-555" if (!mi(q1402_hrdschename_oth_6) & q1402_hrdschename_oth_6!="HBM")
+{txt}(9 real changes made)
+
+{com}. replace q1403_purcscheme_oth_6="-555" if (!mi(q1403_purcscheme_oth_6) & q1403_purcscheme_oth_6!="HBM")
+{txt}(3 real changes made)
+
+{com}. replace q1404_totprempaidlastyear_6=. if (q1403_purcscheme_6==2)
+{txt}(4 real changes made, 4 to missing)
+
+{com}. 
+. // Label variable
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. 
+. /*
+> // Generate variables for analyses
+> egen fl_insurance_any_heard = rowmin(q1402_hrdschename_1 q1402_hrdschename_2 q1402_hrdschename_3 q1402_hrdschename_4 q1402_hrdschename_5 q1402_hrdschename_6)
+> */
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q1401_indculcropkha11 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_1 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_1 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_1 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_2 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_2 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_2 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_3 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_3 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_3 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_4 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_4 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_4 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_5 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_5 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_5 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_6 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_6 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_6 was {res}int{txt} now {res}byte
+{txt}  (95,665 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionG_Insurance_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionG_Insurance_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

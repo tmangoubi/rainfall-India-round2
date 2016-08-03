@@ -1,0 +1,409 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM1_Roster_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 9 Apr 2016, 20:34:52
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM1Roster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q222_3_industry_oth was 
+str17, now str20 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_avgdailywage was 
+str4, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_1_avgmonthwage was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_2_homeearning was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+qM1_BHID was 
+str4, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q221_primaryactivity_oth was 
+str24, now str26 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q223_2_homeearning was 
+str6, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q224_1_homesaving was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q225_relationship_oth was 
+str15, now str24 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. isid Id
+{err}variable Id does not uniquely identify the observations
+{txt}{search r(459):r(459);}
+
+{com}. id _N
+{err}unrecognized command:  id
+{txt}{search r(199):r(199);}
+
+{com}. di _N
+{res}2406
+
+{com}. unique Id subid
+{txt}Number of unique values of Id subid is  {res}2406
+{txt}Number of records is  {res}2406
+
+{com}. do "C:\Users\SLee\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var qM1_BHID "Baseline HH Roster ID"
+{txt}
+{com}. label var qM1_HHRID "Current HH Roster ID"
+{txt}
+{com}. label var q222_3_industry "Industry - Find work"
+{txt}
+{com}. label var q222_3_industry_oth "Industry - Find work - Other"
+{txt}
+{com}. label var q221_primaryactivity "Activities for work"
+{txt}
+{com}. label var q221_primaryactivity_oth "Activities for work - Other"
+{txt}
+{com}. label var q223_avgdailywage "Average daily wage"
+{txt}
+{com}. label var q223_1_avgmonthwage "Average monthly income"
+{txt}
+{com}. label var q223_2_homeearning "Earnings at home during lean period"
+{txt}
+{com}. label var q224_destearning "Earnings at destination during lean period"
+{txt}
+{com}. label var q224_1_homesaving "Savings at home during lean period"
+{txt}
+{com}. label var q225_relationship "Relationship to employer"
+{txt}
+{com}. label var q225_relationship_oth "Relationship to employer - Other"
+{txt}
+{com}. label var q225_1_knowanybody "Know anybody at migration destination?"
+{txt}
+{com}. label var q225_2_newplace "Relationship with people at migration destination_1"
+{txt}
+{com}. label var q225_3_newplace "Relationship with people at migration destination_2"
+{txt}
+{com}. label var q225_4_newplace "Relationship with people at migration destination_3"
+{txt}
+{com}. label var q225_5_mnrega "Employed under MNREGA"
+{txt}
+{com}. label var q225_6_daysempl "Days employed under MNREGA"
+{txt}
+{com}. label var q225_7_totmnrgaearning "Total earnings - MNREGA"
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. isid tab q222_3_industry
+{err}variable tab not found
+{txt}{search r(111):r(111);}
+
+{com}. tab q222_3_industry
+
+ {txt}Industry - {c |}
+  Find work {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+       -666 {c |}{res}          4        0.17        0.17
+{txt}       -888 {c |}{res}         90        3.74        3.91
+{txt}       -999 {c |}{res}          8        0.33        4.24
+{txt}          1 {c |}{res}         62        2.58        6.82
+{txt}         10 {c |}{res}          5        0.21        7.02
+{txt}         11 {c |}{res}         29        1.21        8.23
+{txt}         12 {c |}{res}         15        0.62        8.85
+{txt}         13 {c |}{res}         29        1.21       10.06
+{txt}         14 {c |}{res}         28        1.16       11.22
+{txt}         15 {c |}{res}        108        4.49       15.71
+{txt}         16 {c |}{res}          6        0.25       15.96
+{txt}         17 {c |}{res}         41        1.70       17.66
+{txt}         18 {c |}{res}         41        1.70       19.37
+{txt}         19 {c |}{res}          3        0.12       19.49
+{txt}          2 {c |}{res}         52        2.16       21.65
+{txt}         20 {c |}{res}         13        0.54       22.19
+{txt}         21 {c |}{res}          1        0.04       22.24
+{txt}         22 {c |}{res}          7        0.29       22.53
+{txt}         23 {c |}{res}         16        0.67       23.19
+{txt}         24 {c |}{res}          1        0.04       23.23
+{txt}         25 {c |}{res}        796       33.08       56.32
+{txt}          3 {c |}{res}         22        0.91       57.23
+{txt}          4 {c |}{res}         26        1.08       58.31
+{txt}          5 {c |}{res}        269       11.18       69.49
+{txt}          6 {c |}{res}        661       27.47       96.97
+{txt}          7 {c |}{res}         30        1.25       98.21
+{txt}          8 {c |}{res}         43        1.79      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      2,406      100.00
+
+{com}. tab q221_primaryactivity
+
+ {txt}Activities {c |}
+   for work {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+       -666 {c |}{res}          7        0.29        0.29
+{txt}       -888 {c |}{res}        166        6.90        7.19
+{txt}       -999 {c |}{res}          6        0.25        7.44
+{txt}          1 {c |}{res}         15        0.62        8.06
+{txt}         11 {c |}{res}          6        0.25        8.31
+{txt}         12 {c |}{res}         18        0.75        9.06
+{txt}         13 {c |}{res}         28        1.16       10.22
+{txt}         14 {c |}{res}          3        0.12       10.35
+{txt}         15 {c |}{res}          6        0.25       10.60
+{txt}         16 {c |}{res}         18        0.75       11.35
+{txt}         17 {c |}{res}          2        0.08       11.43
+{txt}         18 {c |}{res}          5        0.21       11.64
+{txt}          2 {c |}{res}          4        0.17       11.80
+{txt}         21 {c |}{res}          2        0.08       11.89
+{txt}         22 {c |}{res}          5        0.21       12.09
+{txt}         23 {c |}{res}         10        0.42       12.51
+{txt}         24 {c |}{res}          2        0.08       12.59
+{txt}         25 {c |}{res}         20        0.83       13.42
+{txt}         26 {c |}{res}          5        0.21       13.63
+{txt}         27 {c |}{res}          2        0.08       13.72
+{txt}         28 {c |}{res}         30        1.25       14.96
+{txt}         29 {c |}{res}          7        0.29       15.25
+{txt}          3 {c |}{res}          4        0.17       15.42
+{txt}         30 {c |}{res}        799       33.21       48.63
+{txt}          4 {c |}{res}        638       26.52       75.15
+{txt}         41 {c |}{res}         49        2.04       77.18
+{txt}         42 {c |}{res}          4        0.17       77.35
+{txt}         43 {c |}{res}          3        0.12       77.47
+{txt}         44 {c |}{res}          3        0.12       77.60
+{txt}         45 {c |}{res}          5        0.21       77.81
+{txt}         51 {c |}{res}          9        0.37       78.18
+{txt}         53 {c |}{res}          3        0.12       78.30
+{txt}         54 {c |}{res}          4        0.17       78.47
+{txt}         55 {c |}{res}         74        3.08       81.55
+{txt}         56 {c |}{res}         37        1.54       83.08
+{txt}         61 {c |}{res}        108        4.49       87.57
+{txt}         62 {c |}{res}         86        3.57       91.15
+{txt}         63 {c |}{res}         20        0.83       91.98
+{txt}         64 {c |}{res}         48        2.00       93.97
+{txt}         65 {c |}{res}          9        0.37       94.35
+{txt}         73 {c |}{res}          2        0.08       94.43
+{txt}         74 {c |}{res}          8        0.33       94.76
+{txt}         75 {c |}{res}          9        0.37       95.14
+{txt}         76 {c |}{res}          4        0.17       95.30
+{txt}         79 {c |}{res}          6        0.25       95.55
+{txt}         81 {c |}{res}         15        0.62       96.18
+{txt}         82 {c |}{res}         85        3.53       99.71
+{txt}         83 {c |}{res}          7        0.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      2,406      100.00
+
+{com}. do "C:\Users\SLee\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. // Destring and recode variables
+. destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}qM1_BHID contains nonnumeric characters; no {res}replace
+{txt}qM1_HHRID contains nonnumeric characters; no {res}replace
+{txt}q222_3_industry has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q222_3_industry_oth contains nonnumeric characters; no {res}replace
+{txt}q221_primaryactivity has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q221_primaryactivity_oth contains nonnumeric characters; no {res}replace
+{txt}q223_avgdailywage has all characters numeric; {res}replaced {txt}as {res}double
+{txt}q223_1_avgmonthwage has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q223_2_homeearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q224_destearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q224_1_homesaving contains nonnumeric characters; no {res}replace
+{txt}q225_relationship has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q225_relationship_oth contains nonnumeric characters; no {res}replace
+{txt}q225_1_knowanybody has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q225_2_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2073 missing values generated)
+q225_3_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2131 missing values generated)
+q225_4_newplace has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2144 missing values generated)
+q225_5_mnrega has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2394 missing values generated)
+q225_6_daysempl has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2394 missing values generated)
+q225_7_totmnrgaearning has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2394 missing values generated)
+
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q223_avgda~e{col 29}q224_deste~g{col 43}q225_2_new~e{col 57}q225_5_mnr~a
+{col 1}q222_3_ind~y{col 15}q223_1_avg~e{col 29}q225_relat~p{col 43}q225_3_new~e{col 57}q225_6_day~l
+{col 1}q221_prima~y{col 15}q223_2_hom~g{col 29}q225_1_kno~y{col 43}q225_4_new~e{col 57}q225_7_tot~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+{txt}end of do-file
+
+{com}. tab q224_1_homesaving
+
+ {txt}Savings at {c |}
+home during {c |}
+lean period {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          - {c |}{res}          1        0.04        0.04
+{txt}         -0 {c |}{res}          1        0.04        0.08
+{txt}       -222 {c |}{res}          2        0.08        0.17
+{txt}       -555 {c |}{res}          1        0.04        0.21
+{txt}       -666 {c |}{res}          1        0.04        0.25
+{txt}       -999 {c |}{res}        120        4.99        5.24
+{txt}          0 {c |}{res}      1,095       45.51       50.75
+{txt}         00 {c |}{res}          1        0.04       50.79
+{txt}        100 {c |}{res}          1        0.04       50.83
+{txt}       1000 {c |}{res}        159        6.61       57.44
+{txt}      10000 {c |}{res}         72        2.99       60.43
+{txt}     105000 {c |}{res}          1        0.04       60.47
+{txt}      11250 {c |}{res}          1        0.04       60.52
+{txt}       1200 {c |}{res}          1        0.04       60.56
+{txt}      12000 {c |}{res}         43        1.79       62.34
+{txt}      12500 {c |}{res}          1        0.04       62.39
+{txt}      13000 {c |}{res}          2        0.08       62.47
+{txt}       1400 {c |}{res}          1        0.04       62.51
+{txt}      14000 {c |}{res}          4        0.17       62.68
+{txt}       1500 {c |}{res}         29        1.21       63.88
+{txt}      15000 {c |}{res}         36        1.50       65.38
+{txt}     150000 {c |}{res}          1        0.04       65.42
+{txt}     168000 {c |}{res}          1        0.04       65.46
+{txt}       1800 {c |}{res}          1        0.04       65.50
+{txt}      18000 {c |}{res}         11        0.46       65.96
+{txt}          2 {c |}{res}          5        0.21       66.17
+{txt}        200 {c |}{res}          1        0.04       66.21
+{txt}       2000 {c |}{res}        162        6.73       72.94
+{txt}      20000 {c |}{res}         31        1.29       74.23
+{txt}      22000 {c |}{res}          2        0.08       74.31
+{txt}        222 {c |}{res}          1        0.04       74.36
+{txt}       2250 {c |}{res}          1        0.04       74.40
+{txt}      22500 {c |}{res}          1        0.04       74.44
+{txt}      22800 {c |}{res}          1        0.04       74.48
+{txt}      23000 {c |}{res}          1        0.04       74.52
+{txt}       2400 {c |}{res}          4        0.17       74.69
+{txt}      24000 {c |}{res}          3        0.12       74.81
+{txt}       2500 {c |}{res}         13        0.54       75.35
+{txt}      25000 {c |}{res}          6        0.25       75.60
+{txt}      27000 {c |}{res}          2        0.08       75.69
+{txt}      28000 {c |}{res}          1        0.04       75.73
+{txt}        300 {c |}{res}          3        0.12       75.85
+{txt}       3000 {c |}{res}        114        4.74       80.59
+{txt}      30000 {c |}{res}          9        0.37       80.96
+{txt}      31500 {c |}{res}          1        0.04       81.01
+{txt}       3500 {c |}{res}          5        0.21       81.21
+{txt}      35000 {c |}{res}          1        0.04       81.26
+{txt}      36000 {c |}{res}          1        0.04       81.30
+{txt}       3750 {c |}{res}          1        0.04       81.34
+{txt}        400 {c |}{res}          4        0.17       81.50
+{txt}       4000 {c |}{res}         82        3.41       84.91
+{txt}      40000 {c |}{res}          9        0.37       85.29
+{txt}       4500 {c |}{res}          7        0.29       85.58
+{txt}      45000 {c |}{res}          2        0.08       85.66
+{txt}        480 {c |}{res}          1        0.04       85.70
+{txt}      48000 {c |}{res}          1        0.04       85.74
+{txt}          5 {c |}{res}          1        0.04       85.79
+{txt}        500 {c |}{res}         50        2.08       87.86
+{txt}       5000 {c |}{res}        117        4.86       92.73
+{txt}      50000 {c |}{res}          8        0.33       93.06
+{txt}        600 {c |}{res}          2        0.08       93.14
+{txt}       6000 {c |}{res}         48        2.00       95.14
+{txt}      60000 {c |}{res}          3        0.12       95.26
+{txt}       6250 {c |}{res}          1        0.04       95.30
+{txt}        700 {c |}{res}          2        0.08       95.39
+{txt}       7000 {c |}{res}         25        1.04       96.43
+{txt}      70000 {c |}{res}          1        0.04       96.47
+{txt}       7200 {c |}{res}          2        0.08       96.55
+{txt}        750 {c |}{res}          1        0.04       96.59
+{txt}       7500 {c |}{res}          5        0.21       96.80
+{txt}        790 {c |}{res}          1        0.04       96.84
+{txt}        800 {c |}{res}          6        0.25       97.09
+{txt}       8000 {c |}{res}         35        1.45       98.55
+{txt}      80000 {c |}{res}          3        0.12       98.67
+{txt}       8100 {c |}{res}          1        0.04       98.71
+{txt}       9000 {c |}{res}         29        1.21       99.92
+{txt}      90000 {c |}{res}          2        0.08      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      2,406      100.00
+
+{com}. do "C:\Users\SLee\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. /*****************************************************************
+> PROJECT:                IN_Rainfall, India Rainfall Insurance
+>                                 
+> TITLE:                  SectionM1_LeanPeriod_clean.do
+>                         
+> AUTHOR:                 Seungmin Lee (seungmin.lee@yale.edu, eatorange@gmail.com)
+> 
+> DATE CREATED:   April 8, 2016
+> 
+> LAST EDITED:    April 8, 2016 by Seungmin Lee
+> 
+> DESCRIPTION:    Import & clean Section M1 of 2014 follow-up survey data
+>         
+> ORGANIZATION:   0 - Preamble
+>                                 1 - Import & clean 
+>                                 X - Save and Exit
+>                                 
+> INPUTS:                 // Raw data 
+>                                         ${c -(}followup_data{c )-}/AP Raw/SectionBWageIncomeP4_1.dta
+>                                         ${c -(}followup_data{c )-}/TN Raw/SectionBWageIncomeP4_1.dta
+>                                         ${c -(}followup_data{c )-}/UP Raw/SectionBWageIncomeP4_1.dta
+>                                 
+> OUTPUTS:                ${c -(}builddta{c )-}/followup_2014/SectionA_HHRoster_cleaned.dta
+>                                 
+> NOTE:                   This do-file is based on
+>                                 - "${c -(}follow_data{c )-}/Do Files/SectionAHouseholdRoster_1.do"
+>                                 - "${c -(}follow_data{c )-}/Do Files/SectionAHouseholdRoster2_1.do" 
+>                                 with additional modifications.
+> ******************************************************************/
+. 
+. /****************************************************************
+>         SECTION 0: Preamble                                                                                                             
+> ****************************************************************/
+. 
+. version 13.1
+{txt}
+{com}. 
+. set more off
+{txt}
+{com}. clear all
+{txt}
+{com}. cap log close 
+{smcl}
+{com}{sf}{ul off}

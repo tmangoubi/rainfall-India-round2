@@ -1,0 +1,208 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/MasterData_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}31 May 2016, 14:37:55
+{txt}
+{com}. 
+. use "${c -(}followup_data{c )-}/Final Data/AICWIUP.dta", clear
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 2: Cover page                                                                                           
+> ****************************************************************/
+. 
+. // Variable labeling
+. label var Id                    "Household ID"
+{txt}
+{com}. label var RespName              "Respondent Name"
+{txt}
+{com}. label var DressHofH             "DRES HofH"
+{txt}
+{com}. label var PhoneNumber   "Phone Number"
+{txt}
+{com}. label var DoorNumber    "Door Number"
+{txt}
+{com}. label var StreetName    "Street Name"
+{txt}
+{com}. label var DistrictID    "District ID"
+{txt}
+{com}. label var TehsilID              "Tehsil ID"
+{txt}
+{com}. label var BlockID               "Block ID"
+{txt}
+{com}. label var VillageID             "VillageID"
+{txt}
+{com}. label var VisitDay              "Day of Visit"
+{txt}
+{com}. label var VisitMonth    "Month of Visit"
+{txt}
+{com}. label var VisitYear             "Year of Visit"
+{txt}
+{com}. label var RevisitMade   "Revisit Made?"
+{txt}
+{com}. label var ReVisitDay    "Day of Revisit"
+{txt}
+{com}. label var ReVisitMonth  "Month of Revisit"
+{txt}
+{com}. label var ReVisitYear   "Year of Revisit"
+{txt}
+{com}. label var Intvrname             "Interviewer Name"
+{txt}
+{com}. label var IntvrID               "Interviewer ID"
+{txt}
+{com}. label var SuprName              "Supervisor Name"
+{txt}
+{com}. label var SuprID                "Supervisor ID"
+{txt}
+{com}. label var StartTimeHr   "Hour of Survey Started"
+{txt}
+{com}. label var StartTimeMin  "Minute of Survey Started"
+{txt}
+{com}. label var enddate_day   "Day of survey ended"
+{txt}
+{com}. label var enddate_month "Month of survey ended"
+{txt}
+{com}. label var enddate_year  "Year of survey ended"
+{txt}
+{com}. label var endtime_hh    "Hour of survey ended"
+{txt}
+{com}. label var endtime_min   "Minute of survey ended"
+{txt}
+{com}. label var endComment    "Comment at the end of survey"
+{txt}
+{com}. 
+. 
+. // ID cleaning
+. // Drop duplicate observations or improper observations
+. duplicates tag Id, gen(ID_dup)
+
+{p 0 4}{txt}Duplicates in terms of {res} Id{p_end}
+{txt}
+{com}. sort Id
+{txt}
+{com}. list Id if (ID_dup==1)
+{txt}
+      {c TLC}{hline 7}{c TRC}
+      {c |} {res}   Id {txt}{c |}
+      {c LT}{hline 7}{c RT}
+  72. {c |} {res}A1145 {txt}{c |}
+  73. {c |} {res}A1145 {txt}{c |}
+ 213. {c |} {res}A2040 {txt}{c |}
+ 214. {c |} {res}A2040 {txt}{c |}
+ 644. {c |} {res}F1285 {txt}{c |}
+      {c LT}{hline 7}{c RT}
+ 645. {c |} {res}F1285 {txt}{c |}
+2918. {c |} {res} P244 {txt}{c |}
+2919. {c |} {res} P244 {txt}{c |}
+4297. {c |} {res}P4537 {txt}{c |}
+4298. {c |} {res}P4537 {txt}{c |}
+      {c BLC}{hline 7}{c BRC}
+
+{com}. /// There are 5 households with duplicates (10 obs total)
+> /// 4 of them can be distinguished, since only one of the two has complete observation.
+> /// Unfortunately, Id=="P4537" can't be determined which observation has more complete information - this household will be dropped.
+> drop if (Id=="A1145" & DoorNumber=="-999")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="A2040" & DoorNumber=="RR")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & DoorNumber=="6F6")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & DoorNumber=="66")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P4537")
+{txt}(2 observations deleted)
+
+{com}. drop ID_dup
+{txt}
+{com}. 
+. drop if (Id=="-555") // Invalid household ID
+{txt}(1 observation deleted)
+
+{com}. isid Id // Confirm there is no more duplicates.
+{txt}
+{com}. 
+. /// StartTimeHr
+> replace StartTimeMin=15 if (StartTimeHr=="04:15")
+{txt}(1 real change made)
+
+{com}. replace StartTimeHr="04" if (StartTimeHr=="04:15")
+{txt}(1 real change made)
+
+{com}. // destring StartTimeHr, replace
+. 
+. // Destring & recode ID variables
+. destring Id-StartTimeMin, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}RespName contains nonnumeric characters; no {res}replace
+{txt}DressHofH already numeric; no {res}replace
+{txt}PhoneNumber contains nonnumeric characters; no {res}replace
+{txt}DoorNumber contains nonnumeric characters; no {res}replace
+{txt}StreetName contains nonnumeric characters; no {res}replace
+{txt}DistrictID contains nonnumeric characters; no {res}replace
+{txt}TehsilID contains nonnumeric characters; no {res}replace
+{txt}BlockID contains nonnumeric characters; no {res}replace
+{txt}VillageID contains nonnumeric characters; no {res}replace
+{txt}VisitDay already numeric; no {res}replace
+{txt}VisitMonth already numeric; no {res}replace
+{txt}VisitYear already numeric; no {res}replace
+{txt}RevisitMade already numeric; no {res}replace
+{txt}ReVisitDay already numeric; no {res}replace
+{txt}ReVisitMonth already numeric; no {res}replace
+{txt}ReVisitYear already numeric; no {res}replace
+{txt}Intvrname contains nonnumeric characters; no {res}replace
+{txt}IntvrID already numeric; no {res}replace
+{txt}SuprName contains nonnumeric characters; no {res}replace
+{txt}SuprID already numeric; no {res}replace
+{txt}StartTimeHr has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(88 missing values generated)
+StartTimeMin already numeric; no {res}replace
+{txt}
+{com}. ds Id-StartTimeMin, has(type numeric)
+{txt}{col 1}DressHofH{col 15}VisitMonth{col 29}RevisitMade{col 43}ReVisitMonth{col 57}IntvrID{col 71}StartTimeHr
+{col 1}VisitDay{col 15}VisitYear{col 29}ReVisitDay{col 43}ReVisitYear{col 57}SuprID{col 71}StartTimeMin
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /*
+> /// dups
+> drop dups // "0" across all observations except 88 obs - why do these 88 obs have missing dups? It seems all 88 obs with missing survey start time have missing dups.
+> */
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. // Save entire master dataset (Will be called in cleaning several survey sections)
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/MasterData_cleaned.dta saved
+
+{com}. 
+. // Save front page only
+. keep Id-StartTimeMin machinename-endComment
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/Front_page_cleaned.dta", replace
+{txt}(note: file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/Front_page_cleaned.dta not found)
+file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/Front_page_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

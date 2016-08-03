@@ -1,0 +1,2526 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/logs/IN_rainfall_round3_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 3 Feb 2016, 11:42:51
+{txt}
+{com}. 
+.                 
+. /****************************************************************
+>         SECTION 1: Converting csv files to dta                                                                                                          
+> ****************************************************************/
+. 
+. //INSURANCE SURVEY ANDHRA PRADESH
+. insheet using "$mk\csv\AICWI 2 - Andhra Pradesh - Insurance Survey.csv", clear
+{txt}(130 vars, 78 obs)
+
+{com}. tostring a1_2other b_4other c_1_d_whymigdest c_1_f_findjob c_1_g_other c_1_d_other c_1_a_other , replace
+{txt}a1_2other was {res:byte} now {res:str1}
+b_4other was {res:byte} now {res:str1}
+c_1_d_whymigdest was {res:byte} now {res:str1}
+c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other was {res:byte} now {res:str1}
+c_1_d_other was {res:byte} now {res:str1}
+c_1_a_other was {res:byte} now {res:str1}
+
+{com}. gen category = 1
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance Survey.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Andhra Pradesh - Insurance Survey.dta saved
+
+{com}. 
+. //INSURANCE SURVEY FINAL ANDHRA PRADESH
+. insheet using "$mk\csv\AICWI 2 - Andhra Pradesh - Insurance Survey - FINAL.csv", clear
+{txt}(134 vars, 540 obs)
+
+{com}. tostring c_1_d_other c_1_a_other , replace
+{txt}c_1_d_other was {res:byte} now {res:str1}
+c_1_a_other was {res:byte} now {res:str1}
+
+{com}. gen category = 2
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance Survey - FINAL.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Andhra Pradesh - Insurance Survey - FINAL.dta saved
+
+{com}. 
+. //INSURANCE + IMD ANDHRA PRADESH
+. insheet using "$mk\csv\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey.csv", clear
+{txt}(138 vars, 88 obs)
+
+{com}. tostring b_4other c_1_g_other c_1_a_other , replace
+{txt}b_4other was {res:byte} now {res:str1}
+c_1_g_other was {res:byte} now {res:str1}
+c_1_a_other was {res:byte} now {res:str1}
+
+{com}. gen category = 3
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey.dta saved
+
+{com}. 
+. //INSURANCE + IMD FINAL ANDHRA PRADESH
+. insheet using "$mk\csv\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey - FINAL.csv", clear
+{txt}(142 vars, 562 obs)
+
+{com}. tostring c_1_a_other c_1_d_other , replace
+{txt}c_1_a_other already string; no {res}replace
+{txt}c_1_d_other was {res:byte} now {res:str1}
+
+{com}. gen category = 4
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey - FINAL.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey - FINAL.dta saved
+
+{com}. 
+. //INSURANCE SURVEY UTTAR PRADESH FINAL
+. drop cnote
+{txt}
+{com}. insheet using "$mk\csv\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL.csv",clear
+{txt}(134 vars, 14 obs)
+
+{com}. tostring doorno d_8nobuyins c_1_l_nomigrate backch_accompsign_mon d_8_othernobuy c_1_l_other c_1_a_other c_1_c_1_c_state b_7_1doorno c_1_f_findjob c_1_g_other c_1_d_other c_1_c_1_c_district c_1_c_1_c_towncity c_1_d_whymigdest  contno c_1_c_1_c_state a1_2other b_7_2stname b_7_3landmark c_1_a_member_mig, replace
+{txt}doorno was {res:int} now {res:str4}
+d_8nobuyins was {res:byte} now {res:str1}
+c_1_l_nomigrate was {res:byte} now {res:str2}
+backch_accompsign_mon was {res:byte} now {res:str1}
+d_8_othernobuy was {res:byte} now {res:str1}
+c_1_l_other was {res:byte} now {res:str1}
+c_1_a_other was {res:byte} now {res:str1}
+c_1_c_1_c_state was {res:byte} now {res:str1}
+b_7_1doorno was {res:byte} now {res:str1}
+c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other was {res:byte} now {res:str1}
+c_1_d_other was {res:byte} now {res:str1}
+c_1_c_1_c_district was {res:byte} now {res:str1}
+c_1_c_1_c_towncity was {res:byte} now {res:str1}
+c_1_d_whymigdest was {res:byte} now {res:str1}
+contno was {res:double} now {res:str10}
+c_1_c_1_c_state already string; no {res}replace
+{txt}a1_2other was {res:byte} now {res:str1}
+b_7_2stname was {res:byte} now {res:str1}
+b_7_3landmark was {res:byte} now {res:str1}
+c_1_a_member_mig was {res:byte} now {res:str1}
+
+{com}. tostring d_7_a_whybuy d_7_a_otherbuy d_2_a_whybuy d_2_a_otherbuy  , replace
+{txt}d_7_a_whybuy was {res:byte} now {res:str1}
+d_7_a_otherbuy was {res:byte} now {res:str1}
+d_2_a_whybuy was {res:byte} now {res:str1}
+d_2_a_otherbuy was {res:byte} now {res:str1}
+
+{com}. gen category = 5
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL.dta", replace 
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL.dta saved
+
+{com}.  
+. //INSURANCE SURVEY UTTAR PRADESH FINAL NEW
+. drop cnote
+{txt}
+{com}. insheet using "$mk\csv\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL_New.csv",clear
+{txt}(134 vars, 574 obs)
+
+{com}. tostring doorno d_8nobuyins c_1_l_nomigrate backch_accompsign_mon d_8_othernobuy c_1_l_other c_1_a_other c_1_c_1_c_state b_7_1doorno c_1_f_findjob c_1_g_other c_1_d_other c_1_c_1_c_district c_1_c_1_c_towncity c_1_d_whymigdest  contno c_1_c_1_c_state a1_2other b_7_2stname b_7_3landmark c_1_a_member_mig, replace
+{txt}doorno already string; no {res}replace
+{txt}d_8nobuyins already string; no {res}replace
+{txt}c_1_l_nomigrate already string; no {res}replace
+{txt}backch_accompsign_mon was {res:byte} now {res:str1}
+d_8_othernobuy already string; no {res}replace
+{txt}c_1_l_other already string; no {res}replace
+{txt}c_1_a_other was {res:byte} now {res:str1}
+c_1_c_1_c_state already string; no {res}replace
+{txt}b_7_1doorno was {res:int} now {res:str4}
+c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other already string; no {res}replace
+{txt}c_1_d_other was {res:byte} now {res:str1}
+c_1_c_1_c_district already string; no {res}replace
+{txt}c_1_c_1_c_towncity already string; no {res}replace
+{txt}c_1_d_whymigdest was {res:byte} now {res:str1}
+contno already string; no {res}replace
+{txt}c_1_c_1_c_state already string; no {res}replace
+{txt}a1_2other already string; no {res}replace
+{txt}b_7_2stname already string; no {res}replace
+{txt}b_7_3landmark already string; no {res}replace
+{txt}c_1_a_member_mig was {res:byte} now {res:str1}
+
+{com}. tostring  d_7_a_whybuy d_7_a_otherbuy d_2_a_whybuy d_2_a_otherbuy , replace
+{txt}d_7_a_whybuy was {res:byte} now {res:str1}
+d_7_a_otherbuy was {res:byte} now {res:str1}
+d_2_a_whybuy already string; no {res}replace
+{txt}d_2_a_otherbuy was {res:byte} now {res:str1}
+
+{com}. gen category = 6
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL_New.dta",replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL_New.dta saved
+
+{com}. 
+. //INSURANCE SURVEY UTTAR PRADESH IMD FINAL
+. drop cnote
+{txt}
+{com}. insheet using "$mk\csv\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL.csv",clear
+{txt}(143 vars, 3 obs)
+
+{com}. tostring doorno d_8nobuyins c_1_l_nomigrate backch_accompsign_mon d_8_othernobuy c_1_l_other c_1_a_other c_1_c_1_c_state b_7_1doorno c_1_f_findjob c_1_g_other c_1_d_other c_1_c_1_c_district c_1_c_1_c_towncity c_1_d_whymigdest  contno c_1_c_1_c_state a1_2other b_7_2stname b_7_3landmark c_1_a_member_mig, replace
+{txt}doorno was {res:int} now {res:str3}
+d_8nobuyins was {res:byte} now {res:str1}
+c_1_l_nomigrate was {res:byte} now {res:str2}
+backch_accompsign_mon was {res:byte} now {res:str1}
+d_8_othernobuy was {res:byte} now {res:str1}
+c_1_l_other was {res:byte} now {res:str1}
+c_1_a_other was {res:byte} now {res:str1}
+c_1_c_1_c_state was {res:byte} now {res:str1}
+b_7_1doorno was {res:byte} now {res:str1}
+c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other was {res:byte} now {res:str1}
+c_1_d_other was {res:byte} now {res:str1}
+c_1_c_1_c_district was {res:byte} now {res:str1}
+c_1_c_1_c_towncity was {res:byte} now {res:str1}
+c_1_d_whymigdest was {res:byte} now {res:str1}
+contno was {res:double} now {res:str10}
+c_1_c_1_c_state already string; no {res}replace
+{txt}a1_2other was {res:byte} now {res:str1}
+b_7_2stname was {res:byte} now {res:str1}
+b_7_3landmark was {res:byte} now {res:str1}
+c_1_a_member_mig was {res:byte} now {res:str1}
+
+{com}. tostring b_4other d_7_a_whybuy d_7_a_otherbuy d_2_a_whybuy d_2_a_otherbuy , replace
+{txt}b_4other was {res:byte} now {res:str1}
+d_7_a_whybuy was {res:byte} now {res:str1}
+d_7_a_otherbuy was {res:byte} now {res:str1}
+d_2_a_whybuy was {res:byte} now {res:str1}
+d_2_a_otherbuy was {res:byte} now {res:str1}
+
+{com}. gen category = 7
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL.dta",replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL.dta saved
+
+{com}. 
+. //INSURANCE SURVEY UTTAR PRADESH IMD FINAL NEW
+. drop cnote
+{txt}
+{com}. insheet using "$mk\csv\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL_New.csv",clear
+{txt}(143 vars, 571 obs)
+
+{com}. tostring doorno d_8nobuyins c_1_l_nomigrate backch_accompsign_mon d_8_othernobuy c_1_l_other c_1_a_other c_1_c_1_c_state b_7_1doorno c_1_f_findjob c_1_g_other c_1_d_other c_1_c_1_c_district c_1_c_1_c_towncity c_1_d_whymigdest  contno c_1_c_1_c_state a1_2other b_7_2stname b_7_3landmark c_1_a_member_mig, replace
+{txt}doorno already string; no {res}replace
+{txt}d_8nobuyins already string; no {res}replace
+{txt}c_1_l_nomigrate already string; no {res}replace
+{txt}backch_accompsign_mon was {res:byte} now {res:str1}
+d_8_othernobuy already string; no {res}replace
+{txt}c_1_l_other already string; no {res}replace
+{txt}c_1_a_other was {res:byte} now {res:str1}
+c_1_c_1_c_state already string; no {res}replace
+{txt}b_7_1doorno was {res:byte} now {res:str1}
+c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other already string; no {res}replace
+{txt}c_1_d_other already string; no {res}replace
+{txt}c_1_c_1_c_district already string; no {res}replace
+{txt}c_1_c_1_c_towncity already string; no {res}replace
+{txt}c_1_d_whymigdest already string; no {res}replace
+{txt}contno already string; no {res}replace
+{txt}c_1_c_1_c_state already string; no {res}replace
+{txt}a1_2other already string; no {res}replace
+{txt}b_7_2stname was {res:byte} now {res:str1}
+b_7_3landmark was {res:byte} now {res:str1}
+c_1_a_member_mig was {res:byte} now {res:str2}
+
+{com}. tostring b_4other d_7_a_whybuy d_7_a_otherbuy d_2_a_whybuy d_2_a_otherbuy , replace
+{txt}b_4other already string; no {res}replace
+{txt}d_7_a_whybuy was {res:byte} now {res:str1}
+d_7_a_otherbuy was {res:byte} now {res:str1}
+d_2_a_whybuy already string; no {res}replace
+{txt}d_2_a_otherbuy was {res:byte} now {res:str1}
+
+{com}. gen category = 8
+{txt}
+{com}. save "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL_New.dta",replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL_New.dta saved
+
+{com}. 
+. //TAMIL NADU INSURANCE SURVEY
+. 
+. insheet using "$mk\csv\AIC_WI_TAMIL_NADU_2014.csv",clear
+{txt}(144 vars, 377 obs)
+
+{com}. tostring doorno d_8nobuyins c_1_l_nomigrate backch_accompsign_mon d_8_othernobuy c_1_l_other c_1_a_other c_1_c_1_c_state b_7_1doorno c_1_f_findjob c_1_g_other c_1_d_other c_1_c_1_c_district c_1_c_1_c_towncity c_1_d_whymigdest  contno c_1_c_1_c_state a1_2other b_7_2stname b_7_3landmark c_1_a_member_mig, replace
+{txt}doorno already string; no {res}replace
+{txt}d_8nobuyins already string; no {res}replace
+{txt}c_1_l_nomigrate already string; no {res}replace
+{txt}backch_accompsign_mon already string; no {res}replace
+{txt}d_8_othernobuy already string; no {res}replace
+{txt}c_1_l_other already string; no {res}replace
+{txt}c_1_a_other was {res:byte} now {res:str1}
+c_1_c_1_c_state already string; no {res}replace
+{txt}b_7_1doorno already string; no {res}replace
+{txt}c_1_f_findjob was {res:byte} now {res:str1}
+c_1_g_other already string; no {res}replace
+{txt}c_1_d_other was {res:byte} now {res:str1}
+c_1_c_1_c_district already string; no {res}replace
+{txt}c_1_c_1_c_towncity already string; no {res}replace
+{txt}c_1_d_whymigdest already string; no {res}replace
+{txt}contno already string; no {res}replace
+{txt}c_1_c_1_c_state already string; no {res}replace
+{txt}a1_2other already string; no {res}replace
+{txt}b_7_2stname already string; no {res}replace
+{txt}b_7_3landmark already string; no {res}replace
+{txt}c_1_a_member_mig was {res:byte} now {res:str1}
+
+{com}. tostring b_4other d_7_a_whybuy d_7_a_otherbuy d_2_a_whybuy d_2_a_otherbuy , replace
+{txt}b_4other already string; no {res}replace
+{txt}d_7_a_whybuy already string; no {res}replace
+{txt}d_7_a_otherbuy already string; no {res}replace
+{txt}d_2_a_whybuy already string; no {res}replace
+{txt}d_2_a_otherbuy was {res:byte} now {res:str1}
+
+{com}. gen category = 9
+{txt}
+{com}. gen a_1hhid = _1hhid
+{txt}
+{com}. drop _1hhid
+{txt}
+{com}. save "$mk/dta\AIC_WI_TAMIL_NADU_2014.dta",replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AIC_WI_TAMIL_NADU_2014.dta saved
+
+{com}. 
+. //APPENDING
+. use "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance Survey.dta", clear
+{txt}
+{com}. append using "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance Survey - FINAL.dta"
+{txt}{p 0 7 2}
+(note: variable
+tehsname was 
+str10, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+blockname was 
+str10, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+villname was 
+str10, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+landmark was 
+str33, now str45 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+father_husband was 
+str24, now str33 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a1_2reasonfornofind was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a1_2other was 
+str1, now str69 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_1findecmaker was 
+str30, now str40 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_3hhheadreplace was 
+str24, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4hhmember was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4other was 
+str1, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str10, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_3landmark was 
+str9, now str49 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_state was 
+str13, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_district was 
+str9, now str16 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_towncity was 
+str9, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_d_whymigdest was 
+str1, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_f_findjob was 
+str1, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_g_occupation was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_g_other was 
+str1, now str8 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_l_nomigrate was 
+str7, now str9 to accommodate using data's values)
+{p_end}
+
+{com}. append using "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey.dta"
+{txt}{p 0 7 2}
+(note: variable
+father_husband was 
+str33, now str38 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str27, now str28 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_a_member_mig was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_d_whymigdest was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_d_other was 
+str1, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_h_hours was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_i_months was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_l_other was 
+str14, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_8_othernobuy was 
+str29, now str43 to accommodate using data's values)
+{p_end}
+
+{com}. append using "$mk/dta\AICWI 2 - Andhra Pradesh - Insurance+IMD Survey - FINAL.dta"
+{txt}{p 0 7 2}
+(note: variable
+landmark was 
+str45, now str65 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+prevresp was 
+str39, now str40 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_1findecmaker was 
+str40, now str42 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4other was 
+str15, now str19 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_a_other was 
+str1, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_state was 
+str14, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_towncity was 
+str12, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_d_whymigdest was 
+str4, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_g_other was 
+str8, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_l_other was 
+str21, now str22 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_7_a_otherbuy was 
+str30, now str31 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_8nobuyins was 
+str6, now str8 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_8_othernobuy was 
+str43, now str51 to accommodate using data's values)
+{p_end}
+
+{com}. append using "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL.dta"
+{txt}
+{com}. append using "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey - FINAL_New.dta"
+{txt}{p 0 7 2}
+(note: variable
+tehsname was 
+str11, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+blockname was 
+str11, now str20 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_c_1_c_district was 
+str16, now str18 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_g_other was 
+str12, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_l_other was 
+str22, now str30 to accommodate using data's values)
+{p_end}
+
+{com}. append using "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL.dta"
+{txt}
+{com}. append using "$mk/dta\AICWI 2 - Uttar Pradesh - Insurance Survey -IMD- FINAL_New.dta"
+{txt}{p 0 7 2}
+(note: variable
+c_1_d_whymigdest was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_g_other was 
+str13, now str20 to accommodate using data's values)
+{p_end}
+
+{com}. append using "$mk/dta\AIC_WI_TAMIL_NADU_2014.dta"
+{txt}{p 0 7 2}
+(note: variable
+distid was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+distname was 
+str13, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+tehsname was 
+str13, now str17 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+stname was 
+str53, now str55 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str28, now str32 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_j_1_j_salary was 
+int, now long to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_l_other was 
+str30, now str33 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_7_a_whybuy was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_8_othernobuy was 
+str51, now str57 to accommodate using data's values)
+{p_end}
+
+{com}. 
+. 
+. gen states = "Andhra Pradesh"
+{txt}
+{com}. replace states = "Tamil Nadu" if category == 9
+{txt}(377 real changes made)
+
+{com}. replace states = "Uttar Pradesh" if category >4 & category <8
+{txt}(591 real changes made)
+
+{com}. label var states "State of Survey"
+{txt}
+{com}. 
+. // Generate an indicator variable of treatment group
+. gen treatment = 1
+{txt}
+{com}. replace treatment = 2 if inlist(category,3,4,7,8)
+{txt}(1224 real changes made)
+
+{com}. label define treatment_r3 1 "Insurance" 2 "Insurance+IMD"
+{txt}
+{com}. label value treatment treatment_r3
+{txt}
+{com}. label var treatment "Treatment in Marketing Round 3"
+{txt}
+{com}. 
+. drop category note // Drop unnecessory variables.
+{txt}
+{com}. 
+. //SAVING CONSOLIDATED DATA SET
+. save "$mk/dta\AICWI2-FULL.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI2-FULL.dta saved
+
+{com}. save "$mk/dta\AICWI2-FULL BACKUP.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\AICWI2-FULL BACKUP.dta saved
+
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 2: Data Cleaning
+> ****************************************************************/
+. 
+. clear
+{txt}
+{com}. set more off
+{txt}
+{com}. 
+. use "$mk/dta\AICWI2-FULL.dta", clear
+{txt}
+{com}. 
+. //CHECKING FOR DUPLICATE HOUSEHOLD IDs
+. duplicates list a_1hhid
+
+{p 0 4}{txt}Duplicates in terms of {res} a_1hhid{p_end}
+{txt}
+  {c TLC}{hline 8}{c -}{hline 6}{c -}{hline 9}{c TRC}
+  {c |} {res}group:   obs:   a_1hhid {txt}{c |}
+  {c LT}{hline 8}{c -}{hline 6}{c -}{hline 9}{c RT}
+  {c |} {res}     1   1414     A1089 {txt}{c |}
+  {c |} {res}     1   2422     A1089 {txt}{c |}
+  {c |} {res}     2     39     F2271 {txt}{c |}
+  {c |} {res}     2    280     F2271 {txt}{c |}
+  {c |} {res}     3    701     F2317 {txt}{c |}
+  {c LT}{hline 8}{c -}{hline 6}{c -}{hline 9}{c RT}
+  {c |} {res}     3   1145     F2317 {txt}{c |}
+  {c |} {res}     4    355     F2621 {txt}{c |}
+  {c |} {res}     4    437     F2621 {txt}{c |}
+  {c |} {res}     5    165     F2846 {txt}{c |}
+  {c |} {res}     5    601     F2846 {txt}{c |}
+  {c LT}{hline 8}{c -}{hline 6}{c -}{hline 9}{c RT}
+  {c |} {res}     6    445     P2134 {txt}{c |}
+  {c |} {res}     6   1381     P2134 {txt}{c |}
+  {c |} {res}     7   2292     P4570 {txt}{c |}
+  {c |} {res}     7   2307     P4570 {txt}{c |}
+  {c |} {res}     8   2284     P4843 {txt}{c |}
+  {c LT}{hline 8}{c -}{hline 6}{c -}{hline 9}{c RT}
+  {c |} {res}     8   2395     P4843 {txt}{c |}
+  {c |} {res}     9   2057     P4920 {txt}{c |}
+  {c |} {res}     9   2137     P4920 {txt}{c |}
+  {c |} {res}    10   1878     P4922 {txt}{c |}
+  {c |} {res}    10   2286     P4922 {txt}{c |}
+  {c BLC}{hline 8}{c -}{hline 6}{c -}{hline 9}{c BRC}
+
+{com}. duplicates tag  a_1hhid, gen(duplicates)
+
+{p 0 4}{txt}Duplicates in terms of {res} a_1hhid{p_end}
+{txt}
+{com}. *10 pairs of duplicates found
+. 
+. sort a_1hhid
+{txt}
+{com}. 
+. drop if submissiondate == "Jun 8, 2014 7:11:21 AM" & a_1hhid == "A1089" // Both are identical across all variables. Dropped one entry.
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "May 15, 2014 10:54:57 AM" & a_1hhid == "F2271" // Both are identical across all variables. Dropped one entry.
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "May 15, 2014 11:23:20 AM" & a_1hhid == "F2317" // A second surveyor went to this HH because of wrong allocation, terminated when told survey was already complete
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jun 3, 2014 11:45:48 AM" & a_1hhid == "F2621" // Later version is correct and complete
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jun 3, 2014 10:52:29 AM" & a_1hhid == "F2846" // Both are identical. One has been dropped
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "May 28, 2014 4:45:45 PM" & a_1hhid == "P2134" //Incomplete survey dropped
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jun 19, 2014 2:26:07 PM" & a_1hhid == "P4570" //Survey was given to HH Head replacement. When HH Head became available, survey was retaken. Have retained survey with HH Head. 
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jun 11, 2014 10:40:51 PM" & a_1hhid == "P4843" //Survey was given to HH Head replacement. When HH Head became available, survey was retaken. Have retained survey with HH Head. 
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jul 1, 2014 3:50:37 PM" & a_1hhid == "P4920" //Survey was given to HH Head replacement. When HH Head became available, survey was retaken. Have retained survey with HH Head. 
+{txt}(1 observation deleted)
+
+{com}. drop if submissiondate == "Jul 1, 2014 3:50:46 PM" & a_1hhid == "P4922" //Survey has been carried out by two different surveyors, but with same responses. One has been dropped
+{txt}(1 observation deleted)
+
+{com}. 
+. // Fix household ID to be matched with round2
+. replace a_1hhid = "P1880" if (a_1hhid=="1880")
+{txt}(1 real change made)
+
+{com}. replace a_1hhid = "P533" if (a_1hhid=="533")
+{txt}(1 real change made)
+
+{com}. 
+. isid a_1hhid // Double-check whether ID variable is unique
+{txt}
+{com}. drop duplicates
+{txt}
+{com}. 
+.  //DROPPING UNNECESSARY VARIABLES AND STRIPPING DATASET OF PII
+. 
+. drop backch_accompsign_sup c_1_c_1_c_mig_dest backch_accompsign_mon anote a1note cnote dnote a_2identify key devicephonenum metainstanceid bnote bhhhead bintroconsent contno dnote_ins_intro dexplanationnote_ins dexplanationnote_ins1 dexplanationnote_ins2 dexplanationnote_ins3 dexplanationnote_ins4 dexplanationnote_ins5 dexplanationnote_ins6 dexplanationnote_ins7 dexplanationnote_ins8 dexplanationnote_ins9 dcomicnote_com1 dcomicnote_com2 dcomicnote_com3 dcomicnote_com4 dcomicnote_com5 dcomicnote_com6 dcomicnote_com7 dcomicnote_com8 dcomicnote_com9 dcomicnote_com10 dcomicnote_com11 dcomicnote_com12 dcomicnote_com13 dendinsnote_endins1 dendinsnote_endins2 dendinsnote_endins3 dendinsnote_endins4 d_notebuyins1 d_notenobuyins1 d_notesevisit d_noteinsend dimd_scriptnote_imd1 dimd_scriptnote_imd2 dimd_scriptnote_imd3 dimd_scriptnote_imd4 dimd_scriptnote_imd5 dimd_scriptnote_imd6 dimd_scriptnote_imd7 dimd_scriptnote_imd8 today deviceid subscriberid simid distid distname tehsid tehsname blockid blockname villid  villname doorno stname landmark
+{txt}
+{com}. drop  b_10_surveyorsign b_12_respondentsign backch_accompsupervisor_name backch_accompsupervisor_other1 backch_accompsupervisor_other2 backch_accompmonitor_name backch_accompmonitor_other1 backch_accompmonitor_other2 backch_accompaccom_check backch_accompback_check metainstancename dimdscriptnote_imd1 dimdscriptnote_imd2 dimdscriptnote_imd3 dimdscriptnote_imd4 dimdscriptnote_imd5 dimdscriptnote_imd6 dimdscriptnote_imd7 dimdscriptnote_imd8 dimdscriptnote_imd9 dimdscriptnote_imd9
+{txt}
+{com}. drop noconsent hhnotfound
+{txt}
+{com}. drop  imd bintroconsent1 bintroconsent2 bintroconsent3 bintroconsent4 dnote_ins_intro1
+{txt}
+{com}. 
+. //LABELLING DATASET
+. 
+. //Label variables
+. 
+. *SECTION A
+.                           
+. label variable a1_1locatehh "Able to Locate Household"
+{txt}
+{com}. label variable a1_2reasonfornofind "Reasons For Not Locating"
+{txt}
+{com}. label variable a1_2other "Other Reasons for Not Locating"
+{txt}
+{com}. label variable father_husband "Father/Husband's Name"
+{txt}
+{com}. label variable prevresp "Previous Respondent"
+{txt}
+{com}. label variable starttime "Start Time"
+{txt}
+{com}. label variable endtime "End Time"
+{txt}
+{com}. label variable a_1hhid "Household ID"
+{txt}
+{com}. 
+. *SECTION B
+. 
+. label variable b_1findecmaker "Name of Decision Maker"
+{txt}
+{com}. label variable b_2availability "Was Decision Maker Availabe?"
+{txt}
+{com}. label variable b_3hhheadreplace "Replacement Decision Maker"
+{txt}
+{com}. label variable b_4hhmember "Relationship of Respondent to Decision Maker"
+{txt}
+{com}. label variable b_4other "Other Relationship"
+{txt}
+{com}. label variable b_5consent "Consent"
+{txt}
+{com}. label variable b_6_address "Has Address Changed?"
+{txt}
+{com}. label variable b_7_4address "Address"   
+{txt}
+{com}. label variable b_7_1doorno "Door No"
+{txt}
+{com}. label variable b_7_2stname "Street Name"
+{txt}
+{com}. label variable b_7_3landmark "Landmark"
+{txt}
+{com}. label variable b_8_contactno "Contact Number"
+{txt}
+{com}. label variable b_9_new_no "New number"
+{txt}
+{com}. label variable b_11_surveyorname "Surveyor Name"
+{txt}
+{com}. 
+. *SECION C
+. 
+. label variable c_1_seasonal_mig "Did anyone migrate?"
+{txt}
+{com}. label variable c_1_a_member_mig "Who migrated?"
+{txt}
+{com}. label variable c_1_a_other "If others migrated, who?"
+{txt}
+{com}. label variable c_1_b_daysaway "How many days were they away?" 
+{txt}
+{com}. label variable c_1_c_1_c_state "State"
+{txt}
+{com}. label variable c_1_c_1_c_district "District"
+{txt}
+{com}. label variable c_1_c_1_c_towncity "Town/City"
+{txt}
+{com}. label variable c_1_d_whymigdest "Reason for Choosing Destination"
+{txt}
+{com}. label variable c_1_d_other "Other Reasons for Destination"
+{txt}
+{com}. label variable c_1_e_success "Did you find a job?" 
+{txt}
+{com}. label variable c_1_f_findjob "How did you find your job?"
+{txt}
+{com}. label variable c_1_f_other "Other ways of Finding Job"
+{txt}
+{com}. label variable c_1_g_occupation "What did you do?"
+{txt}
+{com}. label variable c_1_g_other "Other Occupation"
+{txt}
+{com}. label variable c_1_h_hours "Hours Worked Per Day"
+{txt}
+{com}. label variable c_1_i_months "Weeks Worked Per Month"
+{txt}
+{com}. label variable c_1_j_1_j_earnings "Total Earnings"
+{txt}
+{com}. label variable c_1_j_1_j_salary "Salary"
+{txt}
+{com}. label variable c_1_j_1_j_kind "In Kind"
+{txt}
+{com}. label variable c_1_k_earninglevel "Earned More?"
+{txt}
+{com}. label variable c_1_l_nomigrate "Why No Migration?"
+{txt}
+{com}. label variable c_1_l_other "Other Reasons for No Migration"
+{txt}
+{com}. 
+. *SECTION D
+. 
+. label variable  d_1purchasins "Purchased Insurance"
+{txt}
+{com}. label variable  d_2unitsins "Units Purchased"
+{txt}
+{com}. label variable  d_3awstation "Aware of AWS"
+{txt}
+{com}. label variable  d_4awslocation "Aware of AWS Location"
+{txt}
+{com}. label variable  d_4awskms "Distance from AWS"
+{txt}
+{com}. label variable  d_5datesecvisit "Second Visit Date"
+{txt}
+{com}. label variable  d_6purchasins "Purchased Insurance Second Visit"
+{txt}
+{com}. label variable  d_7unitsins "Units Purchased Second Visit"
+{txt}
+{com}. label variable  d_8nobuyins "Why no insurance?"
+{txt}
+{com}. label variable  d_8nobuyins "Why no insurance - Other?"
+{txt}
+{com}. label variable  d_8nobuyins "Why no insurance?"
+{txt}
+{com}. label variable  d_8_othernobuy "Why no insurance - Other?"
+{txt}
+{com}. label variable  d_2_a_whybuy "Why buy insurance?"
+{txt}
+{com}. label variable  d_2_a_otherbuy "Why buy insurance? - Other"
+{txt}
+{com}. label variable  d_7_a_otherbuy "Why buy insurance Second Visit? - Other"
+{txt}
+{com}. label variable  d_7_a_whybuy "Why buy insurance Second Visit?"
+{txt}
+{com}. 
+. label define yesno 0 "No" 1 "Yes"
+{txt}
+{com}. 
+. save "$mk/dta\labelled_dataset.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014/dta\labelled_dataset.dta saved
+
+{com}. 
+. 
+.                         *****************************************************************************************************************
+.             ****************************************************SECTION A*****************************************************
+.             *****************************************************************************************************************
+.               
+. estpost tab states
+
+{txt}{space 0}{space 0}{ralign 12:states}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Andhra_Pra~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1830}}}{space 1}{space 1}{ralign 9:{res:{sf: 65.42724}}}{space 1}{space 1}{ralign 9:{res:{sf: 65.42724}}}{space 1}
+{space 0}{space 0}{ralign 12:Tamil_Nadu}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      377}}}{space 1}{space 1}{ralign 9:{res:{sf: 13.47873}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.90597}}}{space 1}
+{space 0}{space 0}{ralign 12:Uttar_Prad~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      590}}}{space 1}{space 1}{ralign 9:{res:{sf: 21.09403}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("State-wise Breakup")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}.                           
+. *Were you able to locate the household?
+. label define noyes 0 "NO" 1 "YES"
+{txt}
+{com}. label value a1_1locatehh noyes
+{txt}
+{com}. 
+. *Why were you unable to locate the household?
+. 
+. //Adding "Merged" and "Temporarily Unavailable" to include oft-repeated answers in 'Other'
+. label define locatehousehold 1 "Shifted" 2 "Does Not Exist" 3 "Death" 4 "Merged" 5 "Temporarily Unavailable" 6 "Refused" -888 "Other"
+{txt}
+{com}. label value a1_2reasonfornofind locatehousehold
+{txt}
+{com}. 
+. //Recoding 'other' responses where they fall into categories already listed
+. replace a1_2reasonfornofind = 1 if strpos(a1_2other, "MIG") != 0 | strpos(a1_2other, "SHIFT") !=0 | strpos(a1_2other ,"mig") != 0 
+{txt}(10 real changes made)
+
+{com}. replace a1_2reasonfornofind = 1 if strpos(a1_2other, "Mai") != 0 | strpos(a1_2other, "went") != 0 | strpos(a1_2other, "WENT") != 0 | strpos(a1_2other, "shift") != 0 | strpos(a1_2other, "mai") != 0 
+{txt}(5 real changes made)
+
+{com}. replace a1_2reasonfornofind = 3 if strpos(a1_2other, "DEAD") != 0 | strpos(a1_2other, "dead") !=0
+{txt}(2 real changes made)
+
+{com}. replace a1_2reasonfornofind = 5 if strpos(a1_2other, "fter") != 0 | strpos(a1_2other, "FTER") !=0 | strpos(a1_2other, "ft") !=0 | strpos(a1_2other, "AFT") != 0 | strpos(a1_2other, "Aft") != 0 | strpos(a1_2other, "TEMP") != 0
+{txt}(28 real changes made)
+
+{com}. replace a1_2reasonfornofind = 6 if strpos(a1_2other, "REF") != 0 | strpos(a1_2other, "Ref") !=0 | a1_2other == "Baat karne se mana kiya hai"
+{txt}(11 real changes made)
+
+{com}. replace a1_2reasonfornofind = 4 if strpos(a1_2other, "Same") != 0 | strpos(a1_2other, "same") != 0 | strpos(a1_2other, "SAME") != 0
+{txt}(9 real changes made)
+
+{com}. replace a1_2reasonfornofind = 5 if strpos(a1_2other,"Resp")!=0
+{txt}(7 real changes made)
+
+{com}. 
+. *generating summary for section A
+. estpost tab a1_1locatehh
+
+{txt}{space 0}{space 0}{ralign 12:a1_1locatehh}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      147}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.255631}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.255631}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2650}}}{space 1}{space 1}{ralign 9:{res:{sf: 94.74437}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Were you able to locate the household?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. estpost tab a1_2reasonfornofind
+
+{txt}{space 0}{space 0}{ralign 12:a1_2reasonfo}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Shifted}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       81}}}{space 1}{space 1}{ralign 9:{res:{sf: 55.10204}}}{space 1}{space 1}{ralign 9:{res:{sf: 55.10204}}}{space 1}
+{space 0}{space 0}{ralign 12:Does_Not_E~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.721088}}}{space 1}{space 1}{ralign 9:{res:{sf: 57.82313}}}{space 1}
+{space 0}{space 0}{ralign 12:Death}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        7}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.761905}}}{space 1}{space 1}{ralign 9:{res:{sf: 62.58503}}}{space 1}
+{space 0}{space 0}{ralign 12:Merged}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.122449}}}{space 1}{space 1}{ralign 9:{res:{sf: 68.70748}}}{space 1}
+{space 0}{space 0}{ralign 12:Temporaril~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       35}}}{space 1}{space 1}{ralign 9:{res:{sf: 23.80952}}}{space 1}{space 1}{ralign 9:{res:{sf: 92.51701}}}{space 1}
+{space 0}{space 0}{ralign 12:Refused}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       11}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.482993}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      147}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Why were you unable to locate the household?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. graph pie, over(a1_1locatehh)
+{res}{txt}
+{com}. graph pie, over(a1_2reasonfornofind)
+{res}{txt}
+{com}. 
+.                         *****************************************************************************************************************
+.             ****************************************************SECTION B*****************************************************
+.             *****************************************************************************************************************
+.              
+. * Is Primary Decision Maker available?
+. label value b_2availability noyes
+{txt}
+{com}. tab b_2availability
+
+        {txt}Was {c |}
+   Decision {c |}
+      Maker {c |}
+  Availabe? {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+         NO {c |}{res}        585       22.08       22.08
+{txt}        YES {c |}{res}      2,065       77.92      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      2,650      100.00
+{txt}
+{com}. 
+. * If not, What is your relationship to primary decision maker?
+. label define relationship 1 "Spouse" 2 "Son" 3 "Daughter" 4 "Father" 5 "Mother" 6 "Brother" -888 "Other", replace
+{txt}
+{com}. replace  b_4hhmember = - 888 if  b_4hhmember == 7 | b_4hhmember == 8 | b_4hhmember == 10 | b_4hhmember == 9
+{txt}(24 real changes made)
+
+{com}. label value b_4hhmember relationship
+{txt}
+{com}. tab b_4hhmember
+
+{txt}Relationshi {c |}
+       p of {c |}
+ Respondent {c |}
+to Decision {c |}
+      Maker {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+      Other {c |}{res}         34        5.81        5.81
+{txt}     Spouse {c |}{res}          3        0.51        6.32
+{txt}        Son {c |}{res}        309       52.82       59.15
+{txt}   Daughter {c |}{res}        144       24.62       83.76
+{txt}     Father {c |}{res}         26        4.44       88.21
+{txt}     Mother {c |}{res}          5        0.85       89.06
+{txt}    Brother {c |}{res}         64       10.94      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        585      100.00
+{txt}
+{com}. 
+. * generating summary for section B 
+. graph pie, over(b_2availability)
+{res}{txt}
+{com}. graph pie, over(b_4hhmember)
+{res}{txt}
+{com}. 
+. estpost tab b_2availability
+
+{txt}{space 0}{space 0}{ralign 12:b_2availabil}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      585}}}{space 1}{space 1}{ralign 9:{res:{sf: 22.07547}}}{space 1}{space 1}{ralign 9:{res:{sf: 22.07547}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2065}}}{space 1}{space 1}{ralign 9:{res:{sf: 77.92453}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2650}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Was the primary decision maker available?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. estpost tab b_4hhmember
+
+{txt}{space 0}{space 0}{ralign 12:b_4hhmember}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       34}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.811966}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.811966}}}{space 1}
+{space 0}{space 0}{ralign 12:Spouse}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: .5128205}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.324786}}}{space 1}
+{space 0}{space 0}{ralign 12:Son}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      309}}}{space 1}{space 1}{ralign 9:{res:{sf: 52.82051}}}{space 1}{space 1}{ralign 9:{res:{sf:  59.1453}}}{space 1}
+{space 0}{space 0}{ralign 12:Daughter}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      144}}}{space 1}{space 1}{ralign 9:{res:{sf: 24.61538}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.76068}}}{space 1}
+{space 0}{space 0}{ralign 12:Father}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       26}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.444444}}}{space 1}{space 1}{ralign 9:{res:{sf: 88.20513}}}{space 1}
+{space 0}{space 0}{ralign 12:Mother}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: .8547009}}}{space 1}{space 1}{ralign 9:{res:{sf: 89.05983}}}{space 1}
+{space 0}{space 0}{ralign 12:Brother}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       64}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.94017}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      585}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Relationship of Substitute Respondent to HH Head")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.                         *****************************************************************************************************************
+.             ****************************************************SECTION C*****************************************************
+.             *****************************************************************************************************************
+.              
+. * Has anyone in your family migrated?
+. label define yesno 1 "Yes" 0 "No", replace
+{txt}
+{com}. label value c_1_seasonal_mig yesno
+{txt}
+{com}. estpost tab  c_1_seasonal_mig
+
+{txt}{space 0}{space 0}{ralign 12:c_1_seasonal}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:No}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2482}}}{space 1}{space 1}{ralign 9:{res:{sf: 95.16871}}}{space 1}{space 1}{ralign 9:{res:{sf: 95.16871}}}{space 1}
+{space 0}{space 0}{ralign 12:Yes}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      126}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.831288}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2608}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Has anyone in your family migrated?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * Who migrated? MORE THAN ONE ANSWER
+. 
+. 
+. replace c_1_a_member_mig = "" if c_1_a_member_mig == "."
+{txt}(1489 real changes made)
+
+{com}. replace c_1_a_member_mig = "" if c_1_a_member_mig == "-888"
+{txt}(1 real change made)
+
+{com}. split c_1_a_member_mig, destring
+{res}variables born as string: 
+{txt}{col 1}c_1_a_memb~1{col 15}c_1_a_memb~2{col 29}c_1_a_memb~3
+c_1_a_member_mig1 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2672 missing values generated)
+c_1_a_member_mig2 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2783 missing values generated)
+c_1_a_member_mig3 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2796 missing values generated)
+
+{com}. 
+. label define whomigrated 1 "Household Head" 2 "Spouse" 3 "Son or Daughter" 4 "Daughter-in-law / Son-in-law" 5 "Grandson/Granddaughter" 6 "Parents" 7 "Father-in-law / Mother-in-law" 8 "Brother/Sister" 9 "Brother-in-law/Sister-in-law" 10 "Uncle/Aunt" -888 "Other", replace
+{txt}
+{com}. 
+. foreach x in 1 2 3 {c -(}
+{txt}  2{com}.         label var c_1_a_member_mig`x' "Who migrated? Member `x'"
+{txt}  3{com}.         label value c_1_a_member_mig`x' whomigrated
+{txt}  4{com}.         estpost tab  c_1_a_member_mig`x'
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Migrant `x'")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:c_1_a_member}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Household_~d}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       49}}}{space 1}{space 1}{ralign 9:{res:{sf:     39.2}}}{space 1}{space 1}{ralign 9:{res:{sf:     39.2}}}{space 1}
+{space 0}{space 0}{ralign 12:Spouse}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf:     10.4}}}{space 1}{space 1}{ralign 9:{res:{sf:     49.6}}}{space 1}
+{space 0}{space 0}{ralign 12:Son_or_Dau~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       54}}}{space 1}{space 1}{ralign 9:{res:{sf:     43.2}}}{space 1}{space 1}{ralign 9:{res:{sf:     92.8}}}{space 1}
+{space 0}{space 0}{ralign 12:Daughter-i~w}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:       .8}}}{space 1}{space 1}{ralign 9:{res:{sf:     93.6}}}{space 1}
+{space 0}{space 0}{ralign 12:Grandson/G~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf:      3.2}}}{space 1}{space 1}{ralign 9:{res:{sf:     96.8}}}{space 1}
+{space 0}{space 0}{ralign 12:Parents}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:       .8}}}{space 1}{space 1}{ralign 9:{res:{sf:     97.6}}}{space 1}
+{space 0}{space 0}{ralign 12:Brother/Si~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:       .8}}}{space 1}{space 1}{ralign 9:{res:{sf:     98.4}}}{space 1}
+{space 0}{space 0}{ralign 12:Brother-in~w}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:       .8}}}{space 1}{space 1}{ralign 9:{res:{sf:     99.2}}}{space 1}
+{space 0}{space 0}{ralign 12:Uncle/Aunt}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:       .8}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      125}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_a_member}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Spouse}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}
+{space 0}{space 0}{ralign 12:Son_or_Dau~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 64.28571}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.57143}}}{space 1}
+{space 0}{space 0}{ralign 12:Daughter-i~w}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}{space 1}{ralign 9:{res:{sf: 92.85714}}}{space 1}
+{space 0}{space 0}{ralign 12:Brother/Si~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.142857}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_a_member}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Son_or_Dau~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *Following questions pertain to MOST RECENT EPISODE
+. 
+. * How many days were they away? (pertains to most recent episode)
+. 
+. gen daysaway = .
+{txt}(2797 missing values generated)
+
+{com}. replace daysaway = 0 if  c_1_b_daysaway > 0 & c_1_b_daysaway <11
+{txt}(23 real changes made)
+
+{com}. replace daysaway = 1 if  c_1_b_daysaway > 10 & c_1_b_daysaway <21
+{txt}(27 real changes made)
+
+{com}. replace daysaway = 2 if  c_1_b_daysaway > 20 & c_1_b_daysaway <31
+{txt}(27 real changes made)
+
+{com}. replace daysaway = 3 if  c_1_b_daysaway > 30 & c_1_b_daysaway <41
+{txt}(5 real changes made)
+
+{com}. replace daysaway = 4 if  c_1_b_daysaway > 40 & c_1_b_daysaway <51
+{txt}(13 real changes made)
+
+{com}. replace daysaway = 5 if  c_1_b_daysaway > 50 & c_1_b_daysaway <61
+{txt}(23 real changes made)
+
+{com}. replace daysaway = 6 if  c_1_b_daysaway > 60 & c_1_b_daysaway <71
+{txt}(0 real changes made)
+
+{com}. replace daysaway = 7 if  c_1_b_daysaway > 70 & c_1_b_daysaway <81
+{txt}(4 real changes made)
+
+{com}. replace daysaway = 8 if  c_1_b_daysaway > 80 & c_1_b_daysaway <91
+{txt}(4 real changes made)
+
+{com}. 
+. label define daysmigrated 0 "1-10" 1 "11-20" 2 "21-30" 3 "31-40" 4 "41-50" 5 "51-60" 6 "61-70" 7 "71-80" 8 "81-90" 9 "90+", replace
+{txt}
+{com}. label value daysaway daysmigrated
+{txt}
+{com}. label var daysaway "How many days were they away?"
+{txt}
+{com}. estpost tab daysaway
+
+{txt}{space 0}{space 0}{ralign 12:daysaway}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:1-10}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       23}}}{space 1}{space 1}{ralign 9:{res:{sf: 18.25397}}}{space 1}{space 1}{ralign 9:{res:{sf: 18.25397}}}{space 1}
+{space 0}{space 0}{ralign 12:11-20}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       27}}}{space 1}{space 1}{ralign 9:{res:{sf: 21.42857}}}{space 1}{space 1}{ralign 9:{res:{sf: 39.68254}}}{space 1}
+{space 0}{space 0}{ralign 12:21-30}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       27}}}{space 1}{space 1}{ralign 9:{res:{sf: 21.42857}}}{space 1}{space 1}{ralign 9:{res:{sf: 61.11111}}}{space 1}
+{space 0}{space 0}{ralign 12:31-40}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.968254}}}{space 1}{space 1}{ralign 9:{res:{sf: 65.07937}}}{space 1}
+{space 0}{space 0}{ralign 12:41-50}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.31746}}}{space 1}{space 1}{ralign 9:{res:{sf: 75.39683}}}{space 1}
+{space 0}{space 0}{ralign 12:51-60}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       23}}}{space 1}{space 1}{ralign 9:{res:{sf: 18.25397}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.65079}}}{space 1}
+{space 0}{space 0}{ralign 12:71-80}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}{space 1}{ralign 9:{res:{sf:  96.8254}}}{space 1}
+{space 0}{space 0}{ralign 12:81-90}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      126}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Duration of Migration")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * Where did they go?
+.         
+.         *state
+. gen statemig =  c_1_c_1_c_state
+{txt}(2654 missing values generated)
+
+{com}. replace statemig = "" if statemig == "."
+{txt}(17 real changes made)
+
+{com}. replace statemig = "Karnataka" if strpos(statemig,"Kar") != 0 | strpos(statemig,"KAR") != 0 | strpos(statemig,"Ban") != 0 | strpos(statemig,"BEN") != 0 | strpos(statemig,"Kal") != 0
+{txt}(10 real changes made)
+
+{com}. replace statemig = "Andhra Pradesh" if strpos(statemig,"And") != 0 | strpos(statemig,"AND") != 0 | strpos(statemig,"AP") != 0 | strpos(statemig,"Ap") != 0 | strpos(statemig,"HYD") != 0 | strpos(statemig,"Hyd") != 0 | strpos(statemig,"Ap") != 0
+{txt}(47 real changes made)
+
+{com}. replace statemig = "Abroad" if strpos(statemig,"AB") != 0 | strpos(statemig,"Ab") != 0
+{txt}(4 real changes made)
+
+{com}. replace statemig = "Tamil Nadu" if strpos(statemig,"CHE") != 0 | strpos(statemig,"MAD") != 0 | strpos(statemig,"THAM") != 0 | strpos(statemig,"Tam") != 0
+{txt}(18 real changes made)
+
+{com}. replace statemig = "Gujarat" if strpos(statemig,"GUJ") != 0 | strpos(statemig,"Guj") != 0
+{txt}(4 real changes made)
+
+{com}. replace statemig = "Uttar Pradesh" if strpos(statemig,"Utt") != 0 | strpos(statemig,"Up") != 0
+{txt}(8 real changes made)
+
+{com}. replace statemig = "Haryana" if strpos(statemig,"Har") != 0
+{txt}(4 real changes made)
+
+{com}. replace statemig = "Delhi" if strpos(statemig,"Del") != 0
+{txt}(0 real changes made)
+
+{com}. replace statemig = "Himachal Pradesh" if strpos(statemig,"Him") != 0
+{txt}statemig was {res}str15{txt} now {res}str16
+{txt}(1 real change made)
+
+{com}. replace statemig = "Kerala" if strpos(statemig,"KER") != 0 | strpos(statemig,"Ker") != 0 | strpos(statemig,"ker") != 0
+{txt}(4 real changes made)
+
+{com}. replace statemig = "Maharashtra" if strpos(statemig,"Mum") != 0
+{txt}(1 real change made)
+
+{com}. replace statemig = "Punjab" if strpos(statemig,"Pun") != 0
+{txt}(0 real changes made)
+
+{com}. replace statemig = "Orissa" if strpos(statemig,"OR") != 0
+{txt}(2 real changes made)
+
+{com}. label var statemig "To which state did they migrate?"
+{txt}
+{com}. estpost tab statemig
+
+{txt}{space 0}{space 0}{ralign 12:statemig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Abroad}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}
+{space 0}{space 0}{ralign 12:Andhra_Pra~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       54}}}{space 1}{space 1}{ralign 9:{res:{sf: 42.85714}}}{space 1}{space 1}{ralign 9:{res:{sf: 46.03175}}}{space 1}
+{space 0}{space 0}{ralign 12:Delhi}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.142857}}}{space 1}{space 1}{ralign 9:{res:{sf:  53.1746}}}{space 1}
+{space 0}{space 0}{ralign 12:Gujarat}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}{space 1}{ralign 9:{res:{sf: 56.34921}}}{space 1}
+{space 0}{space 0}{ralign 12:Haryana}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.174603}}}{space 1}{space 1}{ralign 9:{res:{sf: 59.52381}}}{space 1}
+{space 0}{space 0}{ralign 12:Himachal_P~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .7936508}}}{space 1}{space 1}{ralign 9:{res:{sf: 60.31746}}}{space 1}
+{space 0}{space 0}{ralign 12:Karnataka}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.90476}}}{space 1}{space 1}{ralign 9:{res:{sf: 72.22222}}}{space 1}
+{space 0}{space 0}{ralign 12:Kerala}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.968254}}}{space 1}{space 1}{ralign 9:{res:{sf: 76.19048}}}{space 1}
+{space 0}{space 0}{ralign 12:Maharashtra}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .7936508}}}{space 1}{space 1}{ralign 9:{res:{sf: 76.98413}}}{space 1}
+{space 0}{space 0}{ralign 12:Orissa}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.587302}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.57143}}}{space 1}
+{space 0}{space 0}{ralign 12:Punjab}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .7936508}}}{space 1}{space 1}{ralign 9:{res:{sf: 79.36508}}}{space 1}
+{space 0}{space 0}{ralign 12:Tamil_Nadu}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.65079}}}{space 1}
+{space 0}{space 0}{ralign 12:Uttar_Prad~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.349206}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      126}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Which state did you go to?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.         *city
+. gen districtmig = c_1_c_1_c_district
+{txt}(2654 missing values generated)
+
+{com}. replace districtmig = "" if statemig == "."
+{txt}(0 real changes made)
+
+{com}. replace statemig = "" if statemig == "-999"
+{txt}(0 real changes made)
+
+{com}. replace districtmig = "Hyderabad" if strpos(districtmig,"HYD") != 0 | strpos(districtmig,"Hyd") != 0
+{txt}(10 real changes made)
+
+{com}. replace districtmig = "West Godavari" if strpos(districtmig,"WEST") != 0 | strpos(districtmig,"West") != 0
+{txt}(10 real changes made)
+
+{com}. replace districtmig = "Varanasi" if strpos(districtmig,"Var") != 0
+{txt}(3 real changes made)
+
+{com}. replace districtmig = "Chittoor" if strpos(districtmig,"CHIT") != 0
+{txt}(5 real changes made)
+
+{com}. replace districtmig = "Bangalore" if strpos(districtmig,"BAN") != 0 | strpos(districtmig,"BEN") != 0 | strpos(districtmig,"Ben") != 0 | strpos(districtmig,"Ban") != 0
+{txt}(8 real changes made)
+
+{com}. replace districtmig = "Guntur" if strpos(districtmig,"GUNT") != 0
+{txt}(3 real changes made)
+
+{com}. replace districtmig = "East Godavari" if strpos(districtmig,"EAST") != 0
+{txt}(1 real change made)
+
+{com}. replace districtmig = "Chennai" if strpos(districtmig,"CHEN") != 0 | strpos(districtmig,"MAD") != 0
+{txt}(4 real changes made)
+
+{com}. replace districtmig = "Faridabad" if strpos(districtmig,"Fari") != 0
+{txt}(1 real change made)
+
+{com}. replace districtmig = "Ludhiana" if strpos(districtmig,"Ludh") != 0 | strpos(districtmig,"Lodh") != 0
+{txt}(2 real changes made)
+
+{com}. replace districtmig = "Kallakurichi" if strpos(districtmig,"KALAV") != 0 | strpos(districtmig,"KALVA") != 0
+{txt}(2 real changes made)
+
+{com}. replace districtmig = "Nellore" if strpos(districtmig,"NEL") != 0 | strpos(districtmig,"Nel") != 0
+{txt}(2 real changes made)
+
+{com}. replace districtmig = "Kodaikanal" if strpos(districtmig,"odai") != 0
+{txt}(1 real change made)
+
+{com}. replace districtmig = "Tiruppur" if strpos(districtmig,"hiru") != 0 
+{txt}(3 real changes made)
+
+{com}. replace districtmig = "Kozhikode" if strpos(districtmig,"zhik") != 0 
+{txt}(1 real change made)
+
+{com}. replace districtmig = "Warangal" if strpos(districtmig,"WAR") != 0 
+{txt}(1 real change made)
+
+{com}. replace districtmig = "Coimbatore" if strpos(districtmig,"ooyampu") != 0 
+{txt}(1 real change made)
+
+{com}. replace districtmig = "" if strpos(districtmig,".") != 0 
+{txt}(17 real changes made)
+
+{com}. replace districtmig = "Do Not Know" if strpos(districtmig,"99") != 0 
+{txt}(4 real changes made)
+
+{com}. label var districtmig "To which district did they migrate?"
+{txt}
+{com}. 
+. *Include splits of statemig "within state" "outside state" "abroad"
+.         gen statecategory = 2
+{txt}
+{com}.         replace statecategory = 1 if (states == statemig)
+{txt}(70 real changes made)
+
+{com}.         replace statecategory = 3 if statemig == "Abroad"
+{txt}(4 real changes made)
+
+{com}.         label define statecategory 1 "Within State" 2 "Outside State" 3 "Abroad"
+{txt}
+{com}.         label value statecategory statecategory
+{txt}
+{com}.         label var statecategory "Did they migrate within state or not, or abroad?"
+{txt}
+{com}.         estpost tab statecategory 
+
+{txt}{space 0}{space 0}{ralign 12:statecategor}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Within_State}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       70}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.502681}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.502681}}}{space 1}
+{space 0}{space 0}{ralign 12:Outside_St~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2723}}}{space 1}{space 1}{ralign 9:{res:{sf: 97.35431}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.85699}}}{space 1}
+{space 0}{space 0}{ralign 12:Abroad}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: .1430104}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Migrated Within State / Outside State")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. foreach i in "Andhra Pradesh" "Tamil Nadu" "Uttar Pradesh" {c -(}
+{txt}  2{com}.         estpost tab statemig if states == "`i'"
+{txt}  3{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Migrants in`i' migrated to")cells("b pct")
+{txt}  4{com}.         estpost tab statecategory if states == "`i'"
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Migrants in`i' migrated Within/Outside State")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:statemig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Abroad}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.081633}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.081633}}}{space 1}
+{space 0}{space 0}{ralign 12:Andhra_Pra~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       53}}}{space 1}{space 1}{ralign 9:{res:{sf: 54.08163}}}{space 1}{space 1}{ralign 9:{res:{sf: 58.16327}}}{space 1}
+{space 0}{space 0}{ralign 12:Delhi}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.102041}}}{space 1}{space 1}{ralign 9:{res:{sf: 63.26531}}}{space 1}
+{space 0}{space 0}{ralign 12:Gujarat}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.081633}}}{space 1}{space 1}{ralign 9:{res:{sf: 67.34694}}}{space 1}
+{space 0}{space 0}{ralign 12:Haryana}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.061224}}}{space 1}{space 1}{ralign 9:{res:{sf: 70.40816}}}{space 1}
+{space 0}{space 0}{ralign 12:Himachal_P~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.020408}}}{space 1}{space 1}{ralign 9:{res:{sf: 71.42857}}}{space 1}
+{space 0}{space 0}{ralign 12:Karnataka}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf: 15.30612}}}{space 1}{space 1}{ralign 9:{res:{sf: 86.73469}}}{space 1}
+{space 0}{space 0}{ralign 12:Kerala}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.020408}}}{space 1}{space 1}{ralign 9:{res:{sf:  87.7551}}}{space 1}
+{space 0}{space 0}{ralign 12:Maharashtra}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.020408}}}{space 1}{space 1}{ralign 9:{res:{sf: 88.77551}}}{space 1}
+{space 0}{space 0}{ralign 12:Orissa}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.040816}}}{space 1}{space 1}{ralign 9:{res:{sf: 90.81633}}}{space 1}
+{space 0}{space 0}{ralign 12:Tamil_Nadu}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.122449}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.93878}}}{space 1}
+{space 0}{space 0}{ralign 12:Uttar_Prad~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.061224}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       98}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:statecategor}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Within_State}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       53}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.896175}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.896175}}}{space 1}
+{space 0}{space 0}{ralign 12:Outside_St~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1773}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.88525}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.78142}}}{space 1}
+{space 0}{space 0}{ralign 12:Abroad}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: .2185792}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1830}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:statemig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Andhra_Pra~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.882353}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.882353}}}{space 1}
+{space 0}{space 0}{ralign 12:Kerala}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 23.52941}}}{space 1}{space 1}{ralign 9:{res:{sf: 29.41176}}}{space 1}
+{space 0}{space 0}{ralign 12:Tamil_Nadu}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       12}}}{space 1}{space 1}{ralign 9:{res:{sf: 70.58824}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       17}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:statecategor}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Within_State}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       12}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.183024}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.183024}}}{space 1}
+{space 0}{space 0}{ralign 12:Outside_St~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      365}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.81698}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      377}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:statemig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Delhi}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 36.36364}}}{space 1}{space 1}{ralign 9:{res:{sf: 36.36364}}}{space 1}
+{space 0}{space 0}{ralign 12:Haryana}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.090909}}}{space 1}{space 1}{ralign 9:{res:{sf: 45.45455}}}{space 1}
+{space 0}{space 0}{ralign 12:Punjab}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.090909}}}{space 1}{space 1}{ralign 9:{res:{sf: 54.54545}}}{space 1}
+{space 0}{space 0}{ralign 12:Uttar_Prad~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 45.45455}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       11}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:statecategor}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Within_State}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}
+{space 0}{space 0}{ralign 12:Outside_St~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      585}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.15254}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      590}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}.         * Why did they go there?
+. replace c_1_d_whymigdest = "" if c_1_d_whymigdest == "."
+{txt}(652 real changes made)
+
+{com}. replace c_1_d_whymigdest =  "5" if  c_1_d_other == "Broker"
+{txt}(1 real change made)
+
+{com}. split c_1_d_whymigdest, destring
+{res}variables born as string: 
+{txt}{col 1}c_1_d_whym~1{col 15}c_1_d_whym~2{col 29}c_1_d_whym~3
+c_1_d_whymigdest1 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2671 missing values generated)
+c_1_d_whymigdest2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2773 missing values generated)
+c_1_d_whymigdest3 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2794 missing values generated)
+
+{com}. label define whymigdest 1 "Returning to Same Employer" 2 "Many Opportunities Available" 3 "Employer Recruited at the Village" 4 "Friends/Family at Destination" 5 "Close to Home" 6 "Common Migration Destination" -888 "Other", replace
+{txt}
+{com}. 
+. foreach k in 1 2 3 {c -(}
+{txt}  2{com}.         label var c_1_d_whymigdest`k' "Why did they migrate to that destination? Reason `k'"
+{txt}  3{com}.         label value c_1_d_whymigdest`k' whymigdest
+{txt}  4{com}.         estpost tab c_1_d_whymigdest`k'
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Reason No `k' for Choosing Destination")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:c_1_d_whymig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       34}}}{space 1}{space 1}{ralign 9:{res:{sf: 26.98413}}}{space 1}{space 1}{ralign 9:{res:{sf: 26.98413}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       45}}}{space 1}{space 1}{ralign 9:{res:{sf: 35.71429}}}{space 1}{space 1}{ralign 9:{res:{sf: 62.69841}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        7}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.555556}}}{space 1}{space 1}{ralign 9:{res:{sf: 68.25397}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       34}}}{space 1}{space 1}{ralign 9:{res:{sf: 26.98413}}}{space 1}{space 1}{ralign 9:{res:{sf:  95.2381}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .7936508}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.03175}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.968254}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      126}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_d_whymig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.166667}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.166667}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf:       25}}}{space 1}{space 1}{ralign 9:{res:{sf: 29.16667}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.333333}}}{space 1}{space 1}{ralign 9:{res:{sf:     37.5}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 16.66667}}}{space 1}{space 1}{ralign 9:{res:{sf: 54.16667}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf:       25}}}{space 1}{space 1}{ralign 9:{res:{sf: 79.16667}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.83333}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       24}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_d_whymig}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Friends/Fa~n}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 66.66667}}}{space 1}{space 1}{ralign 9:{res:{sf: 66.66667}}}{space 1}
+{space 0}{space 0}{ralign 12:Common_Mig~n}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 33.33333}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * Did they find employment?
+. label value c_1_e_success noyes
+{txt}
+{com}. estpost tab c_1_e_success
+
+{txt}{space 0}{space 0}{ralign 12:c_1_e_succes}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.349206}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.349206}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.65079}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      126}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Did they find employment?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * How did they find employment?
+. replace  c_1_f_findjob = "" if c_1_f_findjob == "."
+{txt}(1565 real changes made)
+
+{com}. label define howfindjob 1 "Return To Same Employer" 2 "Friend/Relative" 3 "Employer Came to Village" 4 "Employer came to Neighbourhood in Destination" 5 "Newspaper/Local Ads" 6 "Middleman" -888 "Other", replace
+{txt}
+{com}. split  c_1_f_findjob, destring
+{res}variables born as string: 
+{txt}{col 1}c_1_f_find~1{col 15}c_1_f_find~2
+c_1_f_findjob1 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2679 missing values generated)
+c_1_f_findjob2 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2786 missing values generated)
+
+{com}. 
+. foreach j in 1 2 {c -(}
+{txt}  2{com}.         label var c_1_f_findjob`j' "How did they find a job? Reason `j'"
+{txt}  3{com}.         label value c_1_f_findjob`j' howfindjob
+{txt}  4{com}.         estpost tab c_1_f_findjob`j'
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("How Job Was Found #`j'")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:c_1_f_findjo}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       23}}}{space 1}{space 1}{ralign 9:{res:{sf: 19.49153}}}{space 1}{space 1}{ralign 9:{res:{sf: 19.49153}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       74}}}{space 1}{space 1}{ralign 9:{res:{sf: 62.71186}}}{space 1}{space 1}{ralign 9:{res:{sf: 82.20339}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.779661}}}{space 1}{space 1}{ralign 9:{res:{sf: 88.98305}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.237288}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.22034}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.779661}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_f_findjo}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Friend/Rel~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.27273}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.27273}}}{space 1}
+{space 0}{space 0}{ralign 12:Employer_C~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.090909}}}{space 1}{space 1}{ralign 9:{res:{sf: 36.36364}}}{space 1}
+{space 0}{space 0}{ralign 12:Middleman}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        7}}}{space 1}{space 1}{ralign 9:{res:{sf: 63.63636}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       11}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. 
+. * What job did they take up while migrating?
+. label define occupation 1 "Construction Worker" 2 "Driver" 3 "Factory Worker" 4 "Carpenter" 5 "Mason" 6 "Welder" 7 "Agricultural Labourer" 8 "Coolie" -999 "Do Not Know" -888 "Other", replace
+{txt}
+{com}. //"Other" occupations include Lorry Cleaner, Painter, Security Guard, Tailor, Vegetable Vendor, Petrol Pump Manager
+. label value c_1_g_occupation occupation
+{txt}
+{com}. estpost tab c_1_g_occupation
+
+{txt}{space 0}{space 0}{ralign 12:c_1_g_occupa}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.86441}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.86441}}}{space 1}
+{space 0}{space 0}{ralign 12:Constructi~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.01695}}}{space 1}{space 1}{ralign 9:{res:{sf: 22.88136}}}{space 1}
+{space 0}{space 0}{ralign 12:Driver}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        7}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.932203}}}{space 1}{space 1}{ralign 9:{res:{sf: 28.81356}}}{space 1}
+{space 0}{space 0}{ralign 12:Factory_Wo~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       22}}}{space 1}{space 1}{ralign 9:{res:{sf: 18.64407}}}{space 1}{space 1}{ralign 9:{res:{sf: 47.45763}}}{space 1}
+{space 0}{space 0}{ralign 12:Carpenter}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.542373}}}{space 1}{space 1}{ralign 9:{res:{sf:       50}}}{space 1}
+{space 0}{space 0}{ralign 12:Mason}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.237288}}}{space 1}{space 1}{ralign 9:{res:{sf: 54.23729}}}{space 1}
+{space 0}{space 0}{ralign 12:Welder}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       11}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.322034}}}{space 1}{space 1}{ralign 9:{res:{sf: 63.55932}}}{space 1}
+{space 0}{space 0}{ralign 12:Agricultur~r}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.237288}}}{space 1}{space 1}{ralign 9:{res:{sf: 67.79661}}}{space 1}
+{space 0}{space 0}{ralign 12:Coolie}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       38}}}{space 1}{space 1}{ralign 9:{res:{sf: 32.20339}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Job Taken Up By Migrant?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * How many hours per day did they work?
+. label define donotknow -999 "Do Not Know"
+{txt}
+{com}. label value c_1_i_months  c_1_h_hours donotknow
+{txt}
+{com}. estpost tab c_1_h_hours
+
+{txt}{space 0}{space 0}{ralign 12:c_1_h_hours}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Do_Not_Know}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.542373}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.389831}}}{space 1}
+{space 0}{space 0}{ralign 12:7}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.389831}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.779661}}}{space 1}
+{space 0}{space 0}{ralign 12:8}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       70}}}{space 1}{space 1}{ralign 9:{res:{sf: 59.32203}}}{space 1}{space 1}{ralign 9:{res:{sf: 66.10169}}}{space 1}
+{space 0}{space 0}{ralign 12:9}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.237288}}}{space 1}{space 1}{ralign 9:{res:{sf: 70.33898}}}{space 1}
+{space 0}{space 0}{ralign 12:10}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 15.25424}}}{space 1}{space 1}{ralign 9:{res:{sf: 85.59322}}}{space 1}
+{space 0}{space 0}{ralign 12:12}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf: 12.71186}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.30508}}}{space 1}
+{space 0}{space 0}{ralign 12:20}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.15254}}}{space 1}
+{space 0}{space 0}{ralign 12:24}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .8474576}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Hours Worked Per Day")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. estpost tab c_1_i_months
+
+{txt}{space 0}{space 0}{ralign 12:c_1_i_months}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Do_Not_Know}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.694915}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.694915}}}{space 1}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       10}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.474576}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.16949}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       24}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.33898}}}{space 1}{space 1}{ralign 9:{res:{sf: 30.50847}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       16}}}{space 1}{space 1}{ralign 9:{res:{sf: 13.55932}}}{space 1}{space 1}{ralign 9:{res:{sf:  44.0678}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       66}}}{space 1}{space 1}{ralign 9:{res:{sf:  55.9322}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Weeks Worked Per Month")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *Total Earnings
+.         // make categories 0-1000, 1 - 4000, 4000-8000, 8000-12000, 12-16000, 16-20, 20+
+.         
+.                 *Wages/Salary
+.                 tab c_1_j_1_j_salary
+
+     {txt}Salary {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+       -999 {c |}{res}          1        0.85        0.85
+{txt}        200 {c |}{res}          1        0.85        1.69
+{txt}        500 {c |}{res}          1        0.85        2.54
+{txt}        600 {c |}{res}          1        0.85        3.39
+{txt}        700 {c |}{res}          1        0.85        4.24
+{txt}        800 {c |}{res}          1        0.85        5.08
+{txt}        900 {c |}{res}          1        0.85        5.93
+{txt}       1000 {c |}{res}          2        1.69        7.63
+{txt}       1050 {c |}{res}          1        0.85        8.47
+{txt}       1200 {c |}{res}          1        0.85        9.32
+{txt}       1260 {c |}{res}          1        0.85       10.17
+{txt}       1500 {c |}{res}          2        1.69       11.86
+{txt}       2000 {c |}{res}          5        4.24       16.10
+{txt}       2100 {c |}{res}          2        1.69       17.80
+{txt}       2200 {c |}{res}          1        0.85       18.64
+{txt}       2400 {c |}{res}          1        0.85       19.49
+{txt}       2500 {c |}{res}          2        1.69       21.19
+{txt}       2800 {c |}{res}          3        2.54       23.73
+{txt}       3000 {c |}{res}         13       11.02       34.75
+{txt}       3375 {c |}{res}          1        0.85       35.59
+{txt}       3500 {c |}{res}          2        1.69       37.29
+{txt}       3570 {c |}{res}          1        0.85       38.14
+{txt}       4000 {c |}{res}          4        3.39       41.53
+{txt}       4400 {c |}{res}          1        0.85       42.37
+{txt}       4500 {c |}{res}          6        5.08       47.46
+{txt}       5000 {c |}{res}          8        6.78       54.24
+{txt}       5500 {c |}{res}          1        0.85       55.08
+{txt}       6000 {c |}{res}         15       12.71       67.80
+{txt}       6250 {c |}{res}          1        0.85       68.64
+{txt}       7000 {c |}{res}          3        2.54       71.19
+{txt}       7500 {c |}{res}          1        0.85       72.03
+{txt}       8000 {c |}{res}          6        5.08       77.12
+{txt}       9000 {c |}{res}          6        5.08       82.20
+{txt}      10000 {c |}{res}          7        5.93       88.14
+{txt}      12000 {c |}{res}          3        2.54       90.68
+{txt}      12750 {c |}{res}          1        0.85       91.53
+{txt}      13500 {c |}{res}          1        0.85       92.37
+{txt}      15000 {c |}{res}          3        2.54       94.92
+{txt}      18000 {c |}{res}          1        0.85       95.76
+{txt}      20000 {c |}{res}          1        0.85       96.61
+{txt}      21000 {c |}{res}          1        0.85       97.46
+{txt}      24000 {c |}{res}          1        0.85       98.31
+{txt}      30000 {c |}{res}          1        0.85       99.15
+{txt}      45000 {c |}{res}          1        0.85      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        118      100.00
+{txt}
+{com}.                 gen salarycat = 0
+{txt}
+{com}.                 gen kindcat = 0
+{txt}
+{com}.                 replace salarycat = 1 if c_1_j_1_j_salary > 1000 & c_1_j_1_j_salary <= 4000
+{txt}(40 real changes made)
+
+{com}.                 replace salarycat = 2 if c_1_j_1_j_salary > 4000 & c_1_j_1_j_salary <= 8000
+{txt}(42 real changes made)
+
+{com}.                 replace salarycat = 3 if c_1_j_1_j_salary > 8000 & c_1_j_1_j_salary <= 12000
+{txt}(16 real changes made)
+
+{com}.                 replace salarycat = 4 if c_1_j_1_j_salary > 12000 & c_1_j_1_j_salary <= 16000
+{txt}(5 real changes made)
+
+{com}.                 replace salarycat = 5 if c_1_j_1_j_salary > 16000 & c_1_j_1_j_salary <= 20000
+{txt}(2 real changes made)
+
+{com}.                 replace salarycat = 6 if c_1_j_1_j_salary > 20000 
+{txt}(2683 real changes made)
+
+{com}.                 label define salarycats 0 "< 1000" 1 "1000- 4000" 2 "4000-8000" 3 "8000-12000" 4 "12000-16000" 5 "16000-20000" 6 "> 20000"
+{txt}
+{com}.                 label value salarycat kindcat salarycats
+{txt}
+{com}.                 label var salarycat "How much wage/salary did they make?"
+{txt}
+{com}.                 estpost tab salarycat
+
+{txt}{space 0}{space 0}{ralign 12:salarycat}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:<_1000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: .3217733}}}{space 1}{space 1}{ralign 9:{res:{sf: .3217733}}}{space 1}
+{space 0}{space 0}{ralign 12:1000-_4000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       40}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.430104}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.751877}}}{space 1}
+{space 0}{space 0}{ralign 12:4000-8000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       42}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.501609}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.253486}}}{space 1}
+{space 0}{space 0}{ralign 12:8000-12000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       16}}}{space 1}{space 1}{ralign 9:{res:{sf: .5720415}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.825527}}}{space 1}
+{space 0}{space 0}{ralign 12:12000-16000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf:  .178763}}}{space 1}{space 1}{ralign 9:{res:{sf:  4.00429}}}{space 1}
+{space 0}{space 0}{ralign 12:16000-20000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .0715052}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.075795}}}{space 1}
+{space 0}{space 0}{ralign 12:>_20000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2683}}}{space 1}{space 1}{ralign 9:{res:{sf:  95.9242}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.                 esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Salary (Wages) Earned in Migration Destination (INR)")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.         *In-kind
+.                 replace kindcat = 1 if c_1_j_1_j_kind > 1000 & c_1_j_1_j_kind <= 4000
+{txt}(27 real changes made)
+
+{com}.                 replace kindcat = 2 if c_1_j_1_j_kind > 4000 & c_1_j_1_j_kind <= 8000
+{txt}(8 real changes made)
+
+{com}.                 replace kindcat = 3 if c_1_j_1_j_kind > 8000 & c_1_j_1_j_kind <= 12000
+{txt}(2 real changes made)
+
+{com}.                 replace kindcat = 4 if c_1_j_1_j_kind > 12000 & c_1_j_1_j_kind <= 16000
+{txt}(1 real change made)
+
+{com}.                 replace kindcat = 5 if c_1_j_1_j_kind > 16000 & c_1_j_1_j_kind <= 20000
+{txt}(0 real changes made)
+
+{com}.                 replace kindcat = 6 if c_1_j_1_j_kind > 20000
+{txt}(2679 real changes made)
+
+{com}.                 label var kindcat "How much value of in-kind items did they receive?"
+{txt}
+{com}.                 estpost tab kindcat
+
+{txt}{space 0}{space 0}{ralign 12:kindcat}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:<_1000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       80}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.860207}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.860207}}}{space 1}
+{space 0}{space 0}{ralign 12:1000-_4000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       27}}}{space 1}{space 1}{ralign 9:{res:{sf:   .96532}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.825527}}}{space 1}
+{space 0}{space 0}{ralign 12:4000-8000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: .2860207}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.111548}}}{space 1}
+{space 0}{space 0}{ralign 12:8000-12000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .0715052}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.183053}}}{space 1}
+{space 0}{space 0}{ralign 12:12000-16000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .0357526}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.218806}}}{space 1}
+{space 0}{space 0}{ralign 12:>_20000}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2679}}}{space 1}{space 1}{ralign 9:{res:{sf: 95.78119}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.                 esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Amount Earned in Kind (Equivalent INR)")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * Did they earn more / less money than if they'd stayed back?
+. 
+. label value c_1_k_earninglevel yesno
+{txt}
+{com}. estpost tab c_1_k_earninglevel
+
+{txt}{space 0}{space 0}{ralign 12:c_1_k_earnin}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:No}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       21}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.79661}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.79661}}}{space 1}
+{space 0}{space 0}{ralign 12:Yes}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       97}}}{space 1}{space 1}{ralign 9:{res:{sf: 82.20339}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      118}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Did you earn more money than if you'd stayed back?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. * Why didn't anyone migrate? MORE THAN ONE ANSWER
+. 
+. *Including "Old Age" under "Sickness/Death"
+. *Treat this more carefully on MS Excel 
+. label define whynomig 1 "Not Enough Money" 2 "Adequate Local Opportunities" 3 "No job info" 4 "No guarantee" 5 "Professional Commitment" 6 "100 Days Program" 7 "No one to Share Costs" 8 "No contacts outside" 9 "Death/Sickness at Home" 10 "Cannot Leave Family" -888 "Other", replace
+{txt}
+{com}. split c_1_l_nomigrate, destring
+{res}variables born as string: 
+{txt}{col 1}c_1_l_nomi~1{col 15}c_1_l_nomi~2{col 29}c_1_l_nomi~3{col 43}c_1_l_nomi~4{col 57}c_1_l_nomi~5
+c_1_l_nomigrate1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(315 missing values generated)
+c_1_l_nomigrate2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(1914 missing values generated)
+c_1_l_nomigrate3 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2629 missing values generated)
+c_1_l_nomigrate4 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2783 missing values generated)
+c_1_l_nomigrate5 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2796 missing values generated)
+
+{com}. 
+. foreach i in 1 2 3 4 5 {c -(}
+{txt}  2{com}.         label var c_1_l_nomigrate`i' "Why did you not migrate? Reason `i'"
+{txt}  3{com}.         label value c_1_l_nomigrate`i' whynomig
+{txt}  4{com}.         estpost tab c_1_l_nomigrate`i'
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Reason for NOT Migrating `i'")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:c_1_l_nomigr}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       34}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.369863}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.369863}}}{space 1}
+{space 0}{space 0}{ralign 12:Not_Enough~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       39}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.571313}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.941176}}}{space 1}
+{space 0}{space 0}{ralign 12:Adequate_L~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1432}}}{space 1}{space 1}{ralign 9:{res:{sf: 57.69541}}}{space 1}{space 1}{ralign 9:{res:{sf: 60.63658}}}{space 1}
+{space 0}{space 0}{ralign 12:No_job_info}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       48}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.933924}}}{space 1}{space 1}{ralign 9:{res:{sf: 62.57051}}}{space 1}
+{space 0}{space 0}{ralign 12:No_guarantee}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       27}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.087832}}}{space 1}{space 1}{ralign 9:{res:{sf: 63.65834}}}{space 1}
+{space 0}{space 0}{ralign 12:Profession~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      106}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.270749}}}{space 1}{space 1}{ralign 9:{res:{sf: 67.92909}}}{space 1}
+{space 0}{space 0}{ralign 12:100_Days_P~m}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       29}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.168413}}}{space 1}{space 1}{ralign 9:{res:{sf:  69.0975}}}{space 1}
+{space 0}{space 0}{ralign 12:No_one_to_~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: .1208703}}}{space 1}{space 1}{ralign 9:{res:{sf: 69.21837}}}{space 1}
+{space 0}{space 0}{ralign 12:No_contact~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: .7252216}}}{space 1}{space 1}{ralign 9:{res:{sf: 69.94359}}}{space 1}
+{space 0}{space 0}{ralign 12:Death/Sick~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       59}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.377115}}}{space 1}{space 1}{ralign 9:{res:{sf: 72.32071}}}{space 1}
+{space 0}{space 0}{ralign 12:Cannot_Lea~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      687}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.67929}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2482}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_l_nomigr}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.585504}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.585504}}}{space 1}
+{space 0}{space 0}{ralign 12:Adequate_L~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.585504}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.171008}}}{space 1}
+{space 0}{space 0}{ralign 12:No_job_info}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       48}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.436014}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.607022}}}{space 1}
+{space 0}{space 0}{ralign 12:No_guarantee}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       76}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.607022}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.21404}}}{space 1}
+{space 0}{space 0}{ralign 12:Profession~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      106}}}{space 1}{space 1}{ralign 9:{res:{sf: 12.00453}}}{space 1}{space 1}{ralign 9:{res:{sf: 29.21857}}}{space 1}
+{space 0}{space 0}{ralign 12:100_Days_P~m}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      180}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.38505}}}{space 1}{space 1}{ralign 9:{res:{sf: 49.60362}}}{space 1}
+{space 0}{space 0}{ralign 12:No_one_to_~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.019253}}}{space 1}{space 1}{ralign 9:{res:{sf: 50.62288}}}{space 1}
+{space 0}{space 0}{ralign 12:No_contact~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       19}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.151755}}}{space 1}{space 1}{ralign 9:{res:{sf: 52.77463}}}{space 1}
+{space 0}{space 0}{ralign 12:Death/Sick~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       41}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.643262}}}{space 1}{space 1}{ralign 9:{res:{sf: 57.41789}}}{space 1}
+{space 0}{space 0}{ralign 12:Cannot_Lea~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      376}}}{space 1}{space 1}{ralign 9:{res:{sf: 42.58211}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      883}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_l_nomigr}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-999}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .5952381}}}{space 1}{space 1}{ralign 9:{res:{sf: .5952381}}}{space 1}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.190476}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.785714}}}{space 1}
+{space 0}{space 0}{ralign 12:No_job_info}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.190476}}}{space 1}{space 1}{ralign 9:{res:{sf:  2.97619}}}{space 1}
+{space 0}{space 0}{ralign 12:No_guarantee}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.333333}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.30952}}}{space 1}
+{space 0}{space 0}{ralign 12:Profession~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf:  2.97619}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}
+{space 0}{space 0}{ralign 12:100_Days_P~m}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.71429}}}{space 1}{space 1}{ralign 9:{res:{sf:       25}}}{space 1}
+{space 0}{space 0}{ralign 12:No_one_to_~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.357143}}}{space 1}{space 1}{ralign 9:{res:{sf: 30.35714}}}{space 1}
+{space 0}{space 0}{ralign 12:No_contact~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.357143}}}{space 1}{space 1}{ralign 9:{res:{sf: 35.71429}}}{space 1}
+{space 0}{space 0}{ralign 12:Death/Sick~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       10}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.952381}}}{space 1}{space 1}{ralign 9:{res:{sf: 41.66667}}}{space 1}
+{space 0}{space 0}{ralign 12:Cannot_Lea~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       98}}}{space 1}{space 1}{ralign 9:{res:{sf: 58.33333}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      168}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_l_nomigr}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:100_Days_P~m}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.142857}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.142857}}}{space 1}
+{space 0}{space 0}{ralign 12:No_one_to_~s}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.28571}}}{space 1}{space 1}{ralign 9:{res:{sf: 21.42857}}}{space 1}
+{space 0}{space 0}{ralign 12:No_contact~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 28.57143}}}{space 1}{space 1}{ralign 9:{res:{sf:       50}}}{space 1}
+{space 0}{space 0}{ralign 12:Death/Sick~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.142857}}}{space 1}{space 1}{ralign 9:{res:{sf: 57.14286}}}{space 1}
+{space 0}{space 0}{ralign 12:Cannot_Lea~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf: 42.85714}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       14}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:c_1_l_nomigr}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:No_contact~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.                                         
+.                                 *****************************************************************************************************************
+.                 ****************************************************SECTION D*****************************************************
+.                                 *****************************************************************************************************************
+.              
+. 
+. *First Visit - Do you want to buy insurance?
+. 
+. label value d_1purchasins noyes
+{txt}
+{com}. estpost tab d_1purchasins
+
+{txt}{space 0}{space 0}{ralign 12:d_1purchasin}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2320}}}{space 1}{space 1}{ralign 9:{res:{sf: 88.95706}}}{space 1}{space 1}{ralign 9:{res:{sf: 88.95706}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      288}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.04294}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2608}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Do you want to buy insurance? - FIRST VISIT")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *For those who say YES
+.         *How many units
+.         estpost tab  d_2unitsins
+
+{txt}{space 0}{space 0}{ralign 12:d_2unitsins}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      227}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.81944}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.81944}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       49}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.01389}}}{space 1}{space 1}{ralign 9:{res:{sf: 95.83333}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .6944444}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.52778}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .6944444}}}{space 1}{space 1}{ralign 9:{res:{sf: 97.22222}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.388889}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.61111}}}{space 1}
+{space 0}{space 0}{ralign 12:7}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .3472222}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.95833}}}{space 1}
+{space 0}{space 0}{ralign 12:10}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .6944444}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.65278}}}{space 1}
+{space 0}{space 0}{ralign 12:22}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .3472222}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      288}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("No of Units - FIRST VISIT")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.         *Do you know where the nearest AWS is?
+.         label value d_3awstation noyes
+{txt}
+{com}.         estpost tab  d_3awstation
+
+{txt}{space 0}{space 0}{ralign 12:d_3awstation}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2236}}}{space 1}{space 1}{ralign 9:{res:{sf:  85.7362}}}{space 1}{space 1}{ralign 9:{res:{sf:  85.7362}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      372}}}{space 1}{space 1}{ralign 9:{res:{sf:  14.2638}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2608}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Do you know where the nearest AWS is?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.         *Where is it?
+.         label define whereaws 1 "In Village" 2 "In block/mandal" 3 "In district" 4 "In state", replace
+{txt}
+{com}.         label value d_4awslocation whereaws
+{txt}
+{com}.         estpost tab d_4awslocation
+
+{txt}{space 0}{space 0}{ralign 12:d_4awslocati}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:In_Village}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      102}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.41935}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.41935}}}{space 1}
+{space 0}{space 0}{ralign 12:In_block/m~l}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      235}}}{space 1}{space 1}{ralign 9:{res:{sf: 63.17204}}}{space 1}{space 1}{ralign 9:{res:{sf:  90.5914}}}{space 1}
+{space 0}{space 0}{ralign 12:In_district}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       34}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.139785}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.73118}}}{space 1}
+{space 0}{space 0}{ralign 12:In_state}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .2688172}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      372}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Where is the nearest AWS?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+.         *How far is it?
+.                 *Make categories : <5 , 5-10 , 10-15, 15-20, 20-30, 30-40, 40-50, 50-60, 60-70
+.         tab d_4awskms
+
+   {txt}Distance {c |}
+   from AWS {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}          6        1.61        1.61
+{txt}         .1 {c |}{res}          7        1.88        3.49
+{txt}         .2 {c |}{res}          1        0.27        3.76
+{txt}        .25 {c |}{res}         10        2.69        6.45
+{txt}         .3 {c |}{res}          1        0.27        6.72
+{txt}         .5 {c |}{res}         50       13.44       20.16
+{txt}          1 {c |}{res}         68       18.28       38.44
+{txt}        1.5 {c |}{res}          5        1.34       39.78
+{txt}          2 {c |}{res}         38       10.22       50.00
+{txt}        2.5 {c |}{res}          2        0.54       50.54
+{txt}          3 {c |}{res}         32        8.60       59.14
+{txt}          4 {c |}{res}         16        4.30       63.44
+{txt}          5 {c |}{res}         21        5.65       69.09
+{txt}          6 {c |}{res}         20        5.38       74.46
+{txt}          7 {c |}{res}          8        2.15       76.61
+{txt}          8 {c |}{res}          8        2.15       78.76
+{txt}          9 {c |}{res}          4        1.08       79.84
+{txt}         10 {c |}{res}         21        5.65       85.48
+{txt}         11 {c |}{res}          4        1.08       86.56
+{txt}         12 {c |}{res}          8        2.15       88.71
+{txt}         13 {c |}{res}          1        0.27       88.98
+{txt}         14 {c |}{res}          2        0.54       89.52
+{txt}         15 {c |}{res}          6        1.61       91.13
+{txt}         16 {c |}{res}          1        0.27       91.40
+{txt}         18 {c |}{res}          3        0.81       92.20
+{txt}         19 {c |}{res}          1        0.27       92.47
+{txt}         20 {c |}{res}          5        1.34       93.82
+{txt}         22 {c |}{res}          1        0.27       94.09
+{txt}         24 {c |}{res}          1        0.27       94.35
+{txt}         25 {c |}{res}          1        0.27       94.62
+{txt}         28 {c |}{res}          1        0.27       94.89
+{txt}         30 {c |}{res}          5        1.34       96.24
+{txt}         35 {c |}{res}          1        0.27       96.51
+{txt}         40 {c |}{res}          3        0.81       97.31
+{txt}         45 {c |}{res}          1        0.27       97.58
+{txt}         50 {c |}{res}          5        1.34       98.92
+{txt}         55 {c |}{res}          1        0.27       99.19
+{txt}         60 {c |}{res}          1        0.27       99.46
+{txt}         70 {c |}{res}          2        0.54      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        372      100.00
+{txt}
+{com}.         gen distanceaws = 1 if d_4awskms>0 & d_4awskms<=5
+{txt}(2546 missing values generated)
+
+{com}.         replace distanceaws = 2 if d_4awskms>5 & d_4awskms<=10
+{txt}(61 real changes made)
+
+{com}.         replace distanceaws = 3 if d_4awskms>10 & d_4awskms<=15
+{txt}(21 real changes made)
+
+{com}.         replace distanceaws = 4 if d_4awskms>15 & d_4awskms<=20
+{txt}(10 real changes made)
+
+{com}.         replace distanceaws = 5 if d_4awskms>20 & d_4awskms<=30
+{txt}(9 real changes made)
+
+{com}.         replace distanceaws = 6 if d_4awskms>30 & d_4awskms<=40
+{txt}(4 real changes made)
+
+{com}.         replace distanceaws = 7 if d_4awskms>40 & d_4awskms<=50
+{txt}(6 real changes made)
+
+{com}.         replace distanceaws = 8 if d_4awskms>50 & d_4awskms<=60
+{txt}(2 real changes made)
+
+{com}.         replace distanceaws = 9 if d_4awskms>60 & d_4awskms<=70
+{txt}(2 real changes made)
+
+{com}.         label define distancecat 1 "<5 km" 2 "5-10 km" 3 "10-15 km" 4 "15-20 km" 5 "20-30 km" 6 "30-40 km" 7 "40-50 km" 8 "50-60 km" 9 "60-70 km", replace
+{txt}
+{com}.         label value distanceaws distancecat
+{txt}
+{com}.         label var distanceaws "How far is AWS in kilometer?"
+{txt}
+{com}.         estpost tab distanceaws
+
+{txt}{space 0}{space 0}{ralign 12:distanceaws}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:<5_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      251}}}{space 1}{space 1}{ralign 9:{res:{sf: 68.57923}}}{space 1}{space 1}{ralign 9:{res:{sf: 68.57923}}}{space 1}
+{space 0}{space 0}{ralign 12:5-10_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       61}}}{space 1}{space 1}{ralign 9:{res:{sf: 16.66667}}}{space 1}{space 1}{ralign 9:{res:{sf:  85.2459}}}{space 1}
+{space 0}{space 0}{ralign 12:10-15_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       21}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.737705}}}{space 1}{space 1}{ralign 9:{res:{sf: 90.98361}}}{space 1}
+{space 0}{space 0}{ralign 12:15-20_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       10}}}{space 1}{space 1}{ralign 9:{res:{sf:  2.73224}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.71585}}}{space 1}
+{space 0}{space 0}{ralign 12:20-30_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.459016}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.17486}}}{space 1}
+{space 0}{space 0}{ralign 12:30-40_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.092896}}}{space 1}{space 1}{ralign 9:{res:{sf: 97.26776}}}{space 1}
+{space 0}{space 0}{ralign 12:40-50_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.639344}}}{space 1}{space 1}{ralign 9:{res:{sf:  98.9071}}}{space 1}
+{space 0}{space 0}{ralign 12:50-60_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .5464481}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.45355}}}{space 1}
+{space 0}{space 0}{ralign 12:60-70_km}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: .5464481}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      366}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("How far is the nearest AWS?")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *For those who say NO
+.         *Why not? 
+.         label define whynoinsurance 1 "Too Expensive" 2 "No Need" 3 "Do Not Understand" 4 "Currently No Cash" 5 "Do Not Trust Insurance" 6 "Payout Unlikely" 7  "Too Early" 8 "Already Bought" 9 "No Bank Account" -888 "Other", replace
+{txt}
+{com}.         //Recoding 'others' where necessary + adding two categories - No Bank Account + Already Purchased
+.         replace d_8_othernobuy = "" if d_8_othernobuy == "." 
+{txt}(17 real changes made)
+
+{com}.                 
+.         replace d_8nobuyins = d_8nobuyins + " " + "8" if strpos(d_8_othernobuy, "chuke") != 0 | strpos(d_8_othernobuy, "ALL") != 0 | strpos(d_8_othernobuy, "ALR") != 0 | strpos(d_8_othernobuy, "Alr") != 0 | strpos(d_8_othernobuy, "Allr") != 0 | strpos(d_8_othernobuy, "alr") != 0 | strpos(d_8_othernobuy, "hle") != 0 | strpos(d_8_othernobuy, "march") != 0 | strpos(d_8_othernobuy, "purshesed") != 0 | strpos(d_8_othernobuy, "arly") != 0
+{txt}d_8nobuyins was {res}str8{txt} now {res}str10
+{txt}(87 real changes made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "chuke") != 0 | strpos(d_8_othernobuy, "ALL") != 0 | strpos(d_8_othernobuy, "ALR") != 0 | strpos(d_8_othernobuy, "Alr") != 0 | strpos(d_8_othernobuy, "Allr") != 0 | strpos(d_8_othernobuy, "alr") != 0 | strpos(d_8_othernobuy, "hle") != 0 | strpos(d_8_othernobuy, "march") != 0 | strpos(d_8_othernobuy, "purshesed") != 0 | strpos(d_8_othernobuy, "arly") != 0
+{txt}(87 real changes made)
+
+{com}.         
+.         replace d_8nobuyins = d_8nobuyins + " " + "9" if strpos(d_8_othernobuy, "bank") != 0 | strpos(d_8_othernobuy, "BANK") != 0 | strpos(d_8_othernobuy, "Bank") != 0 
+{txt}(11 real changes made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "bank") != 0 | strpos(d_8_othernobuy, "BANK") != 0 | strpos(d_8_othernobuy, "Bank") != 0 
+{txt}(11 real changes made)
+
+{com}. 
+.         replace d_8nobuyins = d_8nobuyins + " " + "6" if strpos(d_8_othernobuy, "arsat") != 0 | strpos(d_8_othernobuy, "rain") != 0 
+{txt}(5 real changes made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "arsat") != 0 | strpos(d_8_othernobuy, "rain") != 0 
+{txt}(5 real changes made)
+
+{com}. 
+.         replace d_8nobuyins = d_8nobuyins + " " + "5" if strpos(d_8_othernobuy, "efore") != 0  
+{txt}(1 real change made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "efore") != 0 
+{txt}(1 real change made)
+
+{com}.         //Coded "Tried before, no payout" as "Do Not Trust Insurance"
+.         
+.         replace d_8nobuyins = d_8nobuyins + " " + "1" if strpos(d_8_othernobuy, "famil") != 0  
+{txt}(3 real changes made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "famil") != 0
+{txt}(3 real changes made)
+
+{com}.         //Coded "family in poor circumstances" as "Too Expensive"
+.         
+.         replace d_8nobuyins = d_8nobuyins + " " + "4" if strpos(d_8_othernobuy, "income") != 0  
+{txt}(1 real change made)
+
+{com}.         replace d_8_othernobuy = "" if strpos(d_8_othernobuy, "income") != 0
+{txt}(1 real change made)
+
+{com}.         
+.         tab d_8_othernobuy
+
+              {txt}Why no insurance - Other? {c |}      Freq.     Percent        Cum.
+{hline 40}{c +}{hline 35}
+          Nahar se sinchai ho jati h... {c |}{res}          1       20.00       20.00
+{txt}                Respondent go 2 outside {c |}{res}          1       20.00       40.00
+{txt}     Tommorow  meeting insurance policy {c |}{res}          1       20.00       60.00
+{txt}            not interest for any policy {c |}{res}          1       20.00       80.00
+{txt}   tharpothu venam next time pathukalam {c |}{res}          1       20.00      100.00
+{txt}{hline 40}{c +}{hline 35}
+                                  Total {c |}{res}          5      100.00
+{txt}
+{com}.         
+.         split d_8nobuyins, destring
+{res}variables born as string: 
+{txt}{col 1}d_8nobuyins1{col 15}d_8nobuyins2{col 29}d_8nobuyins3{col 43}d_8nobuyins4
+d_8nobuyins1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(663 missing values generated)
+d_8nobuyins2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2229 missing values generated)
+d_8nobuyins3 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2732 missing values generated)
+d_8nobuyins4 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2794 missing values generated)
+
+{com}.         
+. foreach d in 1 2 3 4 {c -(}
+{txt}  2{com}.         label var d_8nobuyins`d' "Why did you not buy insurance? Reason `d'"
+{txt}  3{com}.         label value d_8nobuyins`d' whynoinsurance
+{txt}  4{com}.         estpost tab d_8nobuyins`d'
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Reason #`d' for No Insurance")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:d_8nobuyins1}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       93}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.358013}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.358013}}}{space 1}
+{space 0}{space 0}{ralign 12:Too_Expens~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       17}}}{space 1}{space 1}{ralign 9:{res:{sf: .7966261}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.154639}}}{space 1}
+{space 0}{space 0}{ralign 12:No_Need}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      888}}}{space 1}{space 1}{ralign 9:{res:{sf:   41.612}}}{space 1}{space 1}{ralign 9:{res:{sf: 46.76664}}}{space 1}
+{space 0}{space 0}{ralign 12:Do_Not_Und~d}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf: .2811621}}}{space 1}{space 1}{ralign 9:{res:{sf:  47.0478}}}{space 1}
+{space 0}{space 0}{ralign 12:Currently_~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      555}}}{space 1}{space 1}{ralign 9:{res:{sf:  26.0075}}}{space 1}{space 1}{ralign 9:{res:{sf:  73.0553}}}{space 1}
+{space 0}{space 0}{ralign 12:Do_Not_Tru~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      208}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.746954}}}{space 1}{space 1}{ralign 9:{res:{sf: 82.80225}}}{space 1}
+{space 0}{space 0}{ralign 12:Payout_Unl~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      354}}}{space 1}{space 1}{ralign 9:{res:{sf: 16.58857}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.39082}}}{space 1}
+{space 0}{space 0}{ralign 12:Too_Early}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf: .6091846}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2134}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_8nobuyins2}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       19}}}{space 1}{space 1}{ralign 9:{res:{sf:  3.34507}}}{space 1}{space 1}{ralign 9:{res:{sf:  3.34507}}}{space 1}
+{space 0}{space 0}{ralign 12:No_Need}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf:  .528169}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.873239}}}{space 1}
+{space 0}{space 0}{ralign 12:Do_Not_Und~d}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .1760563}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.049296}}}{space 1}
+{space 0}{space 0}{ralign 12:Currently_~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      157}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.64085}}}{space 1}{space 1}{ralign 9:{res:{sf: 31.69014}}}{space 1}
+{space 0}{space 0}{ralign 12:Do_Not_Tru~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.60563}}}{space 1}{space 1}{ralign 9:{res:{sf: 49.29577}}}{space 1}
+{space 0}{space 0}{ralign 12:Payout_Unl~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      179}}}{space 1}{space 1}{ralign 9:{res:{sf: 31.51408}}}{space 1}{space 1}{ralign 9:{res:{sf: 80.80986}}}{space 1}
+{space 0}{space 0}{ralign 12:Too_Early}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       26}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.577465}}}{space 1}{space 1}{ralign 9:{res:{sf: 85.38732}}}{space 1}
+{space 0}{space 0}{ralign 12:Already_Bo~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       73}}}{space 1}{space 1}{ralign 9:{res:{sf: 12.85211}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.23944}}}{space 1}
+{space 0}{space 0}{ralign 12:No_Bank_Ac~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       10}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.760563}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      568}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_8nobuyins3}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Other}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.538462}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.538462}}}{space 1}
+{space 0}{space 0}{ralign 12:Too_Expens~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.615385}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.153846}}}{space 1}
+{space 0}{space 0}{ralign 12:Currently_~h}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.153846}}}{space 1}{space 1}{ralign 9:{res:{sf: 12.30769}}}{space 1}
+{space 0}{space 0}{ralign 12:Do_Not_Tru~e}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.69231}}}{space 1}{space 1}{ralign 9:{res:{sf:       40}}}{space 1}
+{space 0}{space 0}{ralign 12:Payout_Unl~y}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       16}}}{space 1}{space 1}{ralign 9:{res:{sf: 24.61538}}}{space 1}{space 1}{ralign 9:{res:{sf: 64.61538}}}{space 1}
+{space 0}{space 0}{ralign 12:Too_Early}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 13.84615}}}{space 1}{space 1}{ralign 9:{res:{sf: 78.46154}}}{space 1}
+{space 0}{space 0}{ralign 12:Already_Bo~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf:       20}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.46154}}}{space 1}
+{space 0}{space 0}{ralign 12:No_Bank_Ac~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.538462}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       65}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_8nobuyins4}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Too_Early}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 66.66667}}}{space 1}{space 1}{ralign 9:{res:{sf: 66.66667}}}{space 1}
+{space 0}{space 0}{ralign 12:Already_Bo~t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 33.33333}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *Why buy insurance?
+. label define whyinsurance 1 "TV/Radio/Newspaper Predict Delayed Monsoon" 2 "Family/Friends Suggested" 3 "Intuition Suggests Delayed Monsoon" 4 "Exposure to IFMR" 5 "Holding Cash to Purchase" 6 "IMD Pie Chart" -888 "Other", replace
+{txt}
+{com}. replace d_2_a_whybuy = d_2_a_whybuy + " " + "4" if strpos(d_2_a_otherbuy, "IFMR") != 0
+{txt}d_2_a_whybuy was {res}str8{txt} now {res}str10
+{txt}(1 real change made)
+
+{com}. split d_2_a_whybuy, destring
+{res}variables born as string: 
+{txt}{col 1}d_2_a_whyb~1{col 15}d_2_a_whyb~2{col 29}d_2_a_whyb~3{col 43}d_2_a_whyb~4
+d_2_a_whybuy1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2541 missing values generated)
+d_2_a_whybuy2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2709 missing values generated)
+d_2_a_whybuy3 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2764 missing values generated)
+d_2_a_whybuy4 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2796 missing values generated)
+
+{com}. 
+. foreach v in 1 2 3 4 {c -(}
+{txt}  2{com}.         label var d_2_a_whybuy`v' "(1st visit) Why did you buy insurance? Reason `v'"
+{txt}  3{com}.         label value d_2_a_whybuy`v' whyinsurance
+{txt}  4{com}.         estpost tab d_2_a_whybuy`v' 
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Reason #`v' for Purching Insurance - FIRST VISIT")cells("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:d_2_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.171875}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.171875}}}{space 1}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       21}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.203125}}}{space 1}{space 1}{ralign 9:{res:{sf:    9.375}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       23}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.984375}}}{space 1}{space 1}{ralign 9:{res:{sf: 18.35938}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      119}}}{space 1}{space 1}{ralign 9:{res:{sf: 46.48438}}}{space 1}{space 1}{ralign 9:{res:{sf: 64.84375}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       70}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.34375}}}{space 1}{space 1}{ralign 9:{res:{sf:  92.1875}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.953125}}}{space 1}{space 1}{ralign 9:{res:{sf: 94.14063}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf: 5.859375}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      256}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_2_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.272727}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.272727}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 4.545455}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.818182}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.45455}}}{space 1}{space 1}{ralign 9:{res:{sf: 27.27273}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       39}}}{space 1}{space 1}{ralign 9:{res:{sf: 44.31818}}}{space 1}{space 1}{ralign 9:{res:{sf: 71.59091}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.45455}}}{space 1}{space 1}{ralign 9:{res:{sf: 92.04545}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        7}}}{space 1}{space 1}{ralign 9:{res:{sf: 7.954545}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       88}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_2_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.060606}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.060606}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 9.090909}}}{space 1}{space 1}{ralign 9:{res:{sf: 15.15152}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 24.24242}}}{space 1}{space 1}{ralign 9:{res:{sf: 39.39394}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       18}}}{space 1}{space 1}{ralign 9:{res:{sf: 54.54545}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.93939}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.060606}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       33}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_2_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Exposure_t~R}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. //Other reasons include "Children's Future", "I like your explanation")
+.         
+. //SECOND VISIT
+. 
+. *Want insurance?
+. label value d_6purchasins noyes
+{txt}
+{com}. estpost tab d_6purchasins
+
+{txt}{space 0}{space 0}{ralign 12:d_6purchasin}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2134}}}{space 1}{space 1}{ralign 9:{res:{sf: 91.98276}}}{space 1}{space 1}{ralign 9:{res:{sf: 91.98276}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      186}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.017241}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2320}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Do you want insurance? - SECOND VISIT")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *How much>
+. estpost tab  d_7unitsins
+
+{txt}{space 0}{space 0}{ralign 12:d_7unitsins}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      156}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.87097}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.87097}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       21}}}{space 1}{space 1}{ralign 9:{res:{sf: 11.29032}}}{space 1}{space 1}{ralign 9:{res:{sf: 95.16129}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.150538}}}{space 1}{space 1}{ralign 9:{res:{sf: 97.31183}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.075269}}}{space 1}{space 1}{ralign 9:{res:{sf:  98.3871}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .5376344}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.92473}}}{space 1}
+{space 0}{space 0}{ralign 12:10}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .5376344}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.46237}}}{space 1}
+{space 0}{space 0}{ralign 12:20}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .5376344}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      186}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title("Number of  units - SECOND VISIT ")cells("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. *Why buy insurance?
+. replace d_7_a_whybuy = d_7_a_whybuy + " " + "4" if strpos(d_7_a_otherbuy, "Ifmr") != 0
+{txt}d_7_a_whybuy was {res}str6{txt} now {res}str8
+{txt}(1 real change made)
+
+{com}. split d_7_a_whybuy, destring
+{res}variables born as string: 
+{txt}{col 1}d_7_a_whyb~1{col 15}d_7_a_whyb~2{col 29}d_7_a_whyb~3
+d_7_a_whybuy1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2640 missing values generated)
+d_7_a_whybuy2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(2710 missing values generated)
+d_7_a_whybuy3 has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2766 missing values generated)
+
+{com}. 
+. foreach v in 1 2 3 {c -(}
+{txt}  2{com}.         label var d_7_a_whybuy`v' "(2nd visit) Why did you buy insurance? Reason `v'"
+{txt}  3{com}.         label value d_7_a_whybuy`v' whyinsurance
+{txt}  4{com}.         estpost tab d_7_a_whybuy`v' 
+{txt}  5{com}.         esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title ("Reason #`v' for Purchasing Insurance") cells ("b pct")
+{txt}  6{com}. {c )-}
+
+{txt}{space 0}{space 0}{ralign 12:d_7_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.910828}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.910828}}}{space 1}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       13}}}{space 1}{space 1}{ralign 9:{res:{sf: 8.280255}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.19108}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       22}}}{space 1}{space 1}{ralign 9:{res:{sf: 14.01274}}}{space 1}{space 1}{ralign 9:{res:{sf: 24.20382}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       70}}}{space 1}{space 1}{ralign 9:{res:{sf: 44.58599}}}{space 1}{space 1}{ralign 9:{res:{sf: 68.78981}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       42}}}{space 1}{space 1}{ralign 9:{res:{sf: 26.75159}}}{space 1}{space 1}{ralign 9:{res:{sf:  95.5414}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.184713}}}{space 1}{space 1}{ralign 9:{res:{sf: 98.72611}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.273885}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      157}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_7_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:-888}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.149425}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.149425}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        2}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.298851}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.448276}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       15}}}{space 1}{space 1}{ralign 9:{res:{sf: 17.24138}}}{space 1}{space 1}{ralign 9:{res:{sf: 20.68966}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       48}}}{space 1}{space 1}{ralign 9:{res:{sf: 55.17241}}}{space 1}{space 1}{ralign 9:{res:{sf: 75.86207}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       12}}}{space 1}{space 1}{ralign 9:{res:{sf:  13.7931}}}{space 1}{space 1}{ralign 9:{res:{sf: 89.65517}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        9}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.34483}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       87}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{space 0}{space 0}{ralign 12:d_7_a_whybuy}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.225806}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.225806}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        8}}}{space 1}{space 1}{ralign 9:{res:{sf: 25.80645}}}{space 1}{space 1}{ralign 9:{res:{sf: 29.03226}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       21}}}{space 1}{space 1}{ralign 9:{res:{sf: 67.74194}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.77419}}}{space 1}
+{space 0}{space 0}{ralign 12:6}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: 3.225806}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       31}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+row labels saved in macro e(labels)
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. 
+. //COMBINING FIRST VISIT AND SECOND VISIT
+. replace d_6purchasins = 0 if d_6purchasins == .
+{txt}(477 real changes made)
+
+{com}. replace d_1purchasins = 0 if d_1purchasins == .
+{txt}(189 real changes made)
+
+{com}. gen insurancepurchased = d_6purchasins + d_1purchasins
+{txt}
+{com}. label value insurancepurchased noyes
+{txt}
+{com}. label var insurancepurchased "Did you purchase insurance in either round?"
+{txt}
+{com}. estpost tab insurancepurchased 
+
+{txt}{space 0}{space 0}{ralign 12:insurancepur}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:NO}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2323}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}
+{space 0}{space 0}{ralign 12:YES}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      474}}}{space 1}{space 1}{ralign 9:{res:{sf: 16.94673}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title ("Insurance Purchased?") cells ("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. gen purchasedvisit = 0
+{txt}
+{com}. replace purchasedvisit = 1 if d_1purchasins == 1
+{txt}(288 real changes made)
+
+{com}. replace purchasedvisit = 2 if d_6purchasins == 1
+{txt}(186 real changes made)
+
+{com}. label define purchasedvisit 0 "Round 2 Not Purchased" 1 "Round 2 Visit 1" 2 "Round 2 Visit 2"
+{txt}
+{com}. label value purchasedvisit purchasedvisit
+{txt}
+{com}. label var purchasedvisit "In which round did you purchase insurance?"
+{txt}
+{com}.  
+. estpost tab purchasedvisit
+
+{txt}{space 0}{space 0}{ralign 12:purchasedvis}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Round_2_No~d}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2323}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}
+{space 0}{space 0}{ralign 12:Round_2_Vi~1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      288}}}{space 1}{space 1}{ralign 9:{res:{sf: 10.29675}}}{space 1}{space 1}{ralign 9:{res:{sf: 93.35002}}}{space 1}
+{space 0}{space 0}{ralign 12:Round_2_Vi~2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      186}}}{space 1}{space 1}{ralign 9:{res:{sf: 6.649982}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title ("In Which Visit was Insurance Purchased? ") cells ("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. replace d_2unitsins = 0 if d_2unitsins == .
+{txt}(2509 real changes made)
+
+{com}. replace d_7unitsins = 0 if d_7unitsins == .
+{txt}(2611 real changes made)
+
+{com}. gen numberofunits = d_2unitsins + d_7unitsins
+{txt}
+{com}. label var numberofunits "Total number of insurance purchased from both rounds"
+{txt}
+{com}. estpost tab numberofunits
+
+{txt}{space 0}{space 0}{ralign 12:numberofunit}{space 1}{c |}{space 1}{ralign 9:e(b)}{space 1}{space 1}{ralign 9:e(pct)}{space 1}{space 1}{ralign 9:e(cumpct)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:0}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2323}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}{space 1}{ralign 9:{res:{sf: 83.05327}}}{space 1}
+{space 0}{space 0}{ralign 12:1}{space 1}{c |}{space 1}{ralign 9:{res:{sf:      383}}}{space 1}{space 1}{ralign 9:{res:{sf: 13.69324}}}{space 1}{space 1}{ralign 9:{res:{sf: 96.74651}}}{space 1}
+{space 0}{space 0}{ralign 12:2}{space 1}{c |}{space 1}{ralign 9:{res:{sf:       70}}}{space 1}{space 1}{ralign 9:{res:{sf: 2.502681}}}{space 1}{space 1}{ralign 9:{res:{sf:  99.2492}}}{space 1}
+{space 0}{space 0}{ralign 12:3}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        6}}}{space 1}{space 1}{ralign 9:{res:{sf: .2145156}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.46371}}}{space 1}
+{space 0}{space 0}{ralign 12:4}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        4}}}{space 1}{space 1}{ralign 9:{res:{sf: .1430104}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.60672}}}{space 1}
+{space 0}{space 0}{ralign 12:5}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        5}}}{space 1}{space 1}{ralign 9:{res:{sf:  .178763}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.78548}}}{space 1}
+{space 0}{space 0}{ralign 12:7}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .0357526}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.82124}}}{space 1}
+{space 0}{space 0}{ralign 12:10}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        3}}}{space 1}{space 1}{ralign 9:{res:{sf: .1072578}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.92849}}}{space 1}
+{space 0}{space 0}{ralign 12:20}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .0357526}}}{space 1}{space 1}{ralign 9:{res:{sf: 99.96425}}}{space 1}
+{space 0}{space 0}{ralign 12:22}{space 1}{c |}{space 1}{ralign 9:{res:{sf:        1}}}{space 1}{space 1}{ralign 9:{res:{sf: .0357526}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:Total}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2797}}}{space 1}{space 1}{ralign 9:{res:{sf:      100}}}{space 1}{space 1}{ralign 9:{res:{sf:{space 9}}}}{space 1}
+
+{com}. esttab . using "${c -(}tab{c )-}/INTERVENTION2.rtf" , nostar unstack label append nomtitles title ("How many units purchased? ") cells ("b pct")
+{res}{txt}(output written to {browse  `"C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/tables/INTERVENTION2.rtf"'})
+
+{com}. 
+. save "$mk\MarketinRound2.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_Round_2_2014\MarketinRound2.dta saved
+
+{com}. 
+. foreach x of varlist _all {c -(}
+{txt}  2{com}.         rename `x' `x'_3
+{txt}  3{com}. {c )-}
+{res}{txt}
+{com}. 
+. rename (a_1hhid_3 states_3) (a_1hhid state)
+{res}{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 3: Save and Exit                                                                                        
+> ****************************************************************/
+. 
+. compress
+  {txt}a1_2reasonfornofind_3 was {res}int{txt} now {res}byte
+  {txt}treatment_3 was {res}float{txt} now {res}byte
+  {txt}daysaway_3 was {res}float{txt} now {res}byte
+  {txt}statecategory_3 was {res}float{txt} now {res}byte
+  {txt}salarycat_3 was {res}float{txt} now {res}byte
+  {txt}kindcat_3 was {res}float{txt} now {res}byte
+  {txt}distanceaws_3 was {res}float{txt} now {res}byte
+  {txt}insurancepurchased_3 was {res}float{txt} now {res}byte
+  {txt}purchasedvisit_3 was {res}float{txt} now {res}byte
+  {txt}numberofunits_3 was {res}float{txt} now {res}byte
+  {txt}d_8_othernobuy_3 was {res}str57{txt} now {res}str36
+{txt}  (137,053 bytes saved)
+
+{com}. save "${c -(}dta{c )-}/round3/IN_rainfall_r3_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/datasets/round3/IN_rainfall_r3_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

@@ -1,0 +1,65 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionE4_E5_KharifCrop_LaborCost_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 May 2016, 14:44:43
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section G
+> keep Id q439_caslabdayM-q522_supfamlabdayC
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q439_casla~M{col 15}q451_trape~M{col 29}q464_weedf~F{col 43}q477_fertc~F{col 57}q490_pestp~F{col 71}q502_irrma~F{col 85}q515_supca~F
+{col 1}q440_casla~F{col 15}q452_trape~F{col 29}q465_weedf~C{col 43}q478_fertc~C{col 57}q491_pestp~C{col 71}q503_irrma~C{col 85}q517_suppe~M
+{col 1}q441_casla~C{col 15}q454_trafa~M{col 29}q467_sowca~M{col 43}q479_fertp~M{col 57}q492_pestf~M{col 71}q504_harca~M{col 85}q518_suppe~F
+{col 1}q442_perml~M{col 15}q455_trafa~F{col 29}q468_sowca~F{col 43}q480_fertp~F{col 57}q493_pestf~F{col 71}q505_harca~F{col 85}q519_suppe~C
+{col 1}q443_perml~f{col 15}q456_trafa~C{col 29}q469_sowca~C{col 43}q481_fertp~C{col 57}q494_pestf~C{col 71}q506_harca~C{col 85}q520_supfa~M
+{col 1}q444_perml~C{col 15}q457_weedc~M{col 29}q470_sowpe~M{col 43}q482_fertf~M{col 57}q495_irrma~M{col 71}q507_harpe~M{col 85}q521_supfa~F
+{col 1}q445_famdayM{col 15}q458_weedc~F{col 29}q471_sowpe~F{col 43}q483_fertf~F{col 57}q496_irrma~F{col 71}q508_harpe~F{col 85}q522_supfa~C
+{col 1}q446_famdayF{col 15}q459_weedc~C{col 29}q472_sowpe~C{col 43}q484_fertf~C{col 57}q497_irrma~C{col 71}q509_harpe~C
+{col 1}q447_famdayC{col 15}q460_weedp~M{col 29}q473_sowfa~M{col 43}q486_pestc~M{col 57}q498_irrma~M{col 71}q510_harfa~M
+{col 1}q448_trapl~M{col 15}q461_weedp~F{col 29}q474_sowfa~F{col 43}q487_pestc~F{col 57}q499_irrma~F{col 71}q511_harfa~F
+{col 1}q449_trapl~F{col 15}q462_weedp~C{col 29}q475_sowfa~C{col 43}q488_pestc~C{col 57}q500_irrma~C{col 71}q512_harfa~C
+{col 1}q450_trapl~C{col 15}q463_weedf~M{col 29}q476_fertc~M{col 43}q489_pestp~M{col 57}q501_irrma~M{col 71}q514_supca~M
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionE4_E5_KharifCrop_LaborCost_cleaned.dta", replace
+{txt}(note: file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE4_E5_KharifCrop_LaborCost_cleaned.dta not found)
+file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE4_E5_KharifCrop_LaborCost_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

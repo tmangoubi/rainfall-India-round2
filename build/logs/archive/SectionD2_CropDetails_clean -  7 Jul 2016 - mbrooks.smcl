@@ -1,0 +1,117 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionD2_CropDetails_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:22
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q324_2_CulCrops-q332_outunitmeas_oth_5 q333_1_curown_1-q338_planpurkha_23
+{txt}
+{com}. 
+. 
+. // Clean variables
+. 
+. /// Q324
+> /// Some households answered they did not cultivate any crops listed, but they answered they did in later questions.
+> replace q324_2_CulCrops=1 if inlist(Id,"P3124","P3579","P4715") // Change their answer from "No" to "Yes"
+{txt}(3 real changes made)
+
+{com}. replace q327_plancrop_1=2 if inlist(Id,"P2068","P2199","P4924")
+{txt}(3 real changes made)
+
+{com}. replace q327_plancrop_1=1 if inlist(Id,"F2166","P1092")
+{txt}(2 real changes made)
+
+{com}. 
+. /// One household (Id=="P3425") answered "Yes" to q324 but skipped most questions. Need to correct them.
+> foreach var in q327_plancrop_1 q327_plancrop_2 q327_plancrop_3 q327_plancrop_5 {c -(}
+{txt}  2{com}.         qui replace `var' =2 if (Id=="P3425")
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *
+. /// Applying skip patterns
+> forval cropnum=1/5{c -(}
+{txt}  2{com}.         replace q329_lowposoutperacre_`cropnum'=. if (q327_plancrop_`cropnum'==2)
+{txt}  3{com}.         replace q330_highposoutperacre_`cropnum'=. if (q327_plancrop_`cropnum'==2)
+{txt}  4{com}.         replace q331_mostfreoutperacre_`cropnum'=. if (q327_plancrop_`cropnum'==2)
+{txt}  5{com}.         replace q332_outunitmeas_`cropnum'=. if (q327_plancrop_`cropnum'==2)
+{txt}  6{com}.         if (`cropnum'==2) {c -(}
+{txt}  7{com}.                 replace q332_outunitmeas_oth_`cropnum'=. if (q327_plancrop_`cropnum'==2)
+{txt}  8{com}.         {c )-}
+{txt}  9{com}.         else {c -(}
+{txt} 10{com}.                 replace q332_outunitmeas_oth_`cropnum'="" if (q327_plancrop_`cropnum'==2)
+{txt} 11{com}.         {c )-}
+{txt} 12{com}. {c )-}
+{txt}(585 real changes made, 585 to missing)
+(585 real changes made, 585 to missing)
+(585 real changes made, 585 to missing)
+(585 real changes made, 585 to missing)
+(585 real changes made)
+(1475 real changes made, 1475 to missing)
+(1475 real changes made, 1475 to missing)
+(1475 real changes made, 1475 to missing)
+(1475 real changes made, 1475 to missing)
+(1475 real changes made, 1475 to missing)
+(2922 real changes made, 2922 to missing)
+(2922 real changes made, 2922 to missing)
+(2922 real changes made, 2922 to missing)
+(2922 real changes made, 2922 to missing)
+(2922 real changes made)
+(2796 real changes made, 2796 to missing)
+(2796 real changes made, 2796 to missing)
+(2796 real changes made, 2796 to missing)
+(2796 real changes made, 2796 to missing)
+(2796 real changes made)
+(2987 real changes made, 2987 to missing)
+(2987 real changes made, 2987 to missing)
+(2987 real changes made, 2987 to missing)
+(2987 real changes made, 2987 to missing)
+(2987 real changes made)
+
+{com}. *
+. 
+. /// Destring & recode variables
+> qui destring *, replace
+{txt}
+{com}. qui ds, has(type numeric)
+{txt}
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. label value q327_plancrop_1 q327_plancrop_2 q327_plancrop_3 q327_plancrop_4 q327_plancrop_5 yesno
+{txt}
+{com}. 
+. 
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionD2_CropDetails_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionD2_CropDetails_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

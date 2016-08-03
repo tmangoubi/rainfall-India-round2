@@ -1,0 +1,197 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionJ1_Asset_part1_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 May 2016, 16:31:33
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section J1
+> keep Id q1001_nregkha11-q1015_oth_reanotrecsche_12
+{txt}
+{com}. rename q103* q1013*
+{res}{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. /*
+> loc vars        q1102_recgiftKha11 q1103_totvalallgiftrs q1104_totvalmarrgift q1105_recloankha11 q1106_amtloanrec ///
+>                         q1107_totmonownloan q1108_1_totMMloanper q1108_numpayloanper q1109_1_totvalcol q1109_totpaidwitint
+> foreach var of loc vars {c -(}
+>         order `var'_10-`var'_14, after(`var'_9)
+> {c )-}
+> *                       
+> */
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1001_nregkha11 already numeric; no {res}replace
+{txt}q1002_totdayHHnreg11 already numeric; no {res}replace
+{txt}q1003_totvalHHnreg11 already numeric; no {res}replace
+{txt}q1004_1_othnotusenreg11 contains nonnumeric characters; no {res}replace
+{txt}q1004_notusenreg11 already numeric; no {res}replace
+{txt}q1005_usepdskha11 already numeric; no {res}replace
+{txt}q1006_recitemkha11_1 already numeric; no {res}replace
+{txt}q1006_recitemkha11_2 already numeric; no {res}replace
+{txt}q1006_recitemkha11_3 already numeric; no {res}replace
+{txt}q1006_recitemkha11_4 already numeric; no {res}replace
+{txt}q1006_recitemkha11_5 already numeric; no {res}replace
+{txt}q1006_recitemkha11_6 already numeric; no {res}replace
+{txt}q1006_recitemkha11_7 already numeric; no {res}replace
+{txt}q1006_recitemkha11_8 already numeric; no {res}replace
+{txt}q1006_recitemkha11_oth_8 contains nonnumeric characters; no {res}replace
+{txt}q1007_1_recitemnumunit_1 already numeric; no {res}replace
+{txt}q1007_1_recitemnumunit_2 contains nonnumeric characters; no {res}replace
+{txt}q1007_1_recitemnumunit_3 contains nonnumeric characters; no {res}replace
+{txt}q1007_1_recitemnumunit_4 already numeric; no {res}replace
+{txt}q1007_1_recitemnumunit_5 already numeric; no {res}replace
+{txt}q1007_1_recitemnumunit_6 already numeric; no {res}replace
+{txt}q1007_1_recitemnumunit_7 already numeric; no {res}replace
+{txt}q1007_1_recitemnumunit_8 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_1 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_2 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_3 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_4 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_5 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_6 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_7 already numeric; no {res}replace
+{txt}q1007_recitemunitmon_8 already numeric; no {res}replace
+{txt}q1008_subpricperunit_1 already numeric; no {res}replace
+{txt}q1008_subpricperunit_2 contains nonnumeric characters; no {res}replace
+{txt}q1008_subpricperunit_3 contains nonnumeric characters; no {res}replace
+{txt}q1008_subpricperunit_4 already numeric; no {res}replace
+{txt}q1008_subpricperunit_5 already numeric; no {res}replace
+{txt}q1008_subpricperunit_6 already numeric; no {res}replace
+{txt}q1008_subpricperunit_7 already numeric; no {res}replace
+{txt}q1008_subpricperunit_8 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_1 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_2 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_3 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_4 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_5 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_6 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_7 already numeric; no {res}replace
+{txt}q1009_avemarkpricpunit_8 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_1 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_2 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_3 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_4 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_5 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_6 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_7 already numeric; no {res}replace
+{txt}q1010_nummonpdskha11_8 already numeric; no {res}replace
+{txt}q1011_1_othreanotusepds11 contains nonnumeric characters; no {res}replace
+{txt}q1011_reanotusepds11 already numeric; no {res}replace
+{txt}q1012_heardnameprog_1 already numeric; no {res}replace
+{txt}q1012_heardnameprog_10 already numeric; no {res}replace
+{txt}q1012_heardnameprog_11 already numeric; no {res}replace
+{txt}q1012_heardnameprog_12 already numeric; no {res}replace
+{txt}q1012_heardnameprog_2 already numeric; no {res}replace
+{txt}q1012_heardnameprog_3 already numeric; no {res}replace
+{txt}q1012_heardnameprog_4 already numeric; no {res}replace
+{txt}q1012_heardnameprog_5 already numeric; no {res}replace
+{txt}q1012_heardnameprog_6 already numeric; no {res}replace
+{txt}q1012_heardnameprog_7 already numeric; no {res}replace
+{txt}q1012_heardnameprog_8 already numeric; no {res}replace
+{txt}q1012_heardnameprog_9 already numeric; no {res}replace
+{txt}q1012_heardnameprog_oth_11 contains nonnumeric characters; no {res}replace
+{txt}q1012_heardnameprog_oth_12 contains nonnumeric characters; no {res}replace
+{txt}q1013_usedschememay11_1 already numeric; no {res}replace
+{txt}q1013_usedschememay11_10 already numeric; no {res}replace
+{txt}q1013_usedschememay11_11 already numeric; no {res}replace
+{txt}q1013_usedschememay11_12 already numeric; no {res}replace
+{txt}q1013_usedschememay11_2 already numeric; no {res}replace
+{txt}q1013_usedschememay11_3 already numeric; no {res}replace
+{txt}q1013_usedschememay11_4 already numeric; no {res}replace
+{txt}q1013_usedschememay11_5 already numeric; no {res}replace
+{txt}q1013_usedschememay11_6 already numeric; no {res}replace
+{txt}q1013_usedschememay11_7 already numeric; no {res}replace
+{txt}q1013_usedschememay11_8 already numeric; no {res}replace
+{txt}q1013_usedschememay11_9 already numeric; no {res}replace
+{txt}q1014_amtvalrec_1 already numeric; no {res}replace
+{txt}q1014_amtvalrec_10 already numeric; no {res}replace
+{txt}q1014_amtvalrec_11 already numeric; no {res}replace
+{txt}q1014_amtvalrec_12 already numeric; no {res}replace
+{txt}q1014_amtvalrec_2 already numeric; no {res}replace
+{txt}q1014_amtvalrec_3 already numeric; no {res}replace
+{txt}q1014_amtvalrec_4 contains nonnumeric characters; no {res}replace
+{txt}q1014_amtvalrec_5 already numeric; no {res}replace
+{txt}q1014_amtvalrec_6 already numeric; no {res}replace
+{txt}q1014_amtvalrec_7 already numeric; no {res}replace
+{txt}q1014_amtvalrec_8 already numeric; no {res}replace
+{txt}q1014_amtvalrec_9 already numeric; no {res}replace
+{txt}q1015_oth_reanotrecsche_1 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_10 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_11 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_12 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_2 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_3 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_4 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_5 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_6 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_7 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_8 contains nonnumeric characters; no {res}replace
+{txt}q1015_oth_reanotrecsche_9 contains nonnumeric characters; no {res}replace
+{txt}q1015_reanotrecsche_1 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_10 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_11 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_12 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_2 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_3 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_4 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_5 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_6 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_7 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_8 already numeric; no {res}replace
+{txt}q1015_reanotrecsche_9 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1001_nre~11{col 15}q1007_1_re~4{col 29}q1008_subp~4{col 43}q1010_numm~2{col 57}q1012_hear~4{col 71}q1013_used~6{col 85}q1014_amtv~9
+{col 1}q1002_tot~11{col 15}q1007_1_re~5{col 29}q1008_subp~5{col 43}q1010_numm~3{col 57}q1012_hear~5{col 71}q1013_used~7{col 85}q1015_rea~_1
+{col 1}q1003_tot~11{col 15}q1007_1_re~6{col 29}q1008_subp~6{col 43}q1010_numm~4{col 57}q1012_hear~6{col 71}q1013_used~8{col 85}q1015_rea~10
+{col 1}q1004_not~11{col 15}q1007_1_re~7{col 29}q1008_subp~7{col 43}q1010_numm~5{col 57}q1012_hear~7{col 71}q1013_used~9{col 85}q1015_rea~11
+{col 1}q1005_use~11{col 15}q1007_1_re~8{col 29}q1008_subp~8{col 43}q1010_numm~6{col 57}q1012_hear~8{col 71}q1014_amt~_1{col 85}q1015_rea~12
+{col 1}q1006_reci~1{col 15}q1007_reci~1{col 29}q1009_avem~1{col 43}q1010_numm~7{col 57}q1012_hear~9{col 71}q1014_amt~10{col 85}q1015_rea~_2
+{col 1}q1006_reci~2{col 15}q1007_reci~2{col 29}q1009_avem~2{col 43}q1010_numm~8{col 57}q1013_use~_1{col 71}q1014_amt~11{col 85}q1015_rean~3
+{col 1}q1006_reci~3{col 15}q1007_reci~3{col 29}q1009_avem~3{col 43}q1011_rea~11{col 57}q1013_use~10{col 71}q1014_amt~12{col 85}q1015_rean~4
+{col 1}q1006_reci~4{col 15}q1007_reci~4{col 29}q1009_avem~4{col 43}q1012_hea~_1{col 57}q1013_use~11{col 71}q1014_amt~_2{col 85}q1015_rean~5
+{col 1}q1006_reci~5{col 15}q1007_reci~5{col 29}q1009_avem~5{col 43}q1012_hea~10{col 57}q1013_use~12{col 71}q1014_amtv~3{col 85}q1015_rean~6
+{col 1}q1006_reci~6{col 15}q1007_reci~6{col 29}q1009_avem~6{col 43}q1012_h~g_11{col 57}q1013_use~_2{col 71}q1014_amtv~5{col 85}q1015_rean~7
+{col 1}q1006_reci~7{col 15}q1007_reci~7{col 29}q1009_avem~7{col 43}q1012_h~g_12{col 57}q1013_used~3{col 71}q1014_amtv~6{col 85}q1015_rean~8
+{col 1}q1006_re~1_8{col 15}q1007_reci~8{col 29}q1009_avem~8{col 43}q1012_hea~_2{col 57}q1013_used~4{col 71}q1014_amtv~7{col 85}q1015_rean~9
+{col 1}q1007_1_re~1{col 15}q1008_subp~1{col 29}q1010_numm~1{col 43}q1012_hear~3{col 57}q1013_used~5{col 71}q1014_amtv~8
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionK_Govenrment_Schemes_cleaned.dta", replace
+{txt}(note: file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionK_Govenrment_Schemes_cleaned.dta not found)
+file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionK_Govenrment_Schemes_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

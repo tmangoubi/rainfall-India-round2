@@ -1,0 +1,211 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/logs/ADB_analysis_prep.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}25 Feb 2016, 09:29:07
+{txt}
+{com}. 
+. // Defining macros for different sample
+. tempfile r2r3_all r2_noattrition r3_noattrition
+{txt}
+{com}. use "${c -(}builddta{c )-}/compiled/IN_rainfall_compiled.dta", clear
+{txt}
+{com}. save `r2r3_all'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_00000001.tmp saved
+
+{com}. drop if r2_attrition==1 
+{txt}(371 observations deleted)
+
+{com}. save `r2_noattrition'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_00000002.tmp saved
+
+{com}. use `r2r3_all', clear
+{txt}
+{com}. drop if r3_attrition==1
+{txt}(189 observations deleted)
+
+{com}. save `r3_noattrition'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_00000003.tmp saved
+
+{com}. 
+. /****************************************************************
+>         SECTION 1: Preliminary analyses
+> ****************************************************************/
+. 
+. // Round 2
+. use `r2_noattrition'
+{txt}
+{com}. 
+. // Cultivators (Those who were offered insurance randomly)
+. orth_out r1_treatment r2_past_insurance r2_d_migration_experience r2_distanceaws r2_c_6_landcultivated_acre r2_c_7_kharifearnings using "${c -(}ADBtab{c )-}/descriptive_stats.xls", by(r2_insurance) se pcompare stars count replace
+{res}{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/output/tables/descriptive_stats.xls saved
+{res}
+{txt}                                            COMMON:    INSURANCE:  (1) vs. (~e:
+                                                 _             _             _
+        Intervention in Round 1:mean {res}        0.688         0.696         0.642
+{txt}                                  se {res}        0.012         0.012             .
+{txt}Have you or any member of you~o:mean {res}        0.241         0.265         0.204
+{txt}                                  se {res}        0.014         0.013             .
+{txt}Did you or your household mem~r:mean {res}        0.113         0.084         0.010
+{txt}                                  se {res}        0.008         0.007             .
+{txt}(In kilometers) Distance b/w ~l:mean {res}       10.825        13.534         0.217
+{txt}                                  se {res}        1.588         1.504             .
+{txt}(In acre) How much land did y~ :mean {res}        4.337         5.223         0.209
+{txt}                                  se {res}        0.394         0.560             .
+{txt}Total earning during the last~h:mean {res}    27440.327     23260.476         0.022
+{txt}                                  se {res}     1471.527      1100.237             .
+{txt}                                 N:_ {res}     1403.000      1499.000             .
+{reset}
+{com}. // Landless laborors (Those who were offered migration randomly)
+. orth_out r1_treatment r2_past_insurance r2_d_migration_experience r2_distanceaws r2_c_5_dailywage using "${c -(}ADBtab{c )-}/descriptive_stats.xls" , by(r2_migration) se pcompare test stars count vappend
+{res}table appended to C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/output/tables/descriptive_stats.xls
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/output/tables/descriptive_stats.xls saved
+{res}
+{txt}                                            COMMON:        TRAIN:         CASH:  (1) vs. (~e:  (1) vs. (~e:
+                                                 _             _             _             _             _
+        Intervention in Round 1:mean {res}        0.719         0.722         0.706         0.879         0.652
+{txt}                                  se {res}        0.017         0.013         0.021             .             .
+{txt}Have you or any member of you~o:mean {res}        0.182         0.139         0.195         0.041         0.638
+{txt}                                  se {res}        0.018         0.012         0.023             .             .
+{txt}Did you or your household mem~r:mean {res}        0.108         0.133         0.109         0.108         0.935
+{txt}                                  se {res}        0.012         0.010         0.014             .             .
+{txt}(In kilometers) Distance b/w ~l:mean {res}        7.404         5.756         4.718         0.344         0.145
+{txt}                                  se {res}        1.248         1.201         1.018             .             .
+{txt}Daily Wage during the last Kh~i:mean {res}      199.835       181.441       184.650         0.007         0.063
+{txt}                                  se {res}        5.220         4.247         6.249             .             .
+{txt}                                 N:_ {res}      679.000      1126.000       477.000             .             .
+
+{txt}                                       (2) vs. (~e:  p-value f~y:
+                                                 _             _
+        Intervention in Round 1:mean {res}        0.528         0.214
+{txt}                                  se {res}            .             .
+{txt}Have you or any member of you~o:mean {res}        0.021         0.000
+{txt}                                  se {res}            .             .
+{txt}Did you or your household mem~r:mean {res}        0.182         0.014
+{txt}                                  se {res}            .             .
+{txt}(In kilometers) Distance b/w ~l:mean {res}        0.579         0.000
+{txt}                                  se {res}            .             .
+{txt}Daily Wage during the last Kh~i:mean {res}        0.678         0.003
+{txt}                                  se {res}            .             .
+{txt}                                 N:_ {res}            .             .
+{reset}
+{com}. 
+. 
+. // Round 3
+. use `r3_noattrition'
+{txt}
+{com}. orth_out r1_treatment r2_past_insurance r3_c_1_seasonal_mig r3_d_4awskms using "${c -(}ADBtab{c )-}/descriptive_stats.xls", by(r3_treatment) se pcompare test stars count vappend
+{res}{txt}{p 0 7 2}
+(note: variable
+C was 
+str10, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+E was 
+str20, now str55 to accommodate using data's values)
+{p_end}
+table appended to C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/output/tables/descriptive_stats.xls
+{res}{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/analysis/ADB Final Report/output/tables/descriptive_stats.xls saved
+{res}
+{txt}                                         Insurance:  Insurance~D:  (1) vs. (~e:  p-value f~y:
+                                                 _             _             _             _
+        Intervention in Round 1:mean {res}        0.748         0.669         0.000         0.000
+{txt}                                  se {res}        0.011         0.014             .             .
+{txt}Have you or any member of you~o:mean {res}        0.247         0.204         0.029         0.051
+{txt}                                  se {res}        0.014         0.013             .             .
+{txt}Did anyone migrate during the~e:mean {res}        0.048         0.048         0.967         0.967
+{txt}                                  se {res}        0.006         0.006             .             .
+{txt}              Distance from AWS:mean {res}        6.334         6.295         0.972         0.972
+{txt}                                  se {res}        0.659         0.950             .             .
+{txt}                                 N:_ {res}     1489.000      1146.000             .             .
+{reset}
+{com}. 
+. 
+. // comparing insurance purchase in round2 b/w previously purchased group and not
+. orth_out r1_treatment r2_past_insurance r2_d_migration_experience r2_insurance_agreed r3_distanceaws, by(r2_past_insurance) pcompare se // test
+{res}
+{txt}                                                No:          Yes:  (1) vs. (~e:
+                                                 _             _             _
+        Intervention in Round 1:mean {res}        0.644         0.925         0.000
+{txt}                                  se {res}        0.009         0.009             .
+{txt}Have you or any member of you~o:mean {res}        0.000         1.000             .
+{txt}                                  se {res}        0.000         0.000             .
+{txt}Did you or your household mem~r:mean {res}        0.117         0.115         0.905
+{txt}                                  se {res}        0.006         0.011             .
+{txt}Do you want to purchase Delay~ :mean {res}        0.213         0.235         0.427
+{txt}                                  se {res}        0.014         0.024             .
+{txt}              Distance from AWS:mean {res}        5.920         6.922         0.519
+{txt}                                  se {res}        0.796         1.095             .
+{reset}
+{com}. *return list
+. *matrix list r(matrix)
+. 
+. // comparing insurnace purchase in round2 b/w who recieved payout before and who did not
+. use `r2_noattrition'
+{txt}
+{com}. orth_out r2_insurance_agreed r3_insurance_agreed, by(r2_past_insurance) pcompare se stars count
+{res}
+{txt}                                                No:          Yes:  (1) vs. (~e:
+                                                 _             _             _
+Do you want to purchase Delay~ :mean {res}        0.207         0.239         0.235
+{txt}                                  se {res}        0.014         0.024             .
+{txt}Did you purchase insurance in~i:mean {res}        0.178         0.171         0.711
+{txt}                                  se {res}        0.010         0.018             .
+{txt}                                 N:_ {res}     2895.000       799.000             .
+{reset}
+{com}. orth_out r2_insurance_agreed r3_insurance_agreed, by(r2_e_5_payout) pcompare se stars count // test
+{res}
+{txt}                                                No:          Yes:  (1) vs. (~e:
+                                                 _             _             _
+Do you want to purchase Delay~ :mean {res}        0.183         0.595         0.000
+{txt}                                  se {res}        0.024         0.077             .
+{txt}Did you purchase insurance in~i:mean {res}        0.126         0.422         0.000
+{txt}                                  se {res}        0.017         0.062             .
+{txt}                                 N:_ {res}      697.000       103.000             .
+{reset}
+{com}. orth_out r2_migration_accepted r3_c_1_seasonal_mig, by(r2_d_migration_experience) pcompare se stars count // test
+{res}
+{txt}                                                NO:          YES:  (1) vs. (~e:
+                                                 _             _             _
+       Accepted Migration Offer:mean {res}        0.050         0.173         0.000
+{txt}                                  se {res}        0.007         0.031             .
+{txt}Did anyone migrate during the~e:mean {res}        0.035         0.161         0.000
+{txt}                                  se {res}        0.004         0.023             .
+{txt}                                 N:_ {res}     4625.000       559.000             .
+{reset}
+{com}. orth_out r2_migration_accepted r3_c_1_seasonal_mig, by(r2_d_1_n_earnmore) pcompare se stars count // test
+{res}
+{txt}                                                No:          Yes:  (1) vs. (~e:
+                                                 _             _             _
+       Accepted Migration Offer:mean {res}        0.308         0.162         0.216
+{txt}                                  se {res}        0.133         0.043             .
+{txt}Did anyone migrate during the~e:mean {res}        0.087         0.250         0.091
+{txt}                                  se {res}        0.060         0.044             .
+{txt}                                 N:_ {res}       56.000       217.000             .
+{reset}
+{com}. 
+. use `r3_noattrition'
+{txt}
+{com}. orth_out r3_insurance_agreed, by(r3_treatment) pcompare se stars count
+{res}
+{txt}                                         Insurance:  Insurance~D:  (1) vs. (~e:
+                                                 _             _             _
+Did you purchase insurance in~i:mean {res}        0.187         0.175         0.429
+{txt}                                  se {res}        0.010         0.011             .
+{txt}                                 N:_ {res}     1489.000      1146.000             .
+{reset}
+{com}. 
+. // comparing migration offer status in round2 b/w who migrated before and who did not
+. 
+. 
+. /****************************************************************
+>         SECTION 2: Preliminary analysis
+> ****************************************************************/
+. 
+{txt}end of do-file
+
+{com}. help orth_out
+
+. exit, clear

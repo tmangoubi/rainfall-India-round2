@@ -1,0 +1,147 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionI3_Savings_Durables_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:43
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section I3
+> keep Id q901_ownassbefkha11_1-q909_retintkha11_8
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. 
+. // Correct error
+. replace q902_estvalassbefkha11_7="50000" if q902_estvalassbefkha11_7=="50000-"
+{txt}(1 real change made)
+
+{com}. replace q904_curestvalass_2="" if q904_curestvalass_2=="-"
+{txt}(1 real change made)
+
+{com}. 
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q901_ownassbefkha11_1 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_2 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_3 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_4 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_5 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_6 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_7 already numeric; no {res}replace
+{txt}q901_ownassbefkha11_8 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_1 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_2 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_3 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_4 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_5 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_6 already numeric; no {res}replace
+{txt}q902_estvalassbefkha11_7 has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(55 missing values generated)
+q902_estvalassbefkha11_8 already numeric; no {res}replace
+{txt}q903_currownass_1 already numeric; no {res}replace
+{txt}q903_currownass_2 already numeric; no {res}replace
+{txt}q903_currownass_3 already numeric; no {res}replace
+{txt}q903_currownass_4 already numeric; no {res}replace
+{txt}q903_currownass_5 already numeric; no {res}replace
+{txt}q903_currownass_6 already numeric; no {res}replace
+{txt}q903_currownass_7 already numeric; no {res}replace
+{txt}q903_currownass_8 already numeric; no {res}replace
+{txt}q904_curestvalass_1 already numeric; no {res}replace
+{txt}q904_curestvalass_2 has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(56 missing values generated)
+q904_curestvalass_3 already numeric; no {res}replace
+{txt}q904_curestvalass_4 already numeric; no {res}replace
+{txt}q904_curestvalass_5 already numeric; no {res}replace
+{txt}q904_curestvalass_6 already numeric; no {res}replace
+{txt}q904_curestvalass_7 already numeric; no {res}replace
+{txt}q904_curestvalass_8 already numeric; no {res}replace
+{txt}q905_purckha11_1 already numeric; no {res}replace
+{txt}q905_purckha11_3 contains nonnumeric characters; no {res}replace
+{txt}q905_purckha11_4 already numeric; no {res}replace
+{txt}q905_purckha11_5 already numeric; no {res}replace
+{txt}q905_purckha11_6 already numeric; no {res}replace
+{txt}q905_purckha11_7 already numeric; no {res}replace
+{txt}q906_soldkha11_1 already numeric; no {res}replace
+{txt}q906_soldkha11_3 already numeric; no {res}replace
+{txt}q906_soldkha11_4 already numeric; no {res}replace
+{txt}q906_soldkha11_5 already numeric; no {res}replace
+{txt}q906_soldkha11_6 already numeric; no {res}replace
+{txt}q906_soldkha11_7 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_1 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_3 contains nonnumeric characters; no {res}replace
+{txt}q907_giftgivenkha11_4 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_5 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_6 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_7 already numeric; no {res}replace
+{txt}q907_giftgivenkha11_8 already numeric; no {res}replace
+{txt}q908_giftreckha11_1 already numeric; no {res}replace
+{txt}q908_giftreckha11_2 already numeric; no {res}replace
+{txt}q908_giftreckha11_3 already numeric; no {res}replace
+{txt}q908_giftreckha11_4 already numeric; no {res}replace
+{txt}q908_giftreckha11_5 already numeric; no {res}replace
+{txt}q908_giftreckha11_6 already numeric; no {res}replace
+{txt}q908_giftreckha11_7 already numeric; no {res}replace
+{txt}q908_giftreckha11_8 already numeric; no {res}replace
+{txt}q909_retintkha11_3 contains nonnumeric characters; no {res}replace
+{txt}q909_retintkha11_4 already numeric; no {res}replace
+{txt}q909_retintkha11_5 already numeric; no {res}replace
+{txt}q909_retintkha11_6 already numeric; no {res}replace
+{txt}q909_retintkha11_7 already numeric; no {res}replace
+{txt}q909_retintkha11_8 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q901_ownas~1{col 15}q902_estva~1{col 29}q903_curro~1{col 43}q904_cures~1{col 57}q905_purck~1{col 71}q906_soldk~5{col 85}q907_giftg~8{col 99}q908_giftr~8
+{col 1}q901_ownas~2{col 15}q902_estva~2{col 29}q903_curro~2{col 43}q904_cures~2{col 57}q905_purck~4{col 71}q906_soldk~6{col 85}q908_giftr~1{col 99}q909_retin~4
+{col 1}q901_ownas~3{col 15}q902_estva~3{col 29}q903_curro~3{col 43}q904_cures~3{col 57}q905_purck~5{col 71}q906_soldk~7{col 85}q908_giftr~2{col 99}q909_retin~5
+{col 1}q901_ownas~4{col 15}q902_estva~4{col 29}q903_curro~4{col 43}q904_cures~4{col 57}q905_purck~6{col 71}q907_giftg~1{col 85}q908_giftr~3{col 99}q909_retin~6
+{col 1}q901_ownas~5{col 15}q902_estva~5{col 29}q903_curro~5{col 43}q904_cures~5{col 57}q905_purck~7{col 71}q907_giftg~4{col 85}q908_giftr~4{col 99}q909_retin~7
+{col 1}q901_ownas~6{col 15}q902_estva~6{col 29}q903_curro~6{col 43}q904_cures~6{col 57}q906_soldk~1{col 71}q907_giftg~5{col 85}q908_giftr~5{col 99}q909_retin~8
+{col 1}q901_ownas~7{col 15}q902_estva~7{col 29}q903_curro~7{col 43}q904_cures~7{col 57}q906_soldk~3{col 71}q907_giftg~6{col 85}q908_giftr~6
+{col 1}q901_ownas~8{col 15}q902_estva~8{col 29}q903_curro~8{col 43}q904_cures~8{col 57}q906_soldk~4{col 71}q907_giftg~7{col 85}q908_giftr~7
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Logic check
+. forval i=1/8 {c -(}
+{txt}  2{com}.         qui replace q902_estvalassbefkha11_`i'=.m if (q901_ownassbefkha11_`i'!=1) & !mi(q902_estvalassbefkha11_`i')
+{txt}  3{com}.         qui replace q904_curestvalass_`i'=.m if (q903_currownass_`i'!=1) & !mi(q904_curestvalass_`i')
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionI3_Savings_Durables_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionI3_Savings_Durables_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

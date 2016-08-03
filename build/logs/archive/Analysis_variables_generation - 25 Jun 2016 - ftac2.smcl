@@ -1,0 +1,3023 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/Analysis_variables_generation.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}25 Jun 2016, 17:34:35
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 0: Generate Variables                                                                                           
+> ****************************************************************/
+. 
+. // Masterdata (Id)
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. isid Id
+{txt}
+{com}. keep Id
+{txt}
+{com}. tempfile Id
+{txt}
+{com}. save `Id'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. 
+. 
+. ************************  Section A (Household Roster)  **********************************
+. 
+. use "${c -(}builddta{c )-}/followup_2014/SectionA1_HHroster_cleaned.dta", clear
+{txt}
+{com}. 
+. // # of household member
+. bys Id: egen NumberOfHHmembers = count(subid)
+{txt}
+{com}. notes NumberOfHHmembers: bys Id: egen NumberOfHHmembers = count(subid)
+{res}{txt}
+{com}. label var NumberOfHHmembers "Number of HH members"
+{txt}
+{com}. 
+. // # of household member engaged in daily wage employment since June 2014
+. bys Id: egen temp = count(subid) if (q106_engdlywageemp==1)
+{txt}(19258 missing values generated)
+
+{com}. bys Id: egen NumberOfHHmembers_dailyworker = max(temp)
+{txt}(10513 missing values generated)
+
+{com}. replace NumberOfHHmembers_dailyworker=0 if mi(NumberOfHHmembers_dailyworker)
+{txt}(10,513 real changes made)
+
+{com}. notes NumberOfHHmembers_dailyworker: bys Id: egen NumberOfHHmembers_dailyworker = count(subid) if (q106_engdlywageemp==1)
+{res}{txt}
+{com}. label var NumberOfHHmembers_dailyworker "Number of HH members engaged in daily wage employment since June 2014"
+{txt}
+{com}. drop temp
+{txt}
+{com}. 
+. // Total household health expenditure
+. bys Id: egen Health_Expenditure_Kharif = sum(q110_hlthexpkha)
+{txt}
+{com}. notes Health_Expenditure_Kharif: bys Id: egen Health_Expenditure_Kharif = sum(q110_hlthexpkha)
+{res}{txt}
+{com}. label var Health_Expenditure_Kharif "Total household health expenditure since the beginning of Kharif season"
+{txt}
+{com}. 
+. // Per capita household health expenditure
+. gen Health_Expenditure_pc_Kharif = (Health_Expenditure_Kharif/NumberOfHHmembers)
+{txt}
+{com}. notes Health_Expenditure_pc_Kharif: gen Health_Expenditure_pc_Kharif = (Health_Expenditure_Kharif/NumberOfHHmembers)
+{res}{txt}
+{com}. label var Health_Expenditure_pc_Kharif "Per capita household health expenditure since the beginning of Kharif season"
+{txt}
+{com}. 
+. keep Id NumberOfHHmembers-Health_Expenditure_pc_Kharif
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(19,137 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecA
+{txt}
+{com}. save `SecA'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. 
+. // Section B1
+. 
+. use "${c -(}builddta{c )-}/followup_2014/SectionB1_WageIncome_cleaned.dta", clear
+{txt}
+{com}. 
+. // Number of Agricultural wage earners in a household
+. bys Id: egen NumberOfAgrEarners = count(subid)
+{txt}
+{com}. notes NumberOfAgrEarners: bys Id: egen NumberOfAgrEarners = count(subid)
+{res}{txt}
+{com}. label var NumberOfAgrEarners "Number of Agricultural wage earners in a household - Kharif"
+{txt}
+{com}. 
+. // Total earning (money + non-monetary compensation) - using cleaned variable
+. egen Total_agri_earning_kharif_indiv = rowtotal (q208_totearnlolagrikha11_c q211_totvalnonmonkha11_c)
+{txt}
+{com}. notes Total_agri_earning_kharif_indiv: egen Total_agri_earning_kharif_indiv = rowtotal (q208_totearnlolagrikha11_c q211_totvalnonmonkha11_c)
+{res}{txt}
+{com}. label var Total_agri_earning_kharif_indiv "Total individual earning (monetary + compensation) from agricultural wage employment - Kharif"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. // Average daily wage: Total earning divided by # of days worked
+. gen Daily_agri_wage_kharif_indiv = (Total_agri_earning_kharif_indiv / q206_totdaylocagrikhar11)
+{txt}(6 missing values generated)
+
+{com}. notes Daily_agri_wage_kharif_indiv: gen Daily_agri_wage_kharif_indiv = (Total_agri_earning_kharif_indiv / q206_totdaylocagrikhar11) 
+{res}{txt}
+{com}. label var Daily_agri_wage_kharif_indiv "Daily wage from agricultrual employment in Kharif (Individual-average)"
+{txt}
+{com}. 
+. // Total household earning
+. bys Id: egen Total_agri_earning_kharif_HH = sum(Total_agri_earning_kharif_indiv) 
+{txt}
+{com}. notes Total_agri_earning_kharif_HH: bys Id: egen Total_agri_earning_kharif_HH = sum(Total_agri_earning_kharif_indiv)
+{res}{txt}
+{com}. label var Total_agri_earning_kharif_HH "Total household earning (monetary + compensation) from agricultural wage employment - Kharif"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. // Total # of days worked - Household level
+. bys Id: egen Total_agri_worksdays_HH = sum(q206_totdaylocagrikhar11) 
+{txt}
+{com}. notes Total_agri_worksdays_HH: bys Id: egen Total_agri_worksdays_HH = sum(q206_totdaylocagrikhar11)
+{res}{txt}
+{com}. label var Total_agri_worksdays_HH "# of days worked in Kharif - HH level"
+{txt}
+{com}. 
+. // Average daily wage - Household level.
+. gen Daily_agri_wage_kharif_HH = (Total_agri_earning_kharif_HH / Total_agri_worksdays_HH) 
+{txt}(3 missing values generated)
+
+{com}. notes Daily_agri_wage_kharif_HH: gen Daily_agri_wage_kharif_HH = (Total_agri_earning_kharif_HH / Total_agri_worksdays_HH)
+{res}{txt}
+{com}. label var Daily_agri_wage_kharif_HH "Daily wage from agricultrual employment in Kharif (Household-average)"
+{txt}
+{com}. 
+. // Keep HH-level variables only
+. keep Id NumberOfAgrEarners Total_agri_earning_kharif_HH Total_agri_worksdays_HH Daily_agri_wage_kharif_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1,004 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecB1
+{txt}
+{com}. save `SecB1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000003.tmp saved
+
+{com}. 
+. 
+. 
+. // Section B2
+. use "${c -(}builddta{c )-}/followup_2014/SectionB2_NonAgri_WageIncome_cleaned.dta", clear
+{txt}
+{com}. 
+. // Total individual earning (estimated)
+. gen Tot_Nonag_earn_Kharif_indiv_est = q214_totdaynonagriwork * q217_avdaiwag 
+{txt}(51 missing values generated)
+
+{com}. notes Tot_Nonag_earn_Kharif_indiv_est: gen Tot_Nonagri_earning_Kharif_indiv_est = q214_totdaynonagriwork * q217_avdaiwag
+{res}{txt}
+{com}. label var Tot_Nonag_earn_Kharif_indiv_est "Total individual non-agricultural earning (estimated)"
+{txt}
+{com}. 
+. /// Total household earning
+> bys Id: egen Tot_Nonag_earn_Kharif_HH = sum(q218_totearnlocnonagr)
+{txt}
+{com}. label var Tot_Nonag_earn_Kharif_HH "Total household non-agricultural earning - Kharif"
+{txt}
+{com}. 
+. /// Total household earning (estimated)
+> bys Id: egen Tot_Nonag_earn_Kharif_HH_est = sum(Tot_Nonag_earn_Kharif_indiv_est) 
+{txt}
+{com}. label var Tot_Nonag_earn_Kharif_HH_est "Total household non-agricultural earning (estimated)"
+{txt}
+{com}. 
+. /// Total number of days worked - HH level
+> bys Id: egen Tot_Nonag_worksdays_HH = sum(q214_totdaynonagriwork) 
+{txt}
+{com}. label var Tot_Nonag_worksdays_HH "Total household non-agricultural workdays - Kharif"
+{txt}
+{com}. 
+. /// Average daily wage - Household level.
+> gen Daily_Nonagr_wage_kharif_HH = (Tot_Nonag_earn_Kharif_HH_est / Tot_Nonag_worksdays_HH) 
+{txt}(37 missing values generated)
+
+{com}. label var Daily_Nonagr_wage_kharif_HH "Daily non-agricultural wage in Kharif (Household-average)"
+{txt}
+{com}. notes Daily_Nonagr_wage_kharif_HH: gen Daily_Nonagr_earn_kharif_HH = (Tot_Nonag_earn_Kharif_HH_est / Tot_Nonag_worksdays_HH)
+{res}{txt}
+{com}. 
+. /// Keep HH-level variables only
+> keep Id Tot_Nonag_earn_Kharif_HH Tot_Nonag_worksdays_HH Daily_Nonagr_wage_kharif_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(485 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecB2
+{txt}
+{com}. save `SecB2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000004.tmp saved
+
+{com}. 
+. 
+. // Section M1: Lean period earning
+. use "${c -(}builddta{c )-}/followup_2014/SectionM1_LeanPeriod_cleaned.dta", clear
+{txt}
+{com}. 
+. egen Tot_earning_lean_indiv = rowtotal (q223_2_homeearning q224_destearning q225_7_totmnrgaearning) // Total earning (indiv-level)
+{txt}
+{com}. bys Id: egen Tot_earning_lean_HH = sum(Tot_earning_lean_indiv) // Total earning (HH-level)
+{txt}
+{com}. bys Id: egen Avg_monthly_income_lean_HH = sum(q223_1_avgmonthwage) // Avg earning (HH-level)
+{txt}
+{com}. bys Id: egen Tot_saving_lean_HH = sum(q224_1_homesaving) // Total saving (HH-level)
+{txt}
+{com}. 
+. notes Tot_earning_lean_indiv: egen Tot_earning_indiv = rowtotal (q223_2_homeearning q224_destearning q225_7_totmnrgaearning)
+{res}{txt}
+{com}. notes Tot_earning_lean_indiv: earning at home + earning at destination + earning via MNREGA
+{res}{txt}
+{com}. notes Tot_earning_lean_HH: bys Id: egen Tot_earning_HH = sum (Tot_earning_lean_indiv)
+{res}{txt}
+{com}. notes Avg_monthly_income_lean_HH:bys Id: egen Avg_monthly_income_lean_HH = sum(q223_1_avgmonthwage)
+{res}{txt}
+{com}. notes Tot_saving_lean_HH: bys Id: egen Tot_saving_lean_HH = sum(q224_1_homesaving)
+{res}{txt}
+{com}. 
+. label var Tot_earning_lean_indiv "Total individual earning during lean period"
+{txt}
+{com}. label var Tot_earning_lean_HH "Total household earning during lean period "
+{txt}
+{com}. label var Avg_monthly_income_lean_HH "Average household monthly income during lean period"
+{txt}
+{com}. label var Tot_saving_lean_HH "Total household saving during lean period"
+{txt}
+{com}. 
+. foreach var in Tot_earning_lean_indiv Tot_earning_lean_HH Avg_monthly_income_lean_HH Tot_saving_lean_HH {c -(}
+{txt}  2{com}.         notes `var': Lean period is from April to July in UP and AP, and from June to September in TN
+{txt}  3{com}. {c )-}
+{res}{txt}
+{com}. *
+. 
+. keep Id Tot_earning_lean_HH Avg_monthly_income_lean_HH Tot_saving_lean_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(623 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecM1
+{txt}
+{com}. save `SecM1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000005.tmp saved
+
+{com}. 
+. 
+. // Section M2: Migration during lean season
+. 
+. * M2A
+. use "${c -(}builddta{c )-}/followup_2014/SectionM2A_Migration_LeanPeriod_cleaned.dta", clear
+{txt}
+{com}. 
+. 
+. /// Migrated during Lean season
+> keep if q219_migserwork==1 // Keep only household members who actually migrated
+{txt}(24 observations deleted)
+
+{com}. loc var migrant_lean_HH
+{txt}
+{com}. gen `var'=1
+{txt}
+{com}. label var `var' "Any household member migrated for work during cropping season"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. /// Total # of HH members migrated - lean season
+> loc var migmembers_lean_HH
+{txt}
+{com}. bys Id: egen `var' = count(subid)
+{txt}
+{com}. lab var `var' "# of HH members migrated during lean season - HH level"
+{txt}
+{com}. 
+. /// Total migration episodes per HH
+> loc var migepisodes_lean_HH
+{txt}
+{com}. bys Id: egen `var'=count(q213_4_migepisode)
+{txt}
+{com}. lab var `var' "Total migration episodes during lean season - HH level"
+{txt}
+{com}. 
+. /// Total days migrated during lean season - HH level
+> loc var migdays_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q222_1_days)
+{txt}
+{com}. lab var `var' "Total # of days HH members migrated - HH total"
+{txt}
+{com}. 
+. 
+. /// Total migration expense (travel + others (visa fee, etc.) + food & lodging before finding a job), per each episode
+> loc var migexpense_lean_episode
+{txt}
+{com}. egen `var' = rowtotal(q12_costoftravel q13_otrcostmig q21_costfoodlodge)
+{txt}
+{com}. lab var `var' "Total migration expense during lean season, per migration episode"
+{txt}
+{com}. note `var': Travel cost + other cost + food & lodging at migration destination
+{res}{txt}
+{com}. 
+. 
+. /// Migration expenses - HH level
+> loc var migtravelcost_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q12_costoftravel)
+{txt}
+{com}. lab var `var' "Migration travel cost during lean season - HH level"
+{txt}
+{com}. 
+. loc var migothercost_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q13_otrcostmig)
+{txt}
+{com}. lab var `var' "Other migration cost (ex. VISA fee, etc.) - HH level"
+{txt}
+{com}. 
+. loc var migfoodlodgegcost_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q21_costfoodlodge)
+{txt}
+{com}. lab var `var' "Cost of food and lodging before starting work at migrationd destination"
+{txt}
+{com}. 
+. loc var migexpense_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(migexpense_lean_episode)
+{txt}
+{com}. lab var `var' "Total migration expense during lean season - HH level"
+{txt}
+{com}. note `var': Travel cost + other cost + food & lodging at migration destination
+{res}{txt}
+{com}. drop migexpense_lean_episode
+{txt}
+{com}. 
+. 
+. /// Days of travel + days taken before starting a job at migration destination - HH total
+> loc var migtraveldays_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q14_daytoreach1)
+{txt}
+{com}. lab var `var' "Total days of migration travel - HH total"
+{txt}
+{com}. 
+. loc var migdaysbeforejob_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q20_daytotakejob)
+{txt}
+{com}. lab var `var' "Total days taken before starting work at migration destination - HH total"
+{txt}
+{com}. 
+. /// Savings from migration episode
+> loc var migsaving_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q21_1_savingonreturn)
+{txt}
+{com}. lab var `var' "Total savings from migration during lean season"
+{txt}
+{com}. 
+. 
+. /*
+> // Tag outliers
+> loc money_vars (list of variables to be tagged)
+> foreach var of loc money_vars {c -(}
+>         gen byte `var'_outlier=0
+>         order `var'_outlier, after(`var')
+>         qui sum `var', detail
+>         scalar `var'_IQR = r(p75)-r(p25)
+>         replace `var'_outlier=1 if !inrange(`var',r(p25)-(3*`var'_IQR),r(p75)+(3*`var'_IQR))
+>         label var `var'_outlier "=1: this obs is an outlier"
+>         note `var'_outlier: Defined as outlier if x < Q(25)-3IQR  or  x > Q(75)+3IQR
+>         scalar drop `var'_IQR
+> {c )-}
+> *
+> */
+. 
+. keep Id migrant_lean_HH-migsaving_lean_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(120 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecM2A
+{txt}
+{com}. save `SecM2A'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000006.tmp saved
+
+{com}. 
+. 
+. *M2B: Migration Remittance during lean season
+. use "${c -(}builddta{c )-}/followup_2014/SectionM2B_Migration_LeanPeriod_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Total migration income during lean season - HH level
+> loc var migincome_lean_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q25_totincome)
+{txt}
+{com}. lab var `var' "Total Migration income during lean season, HH-level"
+{txt}
+{com}. 
+. /// Migration remittance
+> loc var migremitt_lean_HH
+{txt}
+{com}. bys Id: egen `var' = min(q26_sendtohh)
+{txt}(3 missing values generated)
+
+{com}. recode `var' (1/3=1) (4=0)
+{txt}(migremitt_lean_HH: 139 changes made)
+
+{com}. lab var `var' "Whether HH member remitted migration income"
+{txt}
+{com}. lab value `var' yesno
+{txt}
+{com}. 
+. loc var migremittcost_lean_HH
+{txt}
+{com}. bys Id: egen `var'=sum(q29_costofremittance)
+{txt}
+{com}. lab var `var' "Total remittance cost - HH total"
+{txt}
+{com}. 
+. keep Id migincome_lean_HH migremitt_lean_HH migremittcost_lean_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(160 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecM2B
+{txt}
+{com}. save `SecM2B'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000007.tmp saved
+
+{com}. 
+. *Merge M2A and M2B
+. use `SecM2A', clear
+{txt}
+{com}. /* I (SL) decided to keep observations which have complete responses only - who answered both M2A and M2B - to maintain consistency in responses. 
+> Also, the number of HHs with complete response (299) is not significantly different from # of HH who originallay answered "migrated" in q213 (319). */
+. merge 1:1 Id using `SecM2B', nogen keep(3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}             299{txt}  
+{col 5}{hline 41}
+
+{com}. tempfile SecM2
+{txt}
+{com}. save `SecM2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000008.tmp saved
+
+{com}. 
+. /// Avg daily earning via migration (lean season)
+> loc var migavgdailyearn_lean_HH
+{txt}
+{com}. gen `var' = (migincome_lean_HH/migdays_lean_HH) // Daily earning = Total income / total days migrated
+{txt}(2 missing values generated)
+
+{com}. note `var': Avg daily earning = (Total income at migration / Total days migrated)
+{res}{txt}
+{com}. label var `var' "Average daily earning at migration during lean season - HH level average"
+{txt}
+{com}. 
+. // Section M3: Migration during Cropping Season
+. use "${c -(}builddta{c )-}/followup_2014/SectionM3_CropSeason_cleaned.dta", clear
+{txt}
+{com}. keep if match_roster_q218X==3 // We keep observations with complete responses only.
+{txt}(55 observations deleted)
+
+{com}. 
+. /// Migrated during Cropping season
+> *bys Id: egen migrant_cropseason_HH = min(q218_6_migsearwor) // If there's any migrant worker, then min(q218_6_migsearwor) should equal to 1. 2 otherwise.
+. keep if q218_6_migsearwor==1 // Keep only household members who actually migrated
+{txt}(2 observations deleted)
+
+{com}. loc var migrant_crop_HH
+{txt}
+{com}. gen `var'=1
+{txt}
+{com}. label var `var' "Any household member migrated for work during cropping season"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. /// Total migration episodes per household
+> loc var migepisodes_crop_HH
+{txt}
+{com}. bys Id: egen `var'=count(q218_8_migepisode)
+{txt}
+{com}. lab var `var' "Total migration episodes during cropping season - HH level"
+{txt}
+{com}. 
+. /// Total migration income during cropping season - HH level
+> loc var migincome_crop_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q218_16_totearning) // if (q218_6_migsearwor==1)
+{txt}
+{com}. label var `var' "Total income at migration destination during cropping season - HH level"
+{txt}
+{com}. 
+. /// Total migration day during cropping season - HH level
+> loc var migdays_crop_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q218_11_daysepisode) // if (q218_6_migsearwor==1)
+{txt}
+{com}. label var `var' "Total # days migrated during cropping season, HH level"
+{txt}
+{com}. 
+. /// Avg daily earning via migration (cropping season)
+> loc var migavgdailyearn_crop_HH
+{txt}
+{com}. gen `var' = (migincome_crop_HH/migdays_crop_HH) // Daily earning = Total income / total days migrated
+{txt}
+{com}. note `var': Avg daily earning = (Total income at migration / Total days migrated)
+{res}{txt}
+{com}. label var `var' "Average daily earning at migration during cropping season - HH level average"
+{txt}
+{com}. 
+. keep Id migrant_crop_HH-migavgdailyearn_crop_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(136 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecM3
+{txt}
+{com}. save `SecM3'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000009.tmp saved
+
+{com}. 
+. 
+. // Section M4: MNREGA during Kharif (cropping season)
+. use "${c -(}builddta{c )-}/followup_2014/SectionM4_MRNREGA_Kharif_cleaned.dta", clear
+{txt}
+{com}. keep if (q218_22_mnrega==1) // Keep employed observations only
+{txt}(35 observations deleted)
+
+{com}. 
+. /// Generate variables for analysis
+> 
+. loc var MNREGA_employed_Kharif_HH
+{txt}
+{com}. gen `var' = 1
+{txt}
+{com}. lab var `var' "Was anyone in HH employed under MNREGA during Kharif season?"
+{txt}
+{com}. 
+. loc var MNREGA_numemployed_Khariff_HH
+{txt}
+{com}. bys Id: egen `var' = count(subid)
+{txt}
+{com}. lab var `var' "# of HH members employed under MNREGA during Kharif season"
+{txt}
+{com}. 
+. loc var MNREGA_days_Khariff_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q218_23_daysempl)
+{txt}
+{com}. lab var `var' "# of days in total HH members employed under MREGA during Kharif season"
+{txt}
+{com}. 
+. loc var MNREGA_earning_Kharif_HH
+{txt}
+{com}. bys Id: egen `var' = sum(q218_24_totearning)
+{txt}
+{com}. lab var `var' "Total earning HH members earned under MNNREGA during Kharif season"
+{txt}
+{com}. 
+. keep Id MNREGA*
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(64 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecM4
+{txt}
+{com}. save `SecM4'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000a.tmp saved
+
+{com}. 
+. 
+. // Section C: Other Income
+. use "${c -(}builddta{c )-}/followup_2014/SectionC_OtherIncome_Kharif_cleaned.dta", clear
+{txt}
+{com}. 
+. // Total "other income"
+. loc var Otherearn_Kharif_HH
+{txt}
+{com}. egen `var' = rowtotal(q226_totincearnrecei_? q226_totincearnrecei_??)
+{txt}
+{com}. note `var': egen `var' = rowtotal(q226_totincearnrecei_? q226_totincearnrecei_??)
+{res}{txt}
+{com}. note `var': Total income from other sources suchs family business, sale of asset, animals, pension, etc.
+{res}{txt}
+{com}. label var `var' "Total amount of earning from other sources during Kharif season"
+{txt}
+{com}. 
+. // Keep HH-level analysis variables only
+. keep Id Otherearn_Kharif_HH
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(0 observations are duplicates)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecC
+{txt}
+{com}. save `SecC'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000b.tmp saved
+
+{com}. 
+. 
+. // Section D1: Cultivation Details
+. use "${c -(}builddta{c )-}/followup_2014/SectionD1_CultivationDetail_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Ag-Coops
+> 
+. loc var AgCoop_enrolled_HH
+{txt}
+{com}. clonevar `var'=q300_AgrCoop
+{txt}(48 missing values generated)
+
+{com}. lab var `var' "Is anyone in HH a part of Agricultural Cooperative?"
+{txt}
+{com}. 
+. loc var AgCoop_numenrolled_HH
+{txt}
+{com}. gen `var'=0
+{txt}
+{com}. replace `var' = `var'+1 if !mi(q300_1_listname1) & !inlist(q300_1_listname1,"-999","1","3")
+{txt}(403 real changes made)
+
+{com}. replace `var' = `var'+1 if !mi(q300_1_listname2)
+{txt}(28 real changes made)
+
+{com}. replace `var' = `var'+1 if !mi(q300_1_listname3)
+{txt}(3 real changes made)
+
+{com}. lab var `var' "# of AgCoops HH members enrolled in"
+{txt}
+{com}. 
+. loc var AgCoop_memberfee_HH
+{txt}
+{com}. egen `var' = rowtotal(q300_4_MemFee1 q300_4_MemFee2 q300_4_MemFee3), missing
+{txt}(4629 missing values generated)
+
+{com}. lab var `var' "Total AgCoop membership fee HH paid"
+{txt}
+{com}. 
+. loc var AgCoop_estbenefit_HH
+{txt}
+{com}. egen `var' = rowtotal(q300_5_EstBen1 q300_5_EstBen2 q300_5_EstBen3), missing
+{txt}(4622 missing values generated)
+
+{com}. lab var `var' "Total estimated benefits from AgCoop"
+{txt}
+{com}. 
+. 
+. /// Land cultivation
+> 
+. loc var cultivated_crop_Kharif
+{txt}
+{com}. clonevar `var'=q301_lastyeahhcropownrent
+{txt}(72 missing values generated)
+
+{com}. lab var `var' "HH cultivated crops on either own or rented land during Kharif 2014"
+{txt}
+{com}. 
+. loc var cultivated_irrcrop_2014
+{txt}
+{com}. clonevar `var'=q302_lastyeahhIrrcropownrent
+{txt}(71 missing values generated)
+
+{com}. lab var `var' "HH cultivated irregular crops on either own or rented land last year (Jan - Dec 2014)"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. 
+. 
+. /// Convert the unit of land area into single unit ("acre")
+> /// Unit convert sourece: http://www.webconversiononline.com/area-conversion.aspx
+> 
+. scalar bhigha_to_acre=0.4004
+{txt}
+{com}. scalar cent_to_acre=0.01
+{txt}
+{com}. scalar kuzhi_to_acre=0.0132 // This is from Wiki: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}. scalar guntha_to_acre=(1/40)
+{txt}
+{com}. scalar biswa_to_acre=8.0083
+{txt}
+{com}. scalar hectare_to_acre=2.4711
+{txt}
+{com}. scalar kuli_to_acre=(1/2.25) // Source: https://tamilvaralaru.wordpress.com/tamil-units-of-measurement/
+{txt}
+{com}. scalar MA_to_acre=(6.43/20) // 20 MA = 1 Veli = 6.43 acre. Source: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}.         
+. forval i=1/4 {c -(}
+{txt}  2{com}.         *local l`i': variable label q301_1_1_AreaCult_`i'
+.         loc v AreaCult_`i'
+{txt}  3{com}.         clonevar `v'=q301_1_1_AreaCult_`i'
+{txt}  4{com}.         
+.         replace `v' = `v' * bhigha_to_acre if inlist(q301_2_AreaUnit_`i',2,6)
+{txt}  5{com}.         replace `v' = `v' * cent_to_acre if (q301_2_AreaUnit_`i'==3)
+{txt}  6{com}.         replace `v' = `v' * guntha_to_acre if (q301_2_AreaUnit_`i'==4)
+{txt}  7{com}.         replace `v' = `v' * biswa_to_acre if (q301_2_AreaUnit_`i'==5)
+{txt}  8{com}.         replace `v' = `v' * kuli_to_acre if (q301_2_AreaUnit_`i'==7)
+{txt}  9{com}.         replace `v' = `v' * MA_to_acre if (q301_2_AreaUnit_`i'==8)
+{txt} 10{com}.         
+.         note `v': Unit is acre.
+{txt} 11{com}. {c )-}
+{txt}(2,745 missing values generated)
+(940 real changes made)
+(109 real changes made)
+(10 real changes made)
+(390 real changes made)
+(4 real changes made)
+(1 real change made)
+{res}{txt}(2,748 missing values generated)
+(5 real changes made)
+(23 real changes made)
+(1 real change made)
+(2 real changes made)
+(4 real changes made)
+(3 real changes made)
+{res}{txt}(2,744 missing values generated)
+(57 real changes made)
+(20 real changes made)
+(5 real changes made)
+(18 real changes made)
+(0 real changes made)
+(0 real changes made)
+{res}{txt}(2,745 missing values generated)
+(3 real changes made)
+(2 real changes made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+{res}{txt}
+{com}. *
+. 
+. forval i=1/4 {c -(}
+{txt}  2{com}.         *local l`i': variable label q301_1_1_AreaCult_`i'
+.         loc v AreaIrreCult_`i'
+{txt}  3{com}.         clonevar `v'=q302_1_AreaCult_`i'
+{txt}  4{com}.         
+.         replace `v' = `v' * bhigha_to_acre if inlist(q302_2_AreaUnit_`i',2,6)
+{txt}  5{com}.         replace `v' = `v' * cent_to_acre if (q302_2_AreaUnit_`i'==3)
+{txt}  6{com}.         replace `v' = `v' * guntha_to_acre if (q302_2_AreaUnit_`i'==4)
+{txt}  7{com}.         replace `v' = `v' * biswa_to_acre if (q302_2_AreaUnit_`i'==5)
+{txt}  8{com}.         replace `v' = `v' * kuli_to_acre if (q302_2_AreaUnit_`i'==7)
+{txt}  9{com}.         replace `v' = `v' * MA_to_acre if (q302_2_AreaUnit_`i'==8)
+{txt} 10{com}.         
+.         note `v': Unit is acre.
+{txt} 11{com}. {c )-}
+{txt}(4,547 missing values generated)
+(112 real changes made)
+(66 real changes made)
+(3 real changes made)
+(66 real changes made)
+(1 real change made)
+(0 real changes made)
+{res}{txt}(4,552 missing values generated)
+(0 real changes made)
+(18 real changes made)
+(2 real changes made)
+(0 real changes made)
+(2 real changes made)
+(0 real changes made)
+{res}{txt}(4,548 missing values generated)
+(7 real changes made)
+(3 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+{res}{txt}(4,550 missing values generated)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+{res}{txt}
+{com}. *
+. 
+. rename  (AreaCult_1 AreaCult_2 AreaCult_3 AreaCult_4 AreaIrreCult_1 AreaIrreCult_2 AreaIrreCult_3 AreaIrreCult_4) ///
+>                 (Ownirrig_crop_Kharif Ownnonirrig_crop_Kharif Leasedirrig_crop_Kharif Leasednonirrig_crop_Kharif ///
+>                 Ownirrig_irrecrop_2014 Ownnonirrig_irrecrop_2014 Leasedirrig_irrecrop_2014 Leasednonirrig_irrecrop_2014)
+{res}{txt}
+{com}. 
+. 
+. // Save
+. keep Id AgCoop_enrolled_HH-Leasednonirrig_irrecrop_2014
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(0 observations are duplicates)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecD1
+{txt}
+{com}. save `SecD1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000c.tmp saved
+
+{com}.                 
+.                 
+. // Section E: 2014 Kharif Crop
+. 
+. * Kharif Crop roster
+. *** Note: I (SL) included only 5 major crops (Paddy, Maize, Bajra, Jawar) described in Section D2. 
+. *** Wheat is NOT included, since there is only 1 response 
+. 
+. use "${c -(}builddta{c )-}/followup_2014/SectionE_KharifCrop_Roster_cleaned.dta", clear
+{txt}
+{com}. rename q316_HHculkarownrent cultivate_13to15_Kharif
+{res}{txt}
+{com}. *keep if cultivate_13to15_Kharif==1 // (Keep only those who did/will cultivate crops from 2013 to 2015)
+. 
+. /// Clean 5 major crops by names & code
+> gen cropname_cleaned = soundex(q317_namecrop)
+{txt}(47 missing values generated)
+
+{com}. replace cropname_cleaned = "PADDY" if (cropname_cleaned=="P300")
+{txt}variable {bf}cropname_cleaned{sf} was {bf}{res}str4{sf}{txt} now {bf}{res}str5{sf}
+{txt}(1,729 real changes made)
+
+{com}. replace cropname_cleaned = "MAIZE" if (cropname_cleaned=="M200")
+{txt}(149 real changes made)
+
+{com}. replace cropname_cleaned = "JAWAR" if inlist(cropname_cleaned,"J600","J613")
+{txt}(145 real changes made)
+
+{com}. replace cropname_cleaned = "BAJRA" if (cropname_cleaned=="B260")
+{txt}(272 real changes made)
+
+{com}. replace cropname_cleaned = "Others" if !inlist(cropname_cleaned,"PADDY","MAIZE","JAWAR","BAJRA")
+{txt}variable {bf}cropname_cleaned{sf} was {bf}{res}str5{sf}{txt} now {bf}{res}str6{sf}
+{txt}(2,932 real changes made)
+
+{com}. 
+. /// Convert the unit of land area into single unit ("acre")
+> /// Unit convert sourece: http://www.webconversiononline.com/area-conversion.aspx
+> 
+. scalar bhigha_to_acre=0.4004
+{txt}
+{com}. scalar cent_to_acre=0.01
+{txt}
+{com}. scalar kuzhi_to_acre=0.0132 // This is from Wiki: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}. scalar guntha_to_acre=(1/40)
+{txt}
+{com}. scalar biswa_to_acre=8.0083
+{txt}
+{com}. scalar hectare_to_acre=2.4711
+{txt}
+{com}. scalar kuli_to_acre=(1/2.25) // Source: https://tamilvaralaru.wordpress.com/tamil-units-of-measurement/
+{txt}
+{com}. scalar MA_to_acre=(6.43/20) // 20 MA = 1 Veli = 6.43 acre. Source: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}. 
+. rename (q319_crop10kha q321_crop11kha q323_plancropkha12) (growtemp_kh13 growtemp_kh14 growtemp_kh15)
+{res}{txt}
+{com}. rename (q320_areaplanquan q322_areaplankha11 q324_areaplanquan12) (areatemp_kh13 areatemp_kh14 areatemp_kh15)
+{res}{txt}
+{com}. rename (q320_1_areaplanunit q322_1_areacropkha10unit q324_1_areaplanunit12) (areaunit_kh13 areaunit_kh14 areaunit_kh15)
+{res}{txt}
+{com}. rename (q320_1_areaplanunit_oth q322_1_areacrop10unit_oth q324_1_areaplanunit12_oth) (areaotherunit_kh13 areaotherunit_kh14 areaotherunit_kh15)
+{res}{txt}
+{com}.         
+. foreach year in kh13 kh14 kh15 {c -(}
+{txt}  2{com}.         loc v area_`year'_subcroplevel
+{txt}  3{com}.         clonevar `v'=areatemp_`year'
+{txt}  4{com}.         
+.         replace `v' = `v' * bhigha_to_acre if inlist(areaunit_`year',2)
+{txt}  5{com}.         replace `v' = `v' * cent_to_acre if (areaunit_`year'==3)
+{txt}  6{com}.         replace `v' = `v' * guntha_to_acre if (areaunit_`year'==4)
+{txt}  7{com}.         replace `v' = `v' * biswa_to_acre if (areaunit_`year'==5)
+{txt}  8{com}.         replace `v' = `v' * kuli_to_acre if (areaunit_`year'==7)
+{txt}  9{com}.         replace `v' = `v' * MA_to_acre if (areaunit_`year'==8)
+{txt} 10{com}.         replace `v' =.b if (areaunit_`year'==-888) // Only 1 observation. Safe to drop.
+{txt} 11{com}.         replace `v' =.b if ((growtemp_`year'==2) & !mi(`v')) // If did not grow/plan to grow, replace it as missing
+{txt} 12{com}.         
+.         // Create HH-crop level variables
+.         bys Id cropname_cleaned: egen grow_`year' = min(growtemp_`year') // grow indicator
+{txt} 13{com}.         lab value grow_`year' yesno
+{txt} 14{com}.         bys Id cropname_cleaned: egen area_`year' = total(area_`year'_subcroplevel), missing
+{txt} 15{com}.         
+. {c )-}
+{txt}(2,947 missing values generated)
+(990 real changes made)
+(113 real changes made)
+(17 real changes made)
+(399 real changes made)
+(5 real changes made)
+(3 real changes made)
+(1 real change made, 1 to missing)
+(3 real changes made, 3 to missing)
+(2745 missing values generated)
+(2917 missing values generated)
+(2,866 missing values generated)
+(1,007 real changes made)
+(130 real changes made)
+(21 real changes made)
+(420 real changes made)
+(7 real changes made)
+(6 real changes made)
+(1 real change made, 1 to missing)
+(6 real changes made, 6 to missing)
+(2744 missing values generated)
+(2854 missing values generated)
+(3,100 missing values generated)
+(951 real changes made, 6 to missing)
+(103 real changes made)
+(11 real changes made)
+(369 real changes made, 4 to missing)
+(4 real changes made)
+(3 real changes made)
+(1 real change made, 1 to missing)
+(8 real changes made, 8 to missing)
+(2818 missing values generated)
+(3080 missing values generated)
+
+{com}. *
+. 
+. keep Id cultivate_13to15_Kharif cropname_cleaned grow_kh* area_kh13 area_kh14 area_kh15
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(118 observations deleted)
+
+{com}. reshape wide grow_kh* area_kh*, i(Id) j(cropname_cleaned) string
+{txt}(note: j = BAJRA JAWAR MAIZE Others PADDY)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    5109   {txt}->{res}    5035
+{txt}Number of variables            {res}       9   {txt}->{res}      32
+{txt}j variable (5 values)  {res}cropname_cleaned   {txt}->   (dropped)
+xij variables:
+                              {res}grow_kh13   {txt}->   {res}grow_kh13BAJRA grow_kh13JAWAR ... grow_kh13PADDY
+                              grow_kh14   {txt}->   {res}grow_kh14BAJRA grow_kh14JAWAR ... grow_kh14PADDY
+                              grow_kh15   {txt}->   {res}grow_kh15BAJRA grow_kh15JAWAR ... grow_kh15PADDY
+                              area_kh13   {txt}->   {res}area_kh13BAJRA area_kh13JAWAR ... area_kh13PADDY
+                              area_kh14   {txt}->   {res}area_kh14BAJRA area_kh14JAWAR ... area_kh14PADDY
+                              area_kh15   {txt}->   {res}area_kh15BAJRA area_kh15JAWAR ... area_kh15PADDY
+{txt}{hline 77}
+
+{com}. drop *Others
+{txt}
+{com}. 
+. /// Variable labeling
+> forval year=13/15 {c -(}
+{txt}  2{com}.         foreach crop in BAJRA JAWAR MAIZE PADDY {c -(}
+{txt}  3{com}.                 label var grow_kh`year'`crop' "Did household grow (or plan to grow if 2015) `crop' in Kharif 20`year'?"
+{txt}  4{com}.                 label var area_kh`year'`crop' "Area `crop' is planted (or plan to plant if 2015) in Kharif 20`year'(acre)"
+{txt}  5{com}.         {c )-}
+{txt}  6{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /// Save
+> isid Id
+{txt}
+{com}. order cultivate_13to15_Kharif, after(Id)
+{txt}
+{com}. tempfile SecEroster
+{txt}
+{com}. save `SecEroster'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000d.tmp saved
+
+{com}. 
+. 
+. // Section E1: Kharif Crop Section (2014) - sowing cost
+. 
+. use "${c -(}builddta{c )-}/followup_2014/SectionE1_KharifCrop_Sowing_cleaned.dta", clear
+{txt}
+{com}. 
+. loc var NurseryCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q404_cosraisnurs), missing
+{txt}(2795 missing values generated)
+
+{com}. lab var `var' "Cost of Raising Nursery, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SeedsCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q408_seedpurval), missing
+{txt}(2819 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Seeds, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SeedlingsCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q408_seedpurval), missing
+{txt}(2819 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Seedlings, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var OrgmeasureCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q408_seedpurval), missing
+{txt}(2819 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Organic Measures, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SowingCost_Kh14
+{txt}
+{com}. egen `var'=rowtotal(NurseryCost_Kh14 SeedsCost_Kh14 SeedlingsCost_Kh14 OrgmeasureCost_Kh14), missing
+{txt}(2793 missing values generated)
+
+{com}. note `var': egen `var'=rowtotal(NurseryCost_Kh14 SeedsCost_Kh14 SeedlingsCost_Kh14 OrgmeasureCost_Kh14), missing
+{res}{txt}
+{com}. lab var `var' "Total Cost of Sowing, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. keep Id NurseryCost_Kh14 SeedsCost_Kh14 SeedlingsCost_Kh14 OrgmeasureCost_Kh14 SowingCost_Kh14
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(132 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecE1
+{txt}
+{com}. save `SecE1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000e.tmp saved
+
+{com}. 
+. 
+. // Section E2 - Input cost
+. use "${c -(}builddta{c )-}/followup_2014/SectionE2_KharifCrop_Cost_cleaned.dta", clear
+{txt}
+{com}. 
+. loc var TractorCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q421_trahireval), missing
+{txt}(2795 missing values generated)
+
+{com}. lab var `var' "Cost of Hiring Tractor, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var IrrigationOwnExp_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q423_ownirrexpe), missing
+{txt}(2805 missing values generated)
+
+{com}. lab var `var' "Cost of Irrigation Expense(Own), Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var IrrigationCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q425_irrpurval), missing
+{txt}(2818 missing values generated)
+
+{com}. lab var `var' "Cost of Irrigation Purchased, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var TransportCost_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q427_trancost), missing
+{txt}(2796 missing values generated)
+
+{com}. lab var `var' "Cost of Transportation, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var Othermaterial_Kh14
+{txt}
+{com}. bys Id: egen `var'=total(q428_othmatinputcost), missing
+{txt}(2793 missing values generated)
+
+{com}. lab var `var' "Cost of other material input, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. keep Id TractorCost_Kh14 IrrigationOwnExp_Kh14 IrrigationCost_Kh14 TransportCost_Kh14 Othermaterial_Kh14
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(132 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecE2
+{txt}
+{com}. save `SecE2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000f.tmp saved
+
+{com}. 
+. 
+. // Section E3 - Fertilizer & Pesticide
+. use "${c -(}builddta{c )-}/followup_2014/SectionE3_KharifCrop_InputCost_cleaned.dta", clear
+{txt}
+{com}. 
+. loc var FertCost_Kh14
+{txt}
+{com}. egen `var'=rowtotal(q431_2_chemfertval_*), missing
+{txt}(2834 missing values generated)
+
+{com}. lab var `var' "Cost of fertilizer, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var Fertuse_Kh13
+{txt}
+{com}. egen `var'=rowmin(q431_2_chemfertval_*)
+{txt}(2834 missing values generated)
+
+{com}. lab var `var' "Used fertilizer, Kharif 2013 (HH-level)"
+{txt}
+{com}. 
+. loc var Fertuse_Kh15
+{txt}
+{com}. egen `var'=rowmin(q433_plausekha12_*)
+{txt}(2839 missing values generated)
+
+{com}. lab var `var' "Will use fertilizer, Kharif 2015 (HH-level)"
+{txt}
+{com}. 
+. loc var PestCost_Kh14
+{txt}
+{com}. egen `var'=rowtotal(q436_1_pestunitval_*), missing
+{txt}(3534 missing values generated)
+
+{com}. lab var `var' "Cost of Pesticide, Kharif 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var Pestuse_Kh13
+{txt}
+{com}. egen `var'=rowmin(q437_usekha11_*)
+{txt}(3469 missing values generated)
+
+{com}. lab var `var' "Used Pesticide, Kharif 2013 (HH-level)"
+{txt}
+{com}. 
+. loc var Pestuse_Kh15
+{txt}
+{com}. egen `var'=rowmin(q437_1_planusekha12_*)
+{txt}(3499 missing values generated)
+
+{com}. lab var `var' "Will use Pesticide, Kharif 2015 (HH-level)"
+{txt}
+{com}. 
+. 
+. keep Id Fert* Pest*
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(0 observations are duplicates)
+
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecE3
+{txt}
+{com}. save `SecE3'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000g.tmp saved
+
+{com}. 
+. 
+. 
+. // Section G: Insurance
+. use "${c -(}builddta{c )-}/followup_2014/SectionG_Insurance_cleaned.dta", clear
+{txt}
+{com}. 
+. // Heard of ANY insurance
+. loc var Insur_heardany
+{txt}
+{com}. egen `var' = rowmin(q1402_hrdschename_?),
+{txt}(1202 missing values generated)
+
+{com}. label var `var' "Have you ever heard about any insurance scheme?"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. // Purchased ANY insurance
+. loc var Insur_purchany
+{txt}
+{com}. egen `var' = rowmin(q1403_purcscheme_?)
+{txt}(1648 missing values generated)
+
+{com}. label var `var' "Have you purchased any insurance scheme?"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. // Total premium paid from all insurance scheme
+. loc var Insur_premiumpaidany
+{txt}
+{com}. egen `var' = rowtotal(q1404_totprempaidlastyear_?), missing
+{txt}(4133 missing values generated)
+
+{com}. label var `var' "Total premium paid from all insurance scheme"
+{txt}
+{com}. 
+. // Purchasing ANY insurance in the future
+. loc var Insur_futurepurchany
+{txt}
+{com}. egen `var' = rowmin(q1405_purins_?)
+{txt}(1809 missing values generated)
+
+{com}. label var `var' "Will you consider purchasing any insurance scheme in the future?"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. // Amount of premium willing to pay for insurance scheme in the future
+. loc var Insur_futurepremiumany
+{txt}
+{com}. egen `var' = rowmax(q1406_amt_?)
+{txt}(4354 missing values generated)
+
+{com}. label var `var' "If you plan to purchase any insurance in the future, how much will you pay for it?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. 
+. // Variable for each insurance scheme
+. loc scheme1 VB
+{txt}
+{com}. loc scheme2 NAIS
+{txt}
+{com}. loc scheme3 MNAIS
+{txt}
+{com}. loc scheme4 WBCIS
+{txt}
+{com}. loc scheme5 DMOS
+{txt}
+{com}. 
+. 
+. forval i=1/5 {c -(}
+{txt}  2{com}.         loc var Insur_heard
+{txt}  3{com}.         clonevar `var'`scheme`i''=q1402_hrdschename_`i'
+{txt}  4{com}.         lab var `var'`scheme`i'' "Have you ever heard about `scheme`i''?"
+{txt}  5{com}.         
+.         loc var Insur_purch
+{txt}  6{com}.         clonevar `var'`scheme`i''=q1403_purcscheme_`i'
+{txt}  7{com}.         lab var `var'`scheme`i'' "Have you purchased `scheme`i''?"
+{txt}  8{com}.         
+.         loc var Insur_premiumpaid
+{txt}  9{com}.         clonevar `var'`scheme`i''=q1404_totprempaidlastyear_`i'
+{txt} 10{com}.         lab var `var'`scheme`i'' "Total premium paid for `scheme`i'' last year(2013)"
+{txt} 11{com}.         
+.         loc var Insur_futurepurch
+{txt} 12{com}.         clonevar `var'`scheme`i''=q1405_purins_`i'
+{txt} 13{com}.         lab var `var'`scheme`i'' "Will you consider purchasing `scheme`i'' in the future?"
+{txt} 14{com}.         
+.         loc var Insur_futurepremium
+{txt} 15{com}.         clonevar `var'`scheme`i''=q1406_amt_`i'
+{txt} 16{com}.         lab var `var'`scheme`i'' "If you will purchase `scheme`i'' in the future, how much will you pay for it?"
+{txt} 17{com}. {c )-}
+{txt}(1,207 missing values generated)
+(4,279 missing values generated)
+(4,989 missing values generated)
+(4,369 missing values generated)
+(5,000 missing values generated)
+(1,212 missing values generated)
+(4,472 missing values generated)
+(5,018 missing values generated)
+(4,511 missing values generated)
+(5,013 missing values generated)
+(1,211 missing values generated)
+(4,825 missing values generated)
+(5,033 missing values generated)
+(4,827 missing values generated)
+(5,034 missing values generated)
+(1,211 missing values generated)
+(4,806 missing values generated)
+(5,031 missing values generated)
+(4,809 missing values generated)
+(5,030 missing values generated)
+(1,209 missing values generated)
+(1,793 missing values generated)
+(4,189 missing values generated)
+(1,952 missing values generated)
+(4,398 missing values generated)
+
+{com}. *
+. 
+. // Keep generated variable only
+. keep Id Insur*
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(0 observations are duplicates)
+
+{com}. isid Id
+{txt}
+{com}. tempfile SecG
+{txt}
+{com}. save `SecG'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000h.tmp saved
+
+{com}. 
+. 
+. // Section H2 - Irregular Crop Cost
+. use "${c -(}builddta{c )-}/followup_2014/SectionH2_IrregularCrops_Costs_cleaned.dta", clear
+{txt}
+{com}. rename q600_culirrcrop cultivateIrrcrop_1415
+{res}{txt}
+{com}. 
+. 
+. loc var NurseryCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q603_cosraisnurs), missing
+{txt}(4672 missing values generated)
+
+{com}. lab var `var' "Cost of Raising Nursery (Irregular Crop in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SeedsCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q607_seedpurval), missing
+{txt}(4847 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Seeds (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SeedlingsCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q611_sdlingpurval), missing
+{txt}(4979 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Seedlings (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var OrgmeasureCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q614_orgmanpurval), missing
+{txt}(5050 missing values generated)
+
+{com}. lab var `var' "Cost of Purchasing Organic Measures (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var SowingCostIrr_2014
+{txt}
+{com}. egen `var'=rowtotal(NurseryCostIrr_2014 SeedsCostIrr_2014 SeedlingsCostIrr_2014 OrgmeasureCostIrr_2014), missing
+{txt}(4656 missing values generated)
+
+{com}. note `var': egen `var'=rowtotal(NurseryCostIrr_2014 SeedsCostIrr_2014 SeedlingsCostIrr_2014 OrgmeasureCostIrr_2014), missing
+{res}{txt}
+{com}. lab var `var' "Total Cost of Sowing (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var TractorCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q620_trahireval), missing
+{txt}(4654 missing values generated)
+
+{com}. lab var `var' "Cost of Hiring Tractor (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var IrrigationOwnExpIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q622_ownirrexpe), missing
+{txt}(4958 missing values generated)
+
+{com}. lab var `var' "Cost of Irrigation Expense(Own) (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var IrrigationCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q624_irrpurval), missing
+{txt}(4989 missing values generated)
+
+{com}. lab var `var' "Cost of Irrigation Purchased (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var TransportCostIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q626_trancost), missing
+{txt}(4654 missing values generated)
+
+{com}. lab var `var' "Cost of Transportation (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. loc var OthermaterialIrr_2014
+{txt}
+{com}. bys Id: egen `var'=total(q627_othmatinputcost), missing
+{txt}(4654 missing values generated)
+
+{com}. lab var `var' "Cost of other material input (Irregular Crop) in 2014 (HH-level)"
+{txt}
+{com}. 
+. drop q600_culirrcrop_count-q627_othmatinputcost
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(95 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecH2
+{txt}
+{com}. save `SecH2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000i.tmp saved
+
+{com}. 
+. 
+. // Section H3 ~ H5: Fertiliser & Pesticide cost (irregular crop)
+. use "${c -(}builddta{c )-}/followup_2014/SectionH3_H5_IrregularCrops_Costs_cleaned.dta", clear
+{txt}
+{com}. 
+. 
+. loc var FertCost_Kh14
+{txt}
+{com}. egen `var'=rowtotal(q630_2_chemfertval_*), missing
+{txt}(4708 missing values generated)
+
+{com}. lab var `var' "Cost of fertilizer (Irregular Crop) in 2014"
+{txt}
+{com}. 
+. loc var Fertuse_Kh13
+{txt}
+{com}. egen `var'=rowmin(q631_usekha2011_*)
+{txt}(4720 missing values generated)
+
+{com}. lab var `var' "Used fertilizer (Irregular Crop) in 2013"
+{txt}
+{com}. 
+. loc var Fertuse_Kh15
+{txt}
+{com}. egen `var'=rowmin(q632_plausekha12_*)
+{txt}(4722 missing values generated)
+
+{com}. lab var `var' "Will use fertilizer (Irregular Crop) in 2015"
+{txt}
+{com}. 
+. loc var PestCost_Kh14
+{txt}
+{com}. egen `var'=rowtotal(q634_2_pestunitval_*), missing
+{txt}(4797 missing values generated)
+
+{com}. lab var `var' "Cost of pesticide (Irregular Crop) in 2014"
+{txt}
+{com}. 
+. loc var Pestuse_Kh13
+{txt}
+{com}. egen `var'=rowmin(q635_usekha11_*)
+{txt}(4807 missing values generated)
+
+{com}. lab var `var' "Used pesticide (Irregular Crop) in 2013"
+{txt}
+{com}. 
+. loc var Pestuse_Kh15
+{txt}
+{com}. egen `var'=rowmin(q635_1_planusekha12_*)
+{txt}(4808 missing values generated)
+
+{com}. lab var `var'"Will use pesticide (Irregular Crop) in 2015"
+{txt}
+{com}. 
+. drop q600_culirrcrop-q709_supfamlabdayC
+{txt}
+{com}. isid Id
+{txt}
+{com}. tempfile SecH3H4H5
+{txt}
+{com}. save `SecH3H4H5'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000j.tmp saved
+
+{com}. 
+. 
+. // Section I1: Financial Assistance Provided
+. use "${c -(}builddta{c )-}/followup_2014/SectionI1_Financial_Assistance_cleaned.dta", clear
+{txt}
+{com}. 
+. loc varname1 children
+{txt}
+{com}. loc varname2 parents
+{txt}
+{com}. loc varname3 relatfred_svsj
+{txt}
+{com}. loc varname4 relatfred_svdj
+{txt}
+{com}. loc varname5 relatfred_dvsj
+{txt}
+{com}. loc varname6 relatfred_dvdj
+{txt}
+{com}. loc varname7 privlender
+{txt}
+{com}. loc varname8 ldlordemployer
+{txt}
+{com}. loc varname9 agcoop
+{txt}
+{com}. loc varname10 bank
+{txt}
+{com}. loc varname11 coopsociety
+{txt}
+{com}. loc varname12 MFI
+{txt}
+{com}. loc varname13 selfhelpgroup
+{txt}
+{com}. loc varname14 others
+{txt}
+{com}. 
+. loc entity1 Children
+{txt}
+{com}. loc entity2 Parents
+{txt}
+{com}. loc entity3 Relatives/Friend (same jati, same village)
+{txt}
+{com}. loc entity4 Relatives/Friend (different jati, same village)
+{txt}
+{com}. loc entity5 Relatives/Friend (same jati, different village)
+{txt}
+{com}. loc entity6 Relatives/Friend (different jati, different village)
+{txt}
+{com}. loc entity7 Private Lender
+{txt}
+{com}. loc entity8 Lendlord/Employer
+{txt}
+{com}. loc entity9 Ag.Coop/Ag.Input trader
+{txt}
+{com}. loc entity10 Bank
+{txt}
+{com}. loc entity11 Coop. Society
+{txt}
+{com}. loc entity12 Microfinance Institution
+{txt}
+{com}. loc entity13 Self-Help Group(s)
+{txt}
+{com}. loc entity14 Others (Specify)
+{txt}
+{com}. 
+. /// Generate variables for each entity
+> forval i=1/14{c -(}
+{txt}  2{com}.         loc var gavegift_`varname`i''
+{txt}  3{com}.         clonevar `var' = q1111_givgiftkha10_`i'
+{txt}  4{com}.         note `var': EXCLUDE gifts from marriage
+{txt}  5{com}.         lab var `var' "Gave gift to `entity`i'' (last Kharif)"
+{txt}  6{com}.         
+.         loc var gavegiftval_`varname`i''
+{txt}  7{com}.         clonevar `var' = q1112_totvalallgift_`i'
+{txt}  8{com}.         lab var `var' "Total value (Rs.) of Gifts to `entity`i'' (last Kharif)"
+{txt}  9{com}.         
+.         loc var gavemrggiftval_`varname`i''
+{txt} 10{com}.         clonevar `var' = q1113_totvalallmarrgift_`i'
+{txt} 11{com}.         lab var `var' "Total value (Rs.) of all marriage gifts taken `entity`i'' (last Kharif)"
+{txt} 12{com}.         
+.         loc var madeloan_`varname`i''
+{txt} 13{com}.         clonevar `var' = q1114_giveloankha11_`i'
+{txt} 14{com}.         lab var `var' "Made a loan to `entity`i'' (last Kharif)"
+{txt} 15{com}.         
+.         loc var madeloanval_`varname`i''
+{txt} 16{com}.         clonevar `var' = q1115_totamtloangiv_`i'
+{txt} 17{com}.         lab var `var' "Total value (Rs.) of all loans to `entity`i'' (last Kharif)"
+{txt} 18{com}.         
+.         loc var madeloanint_`varname`i''
+{txt} 19{com}.         clonevar `var' = q1115_1_intcharloan_`i'
+{txt} 20{com}.         lab var `var' "Interested charged for loans to `entity`i'' (last Kharif)"
+{txt} 21{com}.         
+.         loc var madeloancol_`varname`i''
+{txt} 22{com}.         clonevar `var' = q1116_totvalcolforloan_`i'
+{txt} 23{com}.         lab var `var' "Total value (Rs.) of collateral used for loans to `entity`i'' (last Kharif)"
+{txt} 24{com}.         
+. {c )-}
+{txt}(71 missing values generated)
+{res}{txt}(3,665 missing values generated)
+(3,748 missing values generated)
+(68 missing values generated)
+(5,022 missing values generated)
+(5,022 missing values generated)
+(5,022 missing values generated)
+(554 missing values generated)
+{res}{txt}(4,742 missing values generated)
+(4,744 missing values generated)
+(416 missing values generated)
+(5,019 missing values generated)
+(5,019 missing values generated)
+(5,019 missing values generated)
+(57 missing values generated)
+{res}{txt}(3,502 missing values generated)
+note: label truncated to 80 characters
+(3,534 missing values generated)
+note: label truncated to 80 characters
+(58 missing values generated)
+(4,875 missing values generated)
+note: label truncated to 80 characters
+(4,876 missing values generated)
+note: label truncated to 80 characters
+(4,876 missing values generated)
+note: label truncated to 80 characters
+(58 missing values generated)
+{res}{txt}(4,145 missing values generated)
+note: label truncated to 80 characters
+(4,158 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+(4,965 missing values generated)
+note: label truncated to 80 characters
+(4,965 missing values generated)
+note: label truncated to 80 characters
+(4,965 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+{res}{txt}(3,801 missing values generated)
+note: label truncated to 80 characters
+(3,823 missing values generated)
+note: label truncated to 80 characters
+(58 missing values generated)
+(4,989 missing values generated)
+note: label truncated to 80 characters
+(4,989 missing values generated)
+note: label truncated to 80 characters
+(4,989 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+{res}{txt}(4,552 missing values generated)
+note: label truncated to 80 characters
+(4,560 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+note: label truncated to 80 characters
+(5,011 missing values generated)
+note: label truncated to 80 characters
+(5,011 missing values generated)
+note: label truncated to 80 characters
+(5,011 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+{res}{txt}(5,015 missing values generated)
+(5,016 missing values generated)
+(59 missing values generated)
+(4,932 missing values generated)
+(4,934 missing values generated)
+(4,934 missing values generated)
+(57 missing values generated)
+{res}{txt}(5,014 missing values generated)
+(5,014 missing values generated)
+(59 missing values generated)
+(5,028 missing values generated)
+(5,029 missing values generated)
+(5,030 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+{res}{txt}(5,028 missing values generated)
+(5,027 missing values generated)
+note: label truncated to 80 characters
+(133 missing values generated)
+(5,007 missing values generated)
+(5,009 missing values generated)
+(5,007 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+{res}{txt}(5,029 missing values generated)
+(5,029 missing values generated)
+(137 missing values generated)
+(4,901 missing values generated)
+(4,911 missing values generated)
+(4,906 missing values generated)
+(58 missing values generated)
+{res}{txt}(5,032 missing values generated)
+(5,032 missing values generated)
+(139 missing values generated)
+(5,017 missing values generated)
+(5,018 missing values generated)
+(5,017 missing values generated)
+(58 missing values generated)
+{res}{txt}(5,033 missing values generated)
+(5,033 missing values generated)
+note: label truncated to 80 characters
+(140 missing values generated)
+(5,016 missing values generated)
+(5,018 missing values generated)
+(5,017 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+{res}{txt}(4,997 missing values generated)
+(4,997 missing values generated)
+(139 missing values generated)
+(4,955 missing values generated)
+(4,966 missing values generated)
+(4,967 missing values generated)
+note: label truncated to 80 characters
+(59 missing values generated)
+{res}{txt}(5,030 missing values generated)
+(5,029 missing values generated)
+(95 missing values generated)
+(5,027 missing values generated)
+(5,027 missing values generated)
+(5,027 missing values generated)
+
+{com}. *
+. /// Generate total variables
+> loc var gavegift_any
+{txt}
+{com}. egen `var'=rowmin(gavegift_*)
+{txt}(56 missing values generated)
+
+{com}. note `var':egen `var'=rowmin(gavegift_*)
+{res}{txt}
+{com}. lab var `var' "Did you give any gift for last Kharif season (since Oct 13)?"
+{txt}
+{com}. 
+. loc var gavegiftval_tot
+{txt}
+{com}. egen `var'=rowtotal(gavegiftval_*), missing
+{txt}(2735 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(gavegiftval_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of gifts gave for last Kharif season (since Oct 13)"
+{txt}
+{com}. 
+. loc var gavemrggiftval_tot
+{txt}
+{com}. egen `var'=rowtotal(gavemrggiftval_*), missing
+{txt}(2817 missing values generated)
+
+{com}. note `var': egen `var'=rowtotal(gavegiftval_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of marriage gifts gave for last Kharif season (since Oct 13)"
+{txt}
+{com}. 
+. loc var madeloan_any
+{txt}
+{com}. egen `var'=rowmin(madeloan_*)
+{txt}(57 missing values generated)
+
+{com}. note `var':egen `var'=rowmin(madeloan_*)
+{res}{txt}
+{com}. lab var `var' "Did you make any loan for last Kharif season (since Oct 13)?"
+{txt}
+{com}. 
+. loc var madeloanval_tot
+{txt}
+{com}. egen `var'=rowtotal(madeloanval_*), missing
+{txt}(4554 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(madeloanval_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of loans made for last Kharif season (since Oct 13)"
+{txt}
+{com}. 
+. loc var madeloanint_tot
+{txt}
+{com}. egen `var'=rowtotal(madeloanint_*), missing
+{txt}(4572 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(madeloanint_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of interests charged on loans for last Kharif season (since Oct 13)"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. loc var madeloancol_tot
+{txt}
+{com}. egen `var'=rowtotal(madeloancol_*), missing
+{txt}(4571 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(madeloancol_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of collateral used for all loans for last Kharif season (since Oct 13)"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. drop q1111_givgiftkha10_1-q1116_totvalcolforloan_14
+{txt}
+{com}. isid Id
+{txt}
+{com}. tempfile SecI1
+{txt}
+{com}. save `SecI1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000k.tmp saved
+
+{com}. 
+. 
+. // Section I2: Financial Assistance Received
+. use "${c -(}builddta{c )-}/followup_2014/SectionI2_Gifts_Loans_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Generate variables for each entity
+> forval i=1/14{c -(}
+{txt}  2{com}.         loc var rcvgift_`varname`i''
+{txt}  3{com}.         clonevar `var' = q1102_recgiftKha11_`i'
+{txt}  4{com}.         note `var': EXCLUDE gifts from marriage
+{txt}  5{com}.         lab var `var' "Received gift from `entity`i'' in 2014"
+{txt}  6{com}.         
+.         loc var rcvgiftval_`varname`i''
+{txt}  7{com}.         clonevar `var' = q1103_totvalallgiftrs_`i'
+{txt}  8{com}.         lab var `var' "Total value (Rs.) of Gifts received from `entity`i'' in 2014"
+{txt}  9{com}.         
+.         loc var rcvmrggiftval_`varname`i''
+{txt} 10{com}.         clonevar `var' = q1104_totvalmarrgift_`i'
+{txt} 11{com}.         lab var `var' "Total value (Rs.) of all marriage gifts received from `entity`i'' in 2014"
+{txt} 12{com}.         
+.         loc var rcvloan_`varname`i''
+{txt} 13{com}.         clonevar `var' = q1105_recloankha11_`i'
+{txt} 14{com}.         lab var `var' "Received a loan from `entity`i'' in 2014"
+{txt} 15{com}.         
+.         loc var rcvloanval_`varname`i''
+{txt} 16{com}.         clonevar `var' = q1106_amtloanrec_`i'
+{txt} 17{com}.         lab var `var' "Total value (Rs.) of all loans received from `entity`i'' in 2014"
+{txt} 18{com}.         
+.         loc var moneyowe_`varname`i''
+{txt} 19{com}.         clonevar `var' = q1107_totmonownloan_`i'
+{txt} 20{com}.         lab var `var' "Total amount (Rs.) currently owe `entity`i''"
+{txt} 21{com}.         
+.         loc var loannumpayment_`varname`i''
+{txt} 22{com}.         clonevar `var' = q1108_numpayloanper_`i'
+{txt} 23{com}.         lab var `var' "Number of Payments to `entity`i'' in 2014"
+{txt} 24{com}.         
+.         loc var loantotperiod_`varname`i''
+{txt} 25{com}.         clonevar `var' = q1108_1_totMMloanper_`i'
+{txt} 26{com}.         lab var `var' "Total length of loan period `entity`i'' in 2014"
+{txt} 27{com}.                 
+.         loc var loanamtpaid_`varname`i''
+{txt} 28{com}.         clonevar `var' = q1109_totpaidwitint_`i'
+{txt} 29{com}.         lab var `var' "Total loan amount (loan + interest) being paid to `entity`i'' in 2014"
+{txt} 30{com}.         
+.         loc var rcvloancol_`varname`i''
+{txt} 31{com}.         clonevar `var' = q1109_1_totvalcol_`i'
+{txt} 32{com}.         note `var': zero collateral implies not given.
+{txt} 33{com}.         lab var `var' "Total value (Rs.) of collateral used for loans received from `entity`i'' in 2014"
+{txt} 34{com}.         
+. {c )-}
+{txt}(70 missing values generated)
+{res}{txt}(4,555 missing values generated)
+(4,575 missing values generated)
+(67 missing values generated)
+(5,020 missing values generated)
+(5,020 missing values generated)
+(5,020 missing values generated)
+(5,021 missing values generated)
+(5,020 missing values generated)
+(5,021 missing values generated)
+{res}{txt}(464 missing values generated)
+{res}{txt}(4,973 missing values generated)
+(4,967 missing values generated)
+(370 missing values generated)
+(5,026 missing values generated)
+(5,026 missing values generated)
+(5,026 missing values generated)
+(5,027 missing values generated)
+(5,026 missing values generated)
+(5,026 missing values generated)
+{res}{txt}(56 missing values generated)
+{res}{txt}(4,802 missing values generated)
+note: label truncated to 80 characters
+(4,819 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+(4,468 missing values generated)
+note: label truncated to 80 characters
+(4,469 missing values generated)
+(4,478 missing values generated)
+(4,476 missing values generated)
+(4,477 missing values generated)
+note: label truncated to 80 characters
+(4,502 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(56 missing values generated)
+{res}{txt}(4,937 missing values generated)
+note: label truncated to 80 characters
+(4,943 missing values generated)
+note: label truncated to 80 characters
+(58 missing values generated)
+(4,814 missing values generated)
+note: label truncated to 80 characters
+(4,814 missing values generated)
+(4,828 missing values generated)
+(4,825 missing values generated)
+note: label truncated to 80 characters
+(4,826 missing values generated)
+note: label truncated to 80 characters
+(4,834 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(4,922 missing values generated)
+note: label truncated to 80 characters
+(4,930 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+(4,823 missing values generated)
+note: label truncated to 80 characters
+(4,823 missing values generated)
+(4,836 missing values generated)
+(4,831 missing values generated)
+note: label truncated to 80 characters
+(4,832 missing values generated)
+note: label truncated to 80 characters
+(4,838 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(56 missing values generated)
+{res}{txt}(4,996 missing values generated)
+note: label truncated to 80 characters
+(4,996 missing values generated)
+note: label truncated to 80 characters
+(58 missing values generated)
+note: label truncated to 80 characters
+(4,977 missing values generated)
+note: label truncated to 80 characters
+(4,977 missing values generated)
+note: label truncated to 80 characters
+(4,979 missing values generated)
+note: label truncated to 80 characters
+(4,981 missing values generated)
+note: label truncated to 80 characters
+(4,980 missing values generated)
+note: label truncated to 80 characters
+(4,983 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(56 missing values generated)
+{res}{txt}(5,007 missing values generated)
+(5,007 missing values generated)
+(56 missing values generated)
+(4,511 missing values generated)
+(4,515 missing values generated)
+(4,525 missing values generated)
+(4,527 missing values generated)
+(4,526 missing values generated)
+(4,527 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(5,032 missing values generated)
+(5,032 missing values generated)
+(56 missing values generated)
+(4,899 missing values generated)
+(4,899 missing values generated)
+(4,901 missing values generated)
+(4,909 missing values generated)
+(4,904 missing values generated)
+(4,904 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(5,028 missing values generated)
+(5,028 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+(4,968 missing values generated)
+(4,970 missing values generated)
+(4,969 missing values generated)
+(4,972 missing values generated)
+(4,973 missing values generated)
+note: label truncated to 80 characters
+(4,972 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(56 missing values generated)
+{res}{txt}(5,012 missing values generated)
+(5,013 missing values generated)
+(57 missing values generated)
+(4,363 missing values generated)
+(4,387 missing values generated)
+(4,386 missing values generated)
+(4,401 missing values generated)
+(4,433 missing values generated)
+(4,377 missing values generated)
+{res}{txt}(56 missing values generated)
+{res}{txt}(5,030 missing values generated)
+(5,030 missing values generated)
+(57 missing values generated)
+(4,964 missing values generated)
+(4,967 missing values generated)
+(4,965 missing values generated)
+(4,967 missing values generated)
+(4,967 missing values generated)
+(4,964 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(5,032 missing values generated)
+(5,032 missing values generated)
+note: label truncated to 80 characters
+(57 missing values generated)
+(4,956 missing values generated)
+(4,962 missing values generated)
+(4,962 missing values generated)
+(4,969 missing values generated)
+(4,964 missing values generated)
+note: label truncated to 80 characters
+(4,958 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(5,007 missing values generated)
+(5,007 missing values generated)
+(56 missing values generated)
+(4,284 missing values generated)
+(4,312 missing values generated)
+(4,314 missing values generated)
+(4,315 missing values generated)
+(4,328 missing values generated)
+(4,346 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+(55 missing values generated)
+{res}{txt}(5,032 missing values generated)
+(5,033 missing values generated)
+(58 missing values generated)
+(5,000 missing values generated)
+(5,000 missing values generated)
+(5,003 missing values generated)
+(5,002 missing values generated)
+(5,002 missing values generated)
+(5,010 missing values generated)
+{res}{txt}note: label truncated to 80 characters
+
+{com}. *
+. /// Generate total variables
+> 
+. loc var rcvgift_any
+{txt}
+{com}. egen `var'=rowmin(rcvgift_*)
+{txt}(55 missing values generated)
+
+{com}. note `var':egen `var'=rowmin(rcvgift_*)
+{res}{txt}
+{com}. lab var `var' "Did you receive any gift in 2014 (Jan-Dec)?"
+{txt}
+{com}. 
+. loc var rcvgiftval_tot
+{txt}
+{com}. egen `var'=rowtotal(rcvgiftval_*), missing
+{txt}(4235 missing values generated)
+
+{com}. lab var `var' "Total values (Rs.) of gifts received in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. loc var rcvmrggiftval_tot
+{txt}
+{com}. egen `var'=rowtotal(rcvmrggiftval_*), missing
+{txt}(4269 missing values generated)
+
+{com}. note `var': egen `var'=rowtotal(rcvmrggiftval_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of marriage gifts received in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. loc var rcvloan_any
+{txt}
+{com}. egen `var'=rowmin(rcvloan_*)
+{txt}(56 missing values generated)
+
+{com}. note `var':egen `var'=rowmin(receiveloan_*)
+{res}{txt}
+{com}. lab var `var' "Did you receive any loan in 2014 (Jan-Dec)?"
+{txt}
+{com}. 
+. loc var rcvloanval_tot
+{txt}
+{com}. egen `var'=rowtotal(rcvloanval_*), missing
+{txt}(2889 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(rcvloanval_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of loans received in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. loc var moneyowe_tot
+{txt}
+{com}. egen `var'=rowtotal(moneyowe_*), missing
+{txt}(2929 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(moneyowe_*), missing
+{res}{txt}
+{com}. lab var `var' "Total amount (Rs.) HH currently owe in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. loc var loanamtpaid_tot
+{txt}
+{com}. egen `var'=rowtotal(loanamtpaid_*), missing
+{txt}(3000 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(loanamtpaid_*), missing
+{res}{txt}
+{com}. lab var `var' "Total amount (loan + interest) being paid to all loaners in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. loc var rcvloancol_tot
+{txt}
+{com}. egen `var'=rowtotal(rcvloancol_*), missing
+{txt}(2946 missing values generated)
+
+{com}. note `var':egen `var'=rowtotal(rcvloancol_*), missing
+{res}{txt}
+{com}. lab var `var' "Total values (Rs.) of collateral used for all loans received in 2014 (Jan-Dec)"
+{txt}
+{com}. 
+. drop q1102_recgiftKha11_1-q1109_totpaidwitint_14
+{txt}
+{com}. isid Id
+{txt}
+{com}. tempfile SecI2
+{txt}
+{com}. save `SecI2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000l.tmp saved
+
+{com}. 
+. // Section I3: Savings and Durables
+. use "${c -(}builddta{c )-}/followup_2014/SectionI3_Savings_Durables_cleaned.dta", clear
+{txt}
+{com}. 
+. loc varname1 animals
+{txt}
+{com}. loc varname2 cropstock
+{txt}
+{com}. loc varname3 gold
+{txt}
+{com}. loc varname4 CFSHG
+{txt}
+{com}. loc varname5 silver
+{txt}
+{com}. loc varname6 othmetals
+{txt}
+{com}. loc varname7 finproducts
+{txt}
+{com}. loc varname8 savings
+{txt}
+{com}. 
+. /*
+> loc asset1 Animals
+> loc asset2 Crop stock
+> loc asset3 Gold
+> loc asset4 Chit Funds, SHG group savings
+> loc asset5 Silver
+> loc asset6 Other metals
+> loc asset7 Financial products(stock,bond,etc.)
+> loc asset8 Savings(formal,informal)
+> */
+. 
+. forval i=1/8 {c -(}
+{txt}  2{com}.         loc var owned`varname`i''_bfJan14
+{txt}  3{com}.         clonevar `var'=q901_ownassbefkha11_`i'
+{txt}  4{com}.                 
+.         loc var estval`varname`i''_bfJan14
+{txt}  5{com}.         clonevar `var'=q902_estvalassbefkha11_`i'
+{txt}  6{com}.                 
+.         loc var own`varname`i''_now
+{txt}  7{com}.         clonevar `var'=q903_currownass_`i'
+{txt}  8{com}.         
+.         loc var estval`varname`i''_now
+{txt}  9{com}.         clonevar `var'=q904_curestvalass_`i'
+{txt} 10{com}.         
+.         if !inlist(`i',2,8) {c -(}
+{txt} 11{com}.                 loc var purch`varname`i''_2014
+{txt} 12{com}.                 clonevar `var'=q905_purckha11_`i'
+{txt} 13{com}.                 
+.                 loc var sold`varname`i''_2014
+{txt} 14{com}.                 clonevar `var'=q906_soldkha11_`i'
+{txt} 15{com}.         {c )-}
+{txt} 16{com}.         
+.         if !inlist(`i',2) {c -(}
+{txt} 17{com}.                 loc var giftgive`varname`i''_2014
+{txt} 18{com}.                 clonevar `var'=q907_giftgivenkha11_`i'
+{txt} 19{com}.         {c )-}
+{txt} 20{com}.         
+.         loc var giftrcv`varname`i''
+{txt} 21{com}.         clonevar `var'=q908_giftreckha11_`i'
+{txt} 22{com}.         
+.         if !inlist(`i',1,2) {c -(}
+{txt} 23{com}.                 loc var returnon`varname`i''
+{txt} 24{com}.                 clonevar `var'=q909_retintkha11_`i'
+{txt} 25{com}.         {c )-}
+{txt} 26{com}. {c )-}
+{txt}(55 missing values generated)
+(2,647 missing values generated)
+(55 missing values generated)
+(2,657 missing values generated)
+(2,650 missing values generated)
+(2,650 missing values generated)
+(2,649 missing values generated)
+(2,649 missing values generated)
+(55 missing values generated)
+(4,489 missing values generated)
+(55 missing values generated)
+(4,248 missing values generated)
+(4,214 missing values generated)
+(64 missing values generated)
+(1,641 missing values generated)
+(63 missing values generated)
+(1,723 missing values generated)
+(55 missing values generated)
+(1,497 missing values generated)
+(55 missing values generated)
+(1,499 missing values generated)
+(55 missing values generated)
+(55 missing values generated)
+(4,509 missing values generated)
+(56 missing values generated)
+(4,473 missing values generated)
+(4,470 missing values generated)
+(4,470 missing values generated)
+(4,470 missing values generated)
+(4,470 missing values generated)
+(4,479 missing values generated)
+(62 missing values generated)
+(1,754 missing values generated)
+(61 missing values generated)
+(1,765 missing values generated)
+(1,496 missing values generated)
+(1,500 missing values generated)
+(1,501 missing values generated)
+(1,503 missing values generated)
+(1,511 missing values generated)
+(57 missing values generated)
+(3,391 missing values generated)
+(58 missing values generated)
+(3,408 missing values generated)
+(3,372 missing values generated)
+(3,373 missing values generated)
+(3,373 missing values generated)
+(3,374 missing values generated)
+(3,373 missing values generated)
+(56 missing values generated)
+(4,940 missing values generated)
+(55 missing values generated)
+(4,952 missing values generated)
+(4,928 missing values generated)
+(4,928 missing values generated)
+(4,927 missing values generated)
+(4,927 missing values generated)
+(4,927 missing values generated)
+(55 missing values generated)
+(3,207 missing values generated)
+(61 missing values generated)
+(3,035 missing values generated)
+(2,876 missing values generated)
+(2,873 missing values generated)
+(2,876 missing values generated)
+
+{com}. *
+. drop q901_ownassbefkha11_1-q909_retintkha11_8
+{txt}
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecI3
+{txt}
+{com}. save `SecI3'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000m.tmp saved
+
+{com}. 
+. 
+. // Section J1: Asset (part 1)
+. use "${c -(}builddta{c )-}/followup_2014/SectionJ1_Asset_part1_cleaned.dta", clear
+{txt}
+{com}. 
+. loc varname1 residH
+{txt}
+{com}. loc varname2 farmH
+{txt}
+{com}. loc varname3 rentalH
+{txt}
+{com}. loc varname4 othuncult
+{txt}
+{com}. loc varname5 othHHcult
+{txt}
+{com}. 
+. scalar bhigha_to_acre=0.4004
+{txt}
+{com}. scalar cent_to_acre=0.01
+{txt}
+{com}. scalar kuzhi_to_acre=0.0132 // This is from Wiki: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}. scalar guntha_to_acre=(1/40)
+{txt}
+{com}. scalar biswa_to_acre=8.0083
+{txt}
+{com}. scalar hectare_to_acre=2.4711
+{txt}
+{com}. scalar kuli_to_acre=(1/2.25) // Source: https://tamilvaralaru.wordpress.com/tamil-units-of-measurement/
+{txt}
+{com}. scalar MA_to_acre=(6.43/20) // 20 MA = 1 Veli = 6.43 acre. Source: https://en.wikipedia.org/wiki/Tamil_units_of_measurement
+{txt}
+{com}. 
+. forval i=1/5{c -(}
+{txt}  2{com}.         loc var own`varname`i''
+{txt}  3{com}.         rename q910_ownasskha11_`i' `var' 
+{txt}  4{com}.         
+.         if inrange(`i',1,3) {c -(}
+{txt}  5{com}.                 loc var val`varname`i''_Jan14
+{txt}  6{com}.                 rename q911_totvalkha11_`i' `var' 
+{txt}  7{com}.                 
+.                 loc var val`varname`i''_now
+{txt}  8{com}.                 rename q912_totvalnow_`i' `var'
+{txt}  9{com}.                 
+.                 loc var consyr`varname`i''_now
+{txt} 10{com}.                 rename q914_YYcons_`i' `var'
+{txt} 11{com}.         {c )-}
+{txt} 12{com}.         else if inlist(`i',4) {c -(}
+{txt} 13{com}.                 loc v landarea_uncult
+{txt} 14{com}.                 clonevar `v'=q921_1_area_4
+{txt} 15{com}.                 
+.                 replace `v' = `v' * bhigha_to_acre if inlist(q921_1_areaunit_4,2)
+{txt} 16{com}.                 replace `v' = `v' * cent_to_acre if (q921_1_areaunit_4==3)
+{txt} 17{com}.                 replace `v' = `v' * guntha_to_acre if (q921_1_areaunit_4==4)
+{txt} 18{com}.                 replace `v' = `v' * biswa_to_acre if (q921_1_areaunit_4==5)
+{txt} 19{com}.                 replace `v' = `v' * kuli_to_acre if (q921_1_areaunit_4==7)
+{txt} 20{com}.                 replace `v' =.b if (q921_1_areaunit_4==-888) // Only 1 observation. Safe to drop.
+{txt} 21{com}.                 note `v': measurement unit is acre
+{txt} 22{com}.                 
+.                 drop q921_1_area_4 q921_1_areaunit_4
+{txt} 23{com}.         {c )-}
+{txt} 24{com}.         else {c -(} // i==5
+{txt} 25{com}.                 loc v landarea_HHnotcult
+{txt} 26{com}.                 clonevar `v'=q921_1_area_5      
+{txt} 27{com}.                 
+.                 replace `v' = `v' * bhigha_to_acre if inlist(q921_1_areaunit_5,2)
+{txt} 28{com}.                 replace `v' = `v' * cent_to_acre if (q921_1_areaunit_5==3)
+{txt} 29{com}.                 replace `v' = `v' * guntha_to_acre if (q921_1_areaunit_5==4)
+{txt} 30{com}.                 replace `v' = `v' * biswa_to_acre if (q921_1_areaunit_5==5)
+{txt} 31{com}.                 replace `v' = `v' * kuli_to_acre if (q921_1_areaunit_5==7)
+{txt} 32{com}.                 replace `v' =.b if (q921_1_areaunit_5==-888) // Only 1 observation. Safe to drop.
+{txt} 33{com}.                 note `v': measurement unit is acre
+{txt} 34{com}.                 
+.                 drop q921_1_area_5 q921_1_areaunit_5
+{txt} 35{com}.         {c )-}
+{txt} 36{com}.         
+.                 loc var rentinc`varname`i''
+{txt} 37{com}.                 rename q913_increntlast12mon_`i' `var' 
+{txt} 38{com}.                 
+.                 loc var consC`varname`i''
+{txt} 39{com}.                 rename q915_constmatcost_`i' `var'
+{txt} 40{com}.                 
+.                 loc var labC`varname`i''
+{txt} 41{com}.                 rename q916_constotwagpayhirelab_`i' `var'
+{txt} 42{com}.                 
+.                 loc var famlab`varname`i''
+{txt} 43{com}.                 rename q917_constotfamday_`i' `var'
+{txt} 44{com}.                 note `var': unit is days
+{txt} 45{com}.                 
+.                 loc var mnt`varname`i''
+{txt} 46{com}.                 rename q918_mainsinkha11_`i' `var'
+{txt} 47{com}.                 
+.                 loc var mntmatC`varname`i''
+{txt} 48{com}.                 rename q919_mainmatcoskha11_`i' `var'
+{txt} 49{com}.                 
+.                 loc var mntlabC`varname`i''
+{txt} 50{com}.                 rename q920_totwagepayhirelabkha_`i' `var'
+{txt} 51{com}. 
+.                 loc var mntfamlab`varname`i''
+{txt} 52{com}.                 rename q921_totfamdaylabkha11_`i' `var'
+{txt} 53{com}.                 note `var': unit is days
+{txt} 54{com}. {c )-}
+{res}{txt}(4,841 missing values generated)
+(13 real changes made)
+(42 real changes made)
+(6 real changes made)
+(11 real changes made)
+(1 real change made)
+(1 real change made, 1 to missing)
+{res}{txt}(4,790 missing values generated)
+(45 real changes made)
+(41 real changes made)
+(3 real changes made)
+(17 real changes made)
+(2 real changes made)
+(0 real changes made)
+{res}{txt}
+{com}. *
+. 
+. tempfile SecJ1
+{txt}
+{com}. save `SecJ1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000n.tmp saved
+
+{com}. 
+. // Section K: Government Scheme
+. use "${c -(}builddta{c )-}/followup_2014/SectionK_Govenrment_Schemes_cleaned.dta", clear
+{txt}
+{com}. 
+. loc var NREGadv_Kh14
+{txt}
+{com}. clonevar `var'=q1001_nregkha11
+{txt}(63 missing values generated)
+
+{com}. lab var `var' "Did you take advantage of NREG scheme in the Kharif 2014 season?"
+{txt}
+{com}. 
+. loc var NREGdaysworked_Kh14
+{txt}
+{com}. clonevar `var'=q1002_totdayHHnreg11
+{txt}(4,454 missing values generated)
+
+{com}. lab var `var' "Total days worked by all HH members (NREG) during Kharif 2014"
+{txt}
+{com}. 
+. loc var NREGrecamt_Kh14
+{txt}
+{com}. clonevar `var'=q1003_totvalHHnreg11
+{txt}(4,455 missing values generated)
+
+{com}. 
+. loc var PDSadv_Kh14
+{txt}
+{com}. clonevar `var'=q1005_usepdskha11
+{txt}(62 missing values generated)
+
+{com}. lab var `var' "Did yout take advantage of PDS (Public Distribution Scheme) in the last Kharif 2014 season?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. 
+. // Other government programs
+. 
+. loc var1 heardGovscheme
+{txt}
+{com}. loc var2 usedGovscheme
+{txt}
+{com}. loc var3 amtGovscheme
+{txt}
+{com}.         
+. forval i=1/11 {c -(}
+{txt}  2{com}. 
+.         if inrange(`i',1,10) {c -(} // 10 pre-determined scheme
+{txt}  3{com}.                 clonevar `var1'`i'=q1012_heardnameprog_`i'
+{txt}  4{com}.                 clonevar `var2'`i'=q1013_usedschememay11_`i'
+{txt}  5{com}.                 clonevar `var3'`i'=q1014_amtvalrec_`i'
+{txt}  6{com}.         {c )-}
+{txt}  7{com}.         else {c -(} // Others
+{txt}  8{com}.                 egen `var1'`i'=rowmin(q1012_heardnameprog_11 q1012_heardnameprog_12)
+{txt}  9{com}.                 lab var `var1'`i' "Others - Heard?"
+{txt} 10{com}.                 
+.                 egen `var2'`i'=rowmin(q1013_usedschememay11_11 q1013_usedschememay11_12)
+{txt} 11{com}.                 lab var `var2'`i' "Others - Used?"
+{txt} 12{com}.                 
+.                 egen `var3'`i'=rowtotal(q1014_amtvalrec_11 q1014_amtvalrec_12), missing
+{txt} 13{com}.                 lab var `var3'`i' "Others - Amount received?"
+{txt} 14{com}.         {c )-}
+{txt} 15{com}. {c )-}
+{txt}(63 missing values generated)
+(2,745 missing values generated)
+(5,010 missing values generated)
+(62 missing values generated)
+(1,835 missing values generated)
+(4,890 missing values generated)
+(63 missing values generated)
+(2,003 missing values generated)
+(4,863 missing values generated)
+(64 missing values generated)
+(2,219 missing values generated)
+(4,897 missing values generated)
+(63 missing values generated)
+(3,493 missing values generated)
+(5,026 missing values generated)
+(63 missing values generated)
+(3,461 missing values generated)
+(4,664 missing values generated)
+(62 missing values generated)
+(3,066 missing values generated)
+(4,933 missing values generated)
+(63 missing values generated)
+(4,310 missing values generated)
+(4,679 missing values generated)
+(62 missing values generated)
+(3,139 missing values generated)
+(4,867 missing values generated)
+(61 missing values generated)
+(1,984 missing values generated)
+(4,832 missing values generated)
+(147 missing values generated)
+(4998 missing values generated)
+(5014 missing values generated)
+
+{com}. *
+. 
+. egen `var1'any=rowmin(`var1'*)
+{txt}(58 missing values generated)
+
+{com}. lab var `var1'any "Heard any Govn't scheme other than NREG and PDS"
+{txt}
+{com}. lab value `var1'any yesno
+{txt}
+{com}. 
+. egen `var2'any=rowmin(`var2'*)
+{txt}(869 missing values generated)
+
+{com}. lab var `var2'any "Used any Govn't scheme other than NREG and PDS"
+{txt}
+{com}. lab value `var2'any yesno
+{txt}
+{com}. 
+. egen `var3'tot=rowtotal(`var3'*), missing
+{txt}(3997 missing values generated)
+
+{com}. lab var `var3'tot "Total mount received from Govn't schemes other than NREG and PDS"
+{txt}
+{com}. 
+. keep Id NREG* PDS* heardGovschemeany usedGovschemeany amtGovschemetot
+{txt}
+{com}. isid Id
+{txt}
+{com}. tempfile SecK
+{txt}
+{com}. save `SecK'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000o.tmp saved
+
+{com}. 
+. // Section L: Consumption
+. use "${c -(}builddta{c )-}/followup_2014/SectionL_Consumption_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Food consumption of each item
+> loc foodcons1 Cerals
+{txt}
+{com}. loc foodcons2 Pulses
+{txt}
+{com}. loc foodcons3 Sugar
+{txt}
+{com}. loc foodcons4 Cookoil
+{txt}
+{com}. loc foodcons5 Spices
+{txt}
+{com}. loc foodcons6 Milk
+{txt}
+{com}. loc foodcons7 Meat
+{txt}
+{com}. loc foodcons8 Fruits
+{txt}
+{com}. loc foodcons9 Veggie
+{txt}
+{com}. loc foodcons10 Confec
+{txt}
+{com}. loc foodcons11 Others1
+{txt}
+{com}. loc foodcons12 Others2
+{txt}
+{com}. loc foodcons13 Others3
+{txt}
+{com}. loc foodcons14 Others4
+{txt}
+{com}. 
+. 
+. forval i=1/14 {c -(}
+{txt}  2{com}.         loc var1 purchval_`foodcons`i''
+{txt}  3{com}.         
+.         // Purchase value
+.         clonevar `var1'=q1203_1_last30purcunit_`i'
+{txt}  4{com}.         note `var1': Purchase value in the last 30 days
+{txt}  5{com}.         
+.         // Estimated unit price
+.         loc var2 unitprice_`foodcons`i''
+{txt}  6{com}.         gen `var2'=(q1203_1_last30purcunit_`i'/q1203_last30purcquan_`i')
+{txt}  7{com}.         lab var `var2' "(Estimated) Unit price of `foodcons`i''"
+{txt}  8{com}. 
+.         /*
+>         There are observations where unit price 1, implying purchase value is equal to purchase quantity
+>         There could be many reasons - data entry error, HH actually paid 1 per unit (after subsidized), actual unit price is 1, or else.
+>         If needed, we can exclude those observations from analysis.
+>         */
+.         
+.         // Family provided value (est. price * quantity family provided)
+.         loc var3 familyval_`foodcons`i''
+{txt}  9{com}.         gen `var3'=q1202_last30famprov_`i' * `var2'
+{txt} 10{com}.         note `var3': Price estimaed from purchase * family-provided quantity
+{txt} 11{com}.         note `var3': Family-provided value in the last 30 days
+{txt} 12{com}.         
+.         // Total food_consumption (purchase value + family provided value)
+.         loc var4 foodconsval`i'
+{txt} 13{com}.         egen `var4' = rowtotal(`var1' `var3')
+{txt} 14{com}.         
+. {c )-}
+{txt}(1,009 missing values generated)
+{res}{txt}(1,011 missing values generated)
+(1,011 missing values generated)
+{res}{txt}(213 missing values generated)
+{res}{txt}(214 missing values generated)
+(214 missing values generated)
+{res}{txt}(358 missing values generated)
+{res}{txt}(360 missing values generated)
+(361 missing values generated)
+{res}{txt}(186 missing values generated)
+{res}{txt}(189 missing values generated)
+(189 missing values generated)
+{res}{txt}(696 missing values generated)
+{res}{txt}(700 missing values generated)
+(701 missing values generated)
+{res}{txt}(2,229 missing values generated)
+{res}{txt}(2,234 missing values generated)
+(2,234 missing values generated)
+{res}{txt}(1,731 missing values generated)
+{res}{txt}(1,735 missing values generated)
+(1,735 missing values generated)
+{res}{txt}(1,920 missing values generated)
+{res}{txt}(1,925 missing values generated)
+(1,926 missing values generated)
+{res}{txt}(290 missing values generated)
+{res}{txt}(293 missing values generated)
+(293 missing values generated)
+{res}{txt}(2,888 missing values generated)
+{res}{txt}(2,898 missing values generated)
+(2,898 missing values generated)
+{res}{txt}(3,426 missing values generated)
+{res}{txt}(3,440 missing values generated)
+(3,440 missing values generated)
+{res}{txt}(3,780 missing values generated)
+{res}{txt}(3,794 missing values generated)
+(3,794 missing values generated)
+{res}{txt}(3,977 missing values generated)
+{res}{txt}(3,996 missing values generated)
+(3,996 missing values generated)
+{res}{txt}(4,188 missing values generated)
+{res}{txt}(4,198 missing values generated)
+(4,198 missing values generated)
+{res}{txt}
+{com}. *
+. /// Total food consumption variables
+> loc var foodconsval_purch
+{txt}
+{com}. egen `var' = rowtotal(purchval*)
+{txt}
+{com}. lab var `var' "Food consumption (purchased) in the last 30 days"
+{txt}
+{com}. 
+. loc var foodconsval_fam
+{txt}
+{com}. egen `var' = rowtotal(familyva*)
+{txt}
+{com}. lab var `var' "Food consumption (family provided) in the last 30 days"
+{txt}
+{com}. 
+. loc var foodconsval_tot
+{txt}
+{com}. egen `var' = rowtotal(foodconsval*), missing
+{txt}
+{com}. lab var `var' "Total food consumption (purchase + family provided) in the last 30 days"
+{txt}
+{com}. 
+. 
+. // Non-food consumption
+. ** Due to the loss of origianl survey data from the field, we do not have unit measurement of some items (Beedis, Cigaretts, etc.)
+. ** Also, we cannot estimate the value of family provided goods due to inconsistency of responses
+. ** (ex. Some households answered "30" as quantity since it is a monthly consumption, no matter actual quantity they spent)
+. ** Thus, I (SL) calculated only the value of purchase only.
+. 
+. loc var nonfoodpurval_tot
+{txt}
+{com}. egen `var' = rowtotal(q1205_1_last30daypurval*), missing
+{txt}(58 missing values generated)
+
+{com}. lab var `var' "Total non-food consumption (purchased only)"
+{txt}
+{com}. 
+. keep Id foodconsval_* nonfoodpurval_tot
+{txt}
+{com}. isid Id
+{txt}
+{com}. tempfile SecL
+{txt}
+{com}. save `SecL'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000p.tmp saved
+
+{com}. 
+. // Section P: Social Network
+. use "${c -(}builddta{c )-}/followup_2014/SectionP_SocialNetwork_cleaned.dta", clear
+{txt}
+{com}. 
+. loc var relsamevil
+{txt}
+{com}. clonevar `var'=q1501_relresinvill
+{txt}(35 missing values generated)
+
+{com}. 
+. loc var2 numrelsamevil
+{txt}
+{com}. bys Id: egen `var2'=count(subid) if (`var'==1)
+{txt}(35 missing values generated)
+
+{com}. lab var `var2' "# of relatives living in a same village"
+{txt}
+{com}. 
+. loc var3 numcultrel
+{txt}
+{com}. bys Id: egen temp=count(subid) if (`var'==1) & (q1507_percult==1)
+{txt}(1743 missing values generated)
+
+{com}. replace temp=0 if mi(temp)
+{txt}(1,743 real changes made)
+
+{com}. bys Id: egen `var3'=max(temp)
+{txt}
+{com}. lab var `var3' "# of cultivating relatives in a same village"
+{txt}
+{com}. 
+. keep Id `var' `var2' `var3'
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(461 observations deleted)
+
+{com}. isid Id
+{txt}
+{com}. 
+. tempfile SecP
+{txt}
+{com}. save `SecP'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_0100000q.tmp saved
+
+{com}. 
+. 
+. 
+. /****************************************************************
+>         SECTION X: Compile, Save and Exit
+> ****************************************************************/
+. 
+. use `Id', clear
+{txt}
+{com}. 
+. merge 1:1 Id using `SecA', keep(1 3) nogen // gen(Match_Id_SecA)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              34
+{txt}{col 9}from master{col 30}{res}              34{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           5,001{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecB1', assert(1 3) nogen // gen(Match_Id_SecB1) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           3,048
+{txt}{col 9}from master{col 30}{res}           3,048{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           1,987{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecB2', assert(1 3) nogen // gen(Match_Id_SecB2) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           3,440
+{txt}{col 9}from master{col 30}{res}           3,440{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           1,595{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecM1', keep(1 3) nogen // gen(Match_Id_SecB2) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           3,260
+{txt}{col 9}from master{col 30}{res}           3,260{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           1,775{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecM2', keep(1 3) nogen // gen(Match_Id_SecB2) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,740
+{txt}{col 9}from master{col 30}{res}           4,740{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}             295{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecM3', assert(1 3) nogen // gen(Match_Id_SecB2) keep (1 3)
+{res}{txt}(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,693
+{txt}{col 9}from master{col 30}{res}           4,693{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}             342{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecM4', assert(1 3) nogen // gen(Match_Id_SecB2) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,679
+{txt}{col 9}from master{col 30}{res}           4,679{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}             356{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecC', assert(3) nogen // gen(Match_Id_SecC) keep (1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecD1', assert(3) nogen // gen(Match_Id_SecC) keep (1 3)
+{res}{txt}(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecEroster', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecE1', keep(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecE2', keep(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecE3', keep(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecG', assert(3) nogen // gen(Match_Id_SecG)
+{res}{txt}(label general already defined)
+(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecH2', keep(1 3) nogen
+{res}{txt}(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecH3H4H5', keep(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecI1', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecI2', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecI3', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecJ1', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecK', keep(1 3) nogen
+{res}{txt}(label yesno already defined)
+(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecL', keep(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id using `SecP', keep(1 3) nogen
+{res}{txt}(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           1,763
+{txt}{col 9}from master{col 30}{res}           1,763{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           3,272{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. // order Match*, last
+. renvars, pref(fu_)
+{txt}
+{com}. rename fu_Id a_1hhid // rename ID variable to be matched with round2, round3 survey
+{res}{txt}
+{com}. 
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/Analysis_variables.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/Analysis_variables.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

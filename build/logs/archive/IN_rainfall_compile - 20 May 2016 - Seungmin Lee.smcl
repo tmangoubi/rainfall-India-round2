@@ -1,0 +1,267 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_compile.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}20 May 2016, 10:31:46
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import datasets
+> ****************************************************************/
+. 
+. // Round 2
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_compiled.dta"
+{txt}
+{com}. isid a_1hhid
+{txt}
+{com}. save `round2dta'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000001.tmp saved
+
+{com}. 
+. // Round 3
+. use "${c -(}builddta{c )-}/round3/IN_rainfall_r3_cleaned.dta", clear
+{txt}
+{com}. isid a_1hhid
+{txt}
+{com}. save `round3dta'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000002.tmp saved
+
+{com}. 
+. // Intervention
+. use "${c -(}builddta{c )-}/intervention/IN_rainfall_intervention.dta", clear
+{txt}
+{com}. isid a_1hhid
+{txt}
+{com}. save `interventiondta'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000003.tmp saved
+
+{com}. 
+. // 2014 Follow-up (Analysis variables only)
+. use "${c -(}builddta{c )-}/followup_2014/Analysis_variables.dta", clear
+{txt}
+{com}. isid a_1hhid
+{txt}
+{com}. save `fu_2014_analysis'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000004.tmp saved
+
+{com}. 
+. /****************************************************************
+>         SECTION 2: Merge datasets
+> ****************************************************************/
+. 
+. // Merge round2, round3, intervention and 2014 follow-up (analysis vars only) dataset
+. use `round2dta', clear
+{txt}
+{com}. merge 1:1 a_1hhid using `round3dta', gen(r2r3_panel) assert(1 3) // To confirm that round3 sample is a subset of round2 sample
+{res}{txt}(label occupation already defined)
+(label yesno already defined)
+(label relationship already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           2,758
+{txt}{col 9}from master{col 30}{res}           2,758{txt}  (r2r3_panel==1)
+{col 9}from using{col 30}{res}               0{txt}  (r2r3_panel==2)
+
+{col 5}matched{col 30}{res}           2,797{txt}  (r2r3_panel==3)
+{col 5}{hline 41}
+
+{com}. label define r2r3_panel 1 "Surveyed in round 2 only" 3 "Surveyed both in round 2 and round 3"
+{txt}
+{com}. label value r2r3_panel r2r3_panel
+{txt}
+{com}. label var r2r3_panel "Household survey status in round 2 & 3"
+{txt}
+{com}. merge 1:1 a_1hhid using `interventiondta', /*nogen*/ assert(3) // To confirm that round2 sample equal to the intervention sample.
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           5,555{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. merge 1:1 a_1hhid using `fu_2014_analysis', nogen assert (1 3) // To confirm that 2014 follow-up survey sample is a subset of r2 sample
+{res}{txt}(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}             520
+{txt}{col 9}from master{col 30}{res}             520{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           5,035{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. /****************************************************************
+>         SECTION 3: Clean merged dataset
+> ****************************************************************/
+. // R2/R3 and Follow-up 2014 have different "yesno" value label. R2/R3 has 0 as "No", while FU2014 has 2 as "NO"
+. label define yesno 0 "No" 1 "Yes" 2 "No", replace
+{txt}
+{com}. 
+. // We will drop id variables from round 2 to use id variables from intervention dataset
+. // Before we drop round 2 id variables, we can observe how much they are different
+. list a_1hhid districtid r2_distid _merge if (districtid!=r2_distid & !mi(r2_distid)) // 6 households
+{txt}
+      {c TLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c TRC}
+      {c |} {res}a_1hhid   distri~d   r2_dis~d        _merge {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+  29. {c |} {res}  A0317         96         99   matched (3) {txt}{c |}
+ 325. {c |} {res}   A312         96        100   matched (3) {txt}{c |}
+ 329. {c |} {res}   A324         96         98   matched (3) {txt}{c |}
+2358. {c |} {res}  P1090         96         97   matched (3) {txt}{c |}
+2359. {c |} {res}  P1091         96        102   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+2363. {c |} {res}  P1096         96        101   matched (3) {txt}{c |}
+      {c BLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c BRC}
+
+{com}. list a_1hhid villageid r2_villid _merge if (villageid!=r2_villid & !mi(r2_villid)) // 6 households, same as bove
+{txt}
+      {c TLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c TRC}
+      {c |} {res}a_1hhid   villag~d   r2_vil~d        _merge {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+  29. {c |} {res}  A0317        229        232   matched (3) {txt}{c |}
+ 325. {c |} {res}   A312        229        233   matched (3) {txt}{c |}
+ 329. {c |} {res}   A324        229        231   matched (3) {txt}{c |}
+2358. {c |} {res}  P1090        229        230   matched (3) {txt}{c |}
+2359. {c |} {res}  P1091        229        235   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+2363. {c |} {res}  P1096        229        234   matched (3) {txt}{c |}
+      {c BLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c BRC}
+
+{com}. list a_1hhid tehsilid r2_tehsid _merge if (tehsilid!=r2_tehsid & !mi(r2_tehsid)) // 80 households
+{txt}
+      {c TLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c TRC}
+      {c |} {res}a_1hhid   tehsilid   r2_teh~d        _merge {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+  29. {c |} {res}  A0317        149        152   matched (3) {txt}{c |}
+ 160. {c |} {res}  A1701         97        101   matched (3) {txt}{c |}
+ 164. {c |} {res}  A1707         97        101   matched (3) {txt}{c |}
+ 221. {c |} {res}  A1902         99        103   matched (3) {txt}{c |}
+ 229. {c |} {res}  A1973         94         98   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+ 325. {c |} {res}   A312        149        153   matched (3) {txt}{c |}
+ 329. {c |} {res}   A324        149        151   matched (3) {txt}{c |}
+ 707. {c |} {res}  F1276         94         97   matched (3) {txt}{c |}
+ 711. {c |} {res}  F1280         94         97   matched (3) {txt}{c |}
+ 746. {c |} {res}  F1317         94         97   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+ 777. {c |} {res}  F1351         94         97   matched (3) {txt}{c |}
+ 790. {c |} {res}  F1365         94         97   matched (3) {txt}{c |}
+ 831. {c |} {res}  F1412         99        103   matched (3) {txt}{c |}
+ 867. {c |} {res}  F1456         91         92   matched (3) {txt}{c |}
+ 882. {c |} {res}  F1473         99        104   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+ 893. {c |} {res}  F1485         99        104   matched (3) {txt}{c |}
+ 898. {c |} {res}  F1490         99        104   matched (3) {txt}{c |}
+ 911. {c |} {res}  F1503         99        104   matched (3) {txt}{c |}
+ 953. {c |} {res}  F1561         86         87   matched (3) {txt}{c |}
+1900. {c |} {res}  FA162         86         87   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+2064. {c |} {res}  FA249         99        104   matched (3) {txt}{c |}
+2076. {c |} {res}  FA294         94         97   matched (3) {txt}{c |}
+2358. {c |} {res}  P1090        149        150   matched (3) {txt}{c |}
+2359. {c |} {res}  P1091        149        155   matched (3) {txt}{c |}
+2363. {c |} {res}  P1096        149        154   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+3756. {c |} {res}  P3414         89         90   matched (3) {txt}{c |}
+3759. {c |} {res}  P3417         89         90   matched (3) {txt}{c |}
+4338. {c |} {res}  P4066         86         87   matched (3) {txt}{c |}
+4450. {c |} {res}  P4198         97        101   matched (3) {txt}{c |}
+4462. {c |} {res}  P4211         97        101   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4468. {c |} {res}  P4219         97        101   matched (3) {txt}{c |}
+4471. {c |} {res}  P4221         97        101   matched (3) {txt}{c |}
+4475. {c |} {res}  P4225         97        101   matched (3) {txt}{c |}
+4476. {c |} {res}  P4226         97        101   matched (3) {txt}{c |}
+4486. {c |} {res}  P4237         97        101   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4504. {c |} {res}  P4262         97        101   matched (3) {txt}{c |}
+4509. {c |} {res}  P4269         97        101   matched (3) {txt}{c |}
+4511. {c |} {res}  P4270         97        101   matched (3) {txt}{c |}
+4515. {c |} {res}  P4276         97        101   matched (3) {txt}{c |}
+4521. {c |} {res}  P4282         97        101   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4526. {c |} {res}  P4288         97        101   matched (3) {txt}{c |}
+4531. {c |} {res}  P4292         97        101   matched (3) {txt}{c |}
+4540. {c |} {res}  P4304         97        101   matched (3) {txt}{c |}
+4543. {c |} {res}  P4307         97        101   matched (3) {txt}{c |}
+4560. {c |} {res}  P4329         97        101   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4562. {c |} {res}  P4332         97        101   matched (3) {txt}{c |}
+4564. {c |} {res}  P4335         97        101   matched (3) {txt}{c |}
+4576. {c |} {res}  P4350         97        101   matched (3) {txt}{c |}
+4579. {c |} {res}  P4354         97        101   matched (3) {txt}{c |}
+4582. {c |} {res}  P4357         97        101   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4589. {c |} {res}  P4365         97        101   matched (3) {txt}{c |}
+4594. {c |} {res}  P4373         97        101   matched (3) {txt}{c |}
+4602. {c |} {res}  P4382         97        101   matched (3) {txt}{c |}
+4605. {c |} {res}  P4385         97        101   matched (3) {txt}{c |}
+4644. {c |} {res}  P4431         99        104   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4649. {c |} {res}  P4439         99        104   matched (3) {txt}{c |}
+4652. {c |} {res}  P4441         99        104   matched (3) {txt}{c |}
+4654. {c |} {res}  P4443         99        104   matched (3) {txt}{c |}
+4665. {c |} {res}  P4455         99        104   matched (3) {txt}{c |}
+4683. {c |} {res}  P4479         99        104   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4685. {c |} {res}  P4480         99        104   matched (3) {txt}{c |}
+4735. {c |} {res}  P4544         99        104   matched (3) {txt}{c |}
+4750. {c |} {res}  P4563         99        104   matched (3) {txt}{c |}
+4753. {c |} {res}  P4566         99        104   matched (3) {txt}{c |}
+4797. {c |} {res}  P4628         99        103   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4803. {c |} {res}  P4638         99        103   matched (3) {txt}{c |}
+4813. {c |} {res}  P4652         99        103   matched (3) {txt}{c |}
+4816. {c |} {res}  P4656         99        103   matched (3) {txt}{c |}
+4837. {c |} {res}  P4682         99        103   matched (3) {txt}{c |}
+4838. {c |} {res}  P4683         99        103   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4840. {c |} {res}  P4687         99        103   matched (3) {txt}{c |}
+4857. {c |} {res}  P4703         94         98   matched (3) {txt}{c |}
+4925. {c |} {res}  P4774         94         98   matched (3) {txt}{c |}
+4932. {c |} {res}  P4781         94         98   matched (3) {txt}{c |}
+4933. {c |} {res}  P4782         94         98   matched (3) {txt}{c |}
+      {c LT}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c RT}
+4992. {c |} {res}  P4851         94         97   matched (3) {txt}{c |}
+5009. {c |} {res}  P4874         94         97   matched (3) {txt}{c |}
+5204. {c |} {res}  P5107         91         92   matched (3) {txt}{c |}
+5238. {c |} {res}  P5144         91         92   matched (3) {txt}{c |}
+5249. {c |} {res}  P5155         91         92   matched (3) {txt}{c |}
+      {c BLC}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 13}{c BRC}
+
+{com}. // Since there are not too many conflicts, we can drop round 2 id variables safely.
+. drop r2_distid-r2_stname _merge
+{txt}
+{com}. 
+. // Declar macros of variables to sort & order later
+. // loc surveyinfovar submissiondate starttime endtime today deviceid subscriberid simid
+. loc id_var state stateid district districtid tehsil tehsilid block blockid village villageid redsid reds_vill a_1hhid
+{txt}
+{com}. loc intervention_var r1_treatment r2_treatment r2_insurance r2_migration r3_treatment r3_insurance
+{txt}
+{com}. loc sample_var r2r3_panel r2_attrition r3_attrition
+{txt}
+{com}. 
+. order `id_var' `intervention_var' `sample_var'
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 4: Save and Exit
+> ****************************************************************/
+. 
+. compress
+{txt}  (0 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/compiled/IN_rainfall_compiled.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/compiled/IN_rainfall_compiled.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

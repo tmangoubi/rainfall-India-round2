@@ -1,0 +1,112 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionG_Insurance_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}11 Apr 2016, 22:37:48
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section G
+> keep Id q1401_indculcropkha11-q1406_amt_6
+{txt}
+{com}. 
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1401_indculcropkha11 already numeric; no {res}replace
+{txt}q1402_hrdschename_1 already numeric; no {res}replace
+{txt}q1403_purcscheme_1 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_1 already numeric; no {res}replace
+{txt}q1405_purins_1 already numeric; no {res}replace
+{txt}q1406_amt_1 already numeric; no {res}replace
+{txt}q1402_hrdschename_2 already numeric; no {res}replace
+{txt}q1403_purcscheme_2 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_2 already numeric; no {res}replace
+{txt}q1405_purins_2 already numeric; no {res}replace
+{txt}q1406_amt_2 already numeric; no {res}replace
+{txt}q1402_hrdschename_3 already numeric; no {res}replace
+{txt}q1403_purcscheme_3 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_3 already numeric; no {res}replace
+{txt}q1405_purins_3 already numeric; no {res}replace
+{txt}q1406_amt_3 already numeric; no {res}replace
+{txt}q1402_hrdschename_4 already numeric; no {res}replace
+{txt}q1403_purcscheme_4 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_4 already numeric; no {res}replace
+{txt}q1405_purins_4 already numeric; no {res}replace
+{txt}q1406_amt_4 already numeric; no {res}replace
+{txt}q1402_hrdschename_5 already numeric; no {res}replace
+{txt}q1403_purcscheme_5 already numeric; no {res}replace
+{txt}q1404_totprempaidlastyear_5 already numeric; no {res}replace
+{txt}q1405_purins_5 already numeric; no {res}replace
+{txt}q1406_amt_5 already numeric; no {res}replace
+{txt}q1402_hrdschename_6 already numeric; no {res}replace
+{txt}q1402_hrdschename_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q1403_purcscheme_6 already numeric; no {res}replace
+{txt}q1403_purcscheme_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q1404_totprempaidlastyear_6 already numeric; no {res}replace
+{txt}q1405_purins_6 already numeric; no {res}replace
+{txt}q1406_amt_6 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1401_ind~11{col 15}q1406_amt_1{col 29}q1406_amt_2{col 43}q1406_amt_3{col 57}q1406_amt_4{col 71}q1406_amt_5{col 85}q1406_amt_6
+{col 1}q1402_hrds~1{col 15}q1402_hrds~2{col 29}q1402_hrds~3{col 43}q1402_hrds~4{col 57}q1402_hrds~5{col 71}q1402_hr~e_6
+{col 1}q1403_purc~1{col 15}q1403_purc~2{col 29}q1403_purc~3{col 43}q1403_purc~4{col 57}q1403_purc~5{col 71}q1403_pu~e_6
+{col 1}q1404_totp~1{col 15}q1404_totp~2{col 29}q1404_totp~3{col 43}q1404_totp~4{col 57}q1404_totp~5{col 71}q1404_totp~6
+{col 1}q1405_puri~1{col 15}q1405_puri~2{col 29}q1405_puri~3{col 43}q1405_puri~4{col 57}q1405_puri~5{col 71}q1405_puri~6
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label variable
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q1401_indculcropkha11 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_1 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_1 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_1 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_2 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_2 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_2 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_3 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_3 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_3 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_4 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_4 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_4 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_5 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_5 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_5 was {res}int{txt} now {res}byte
+  {txt}q1402_hrdschename_6 was {res}int{txt} now {res}byte
+  {txt}q1403_purcscheme_6 was {res}int{txt} now {res}byte
+  {txt}q1405_purins_6 was {res}int{txt} now {res}byte
+{txt}  (95,665 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionG_Insurance_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionG_Insurance_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

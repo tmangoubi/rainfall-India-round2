@@ -1,0 +1,195 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionC_OtherIncome_Kharif_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}12 Apr 2016, 19:39:05
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. keep Id q226_totincearnrecei_1-q228_hhmemrel_oth_12 // Keep Section C Only
+{txt}
+{com}. 
+. 
+. // Destring & recode variables
+. destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_1 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_1 already numeric; no {res}replace
+{txt}q228_hhmemrel_1 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_1 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_1 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_1 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_2 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_2 already numeric; no {res}replace
+{txt}q228_hhmemrel_2 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_2 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_2 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_2 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_3 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_3 already numeric; no {res}replace
+{txt}q228_hhmemrel_3 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_3 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_3 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_3 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_4 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_4 already numeric; no {res}replace
+{txt}q228_hhmemrel_4 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_4 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_4 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_4 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_5 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_5 already numeric; no {res}replace
+{txt}q228_hhmemrel_5 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_5 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_5 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_5 already numeric; no {res}replace
+{txt}q226_totincearnrecei_6 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_6 already numeric; no {res}replace
+{txt}q228_hhmemrel_6 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_6 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_6 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_7 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_7 already numeric; no {res}replace
+{txt}q228_hhmemrel_7 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_7 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_7 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_7 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_8 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_8 already numeric; no {res}replace
+{txt}q228_hhmemrel_8 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_8 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_8 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_8 already numeric; no {res}replace
+{txt}q226_totincearnrecei_9 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_9 already numeric; no {res}replace
+{txt}q228_hhmemrel_9 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_9 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_9 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_9 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_10 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_10 already numeric; no {res}replace
+{txt}q228_hhmemrel_10 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_10 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_10 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_10 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_11 already numeric; no {res}replace
+{txt}q227_totearncomplastkar_11 already numeric; no {res}replace
+{txt}q228_hhmemrel_11 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_11 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_11 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_11 contains nonnumeric characters; no {res}replace
+{txt}q226_totincearnrecei_12 already numeric; no {res}replace
+{txt}q226_totincearnrecei_oth_12 contains nonnumeric characters; no {res}replace
+{txt}q227_totearncomplastkar_12 already numeric; no {res}replace
+{txt}q228_hhmemrel_12 already numeric; no {res}replace
+{txt}q228_hhmemrel_x2_12 already numeric; no {res}replace
+{txt}q228_hhmemrel_x3_12 already numeric; no {res}replace
+{txt}q228_hhmemrel_oth_12 contains nonnumeric characters; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q226_toti~_1{col 15}q227_totea~3{col 29}q228_hhm~l_5{col 43}q228_hhm~l_7{col 57}q228_hhm~l_9{col 71}q228_hh~2_11
+{col 1}q227_tote~_1{col 15}q228_hhm~l_3{col 29}q228_hhm~2_5{col 43}q228_hhm~2_7{col 57}q228_hhm~2_9{col 71}q228_hh~3_11
+{col 1}q228_hhm~l_1{col 15}q228_hhm~2_3{col 29}q228_hhm~3_5{col 43}q228_hhm~3_7{col 57}q228_hhm~3_9{col 71}q226_to~i_12
+{col 1}q228_hhm~2_1{col 15}q228_hhm~3_3{col 29}q228_hhm~h_5{col 43}q226_totin~8{col 57}q226_toti~10{col 71}q227_tote~12
+{col 1}q228_hhm~3_1{col 15}q226_totin~4{col 29}q226_totin~6{col 43}q227_totea~8{col 57}q227_tote~10{col 71}q228_hh~l_12
+{col 1}q226_toti~_2{col 15}q227_totea~4{col 29}q227_totea~6{col 43}q228_hhm~l_8{col 57}q228_hh~l_10{col 71}q228_hh~2_12
+{col 1}q227_tote~_2{col 15}q228_hhm~l_4{col 29}q228_hhm~l_6{col 43}q228_hhm~2_8{col 57}q228_hh~2_10{col 71}q228_hh~3_12
+{col 1}q228_hhm~l_2{col 15}q228_hhm~2_4{col 29}q228_hhm~2_6{col 43}q228_hhm~3_8{col 57}q228_hh~3_10
+{col 1}q228_hhm~2_2{col 15}q228_hhm~3_4{col 29}q228_hhm~3_6{col 43}q228_hhm~h_8{col 57}q226_toti~11
+{col 1}q228_hhm~3_2{col 15}q226_totin~5{col 29}q226_totin~7{col 43}q226_totin~9{col 57}q227_tote~11
+{col 1}q226_totin~3{col 15}q227_totea~5{col 29}q227_totea~7{col 43}q227_totea~9{col 57}q228_hh~l_11
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Re-label variables
+. 
+. loc source1 "Domestic Remittance"
+{txt}
+{com}. loc source2 "International Remittance"
+{txt}
+{com}. loc source3 "Asset Sales(non-livestock)"
+{txt}
+{com}. loc source4 "Entrepreneurial activity/start-up (since June 2014)"
+{txt}
+{com}. loc source5 "Craft/Artisan"
+{txt}
+{com}. loc source6 "Household-run business(small shop)/Transport/Trade"
+{txt}
+{com}. loc source7 "Professional/Service"
+{txt}
+{com}. loc source8 "Factory/Industry"
+{txt}
+{com}. loc source9 "Tending Animals/Sale of animal goods/Fishing"
+{txt}
+{com}. loc source10 "Scholarship/Lottery"
+{txt}
+{com}. loc source11 "Government Pension"
+{txt}
+{com}. loc source12 "Other (Specify)"
+{txt}
+{com}. 
+. 
+. forval sourcenum=1/12 {c -(}
+{txt}  2{com}.         label var q226_totincearnrecei_`sourcenum' "`source`sourcenum'' - Total earning"
+{txt}  3{com}.         if (`sourcenum'==12) {c -(}
+{txt}  4{com}.                 label var q226_totincearnrecei_oth_`sourcenum' "`source`sourcenum'' - Earning source"
+{txt}  5{com}.         {c )-}
+{txt}  6{com}.         label var q227_totearncomplastkar_`sourcenum' "`source`sourcenum'' - Total earning compared to last Kharif"
+{txt}  7{com}.         label var q228_hhmemrel_`sourcenum' "`source`sourcenum'' - HH Member 1 contributing"
+{txt}  8{com}.         label var q228_hhmemrel_x2_`sourcenum' "`source`sourcenum'' - HH Member 2 contributing"
+{txt}  9{com}.         label var q228_hhmemrel_x3_`sourcenum' "`source`sourcenum'' - HH Member 3 contributing"
+{txt} 10{com}.         label var q228_hhmemrel_oth_`sourcenum' "`source`sourcenum'' - Other HH Member contributing"
+{txt} 11{com}. {c )-}
+{txt}note: label truncated to 80 characters
+note: label truncated to 80 characters
+note: label truncated to 80 characters
+note: label truncated to 80 characters
+note: label truncated to 80 characters
+
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q227_totearncomplastkar_1 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_2 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_3 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_4 was {res}int{txt} now {res}byte
+  {txt}q228_hhmemrel_oth_5 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_6 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_7 was {res}int{txt} now {res}byte
+  {txt}q228_hhmemrel_oth_8 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_9 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_10 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_11 was {res}int{txt} now {res}byte
+  {txt}q227_totearncomplastkar_12 was {res}int{txt} now {res}byte
+{txt}  (60,420 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionC_OtherIncome_Kharif_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionC_OtherIncome_Kharif_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

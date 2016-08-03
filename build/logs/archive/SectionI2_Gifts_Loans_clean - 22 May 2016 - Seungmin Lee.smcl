@@ -1,0 +1,225 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionI2_Gifts_Loans_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 May 2016, 15:34:03
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section I1
+> keep Id q1102_recgiftKha11_1-q1109_1_totvalcol_14
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. loc vars        q1102_recgiftKha11 q1103_totvalallgiftrs q1104_totvalmarrgift q1105_recloankha11 q1106_amtloanrec ///
+>                         q1107_totmonownloan q1108_1_totMMloanper q1108_numpayloanper q1109_1_totvalcol q1109_totpaidwitint
+{txt}
+{com}. foreach var of loc vars {c -(}
+{txt}  2{com}.         order `var'_10-`var'_14, after(`var'_9)
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *                       
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1102_recgiftKha11_1 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_2 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_3 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_4 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_5 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_6 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_7 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_8 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_9 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_10 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_11 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_12 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_13 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_14 already numeric; no {res}replace
+{txt}q1102_recgiftKha11_oth_14 contains nonnumeric characters; no {res}replace
+{txt}q1103_totvalallgiftrs_1 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_2 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_3 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_4 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_5 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_6 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_7 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_8 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_9 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_10 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_11 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_12 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_13 already numeric; no {res}replace
+{txt}q1103_totvalallgiftrs_14 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_1 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_2 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_3 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_4 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_5 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_6 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_7 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_8 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_9 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_10 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_11 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_12 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_13 already numeric; no {res}replace
+{txt}q1104_totvalmarrgift_14 already numeric; no {res}replace
+{txt}q1105_recloankha11_1 already numeric; no {res}replace
+{txt}q1105_recloankha11_2 already numeric; no {res}replace
+{txt}q1105_recloankha11_3 already numeric; no {res}replace
+{txt}q1105_recloankha11_4 already numeric; no {res}replace
+{txt}q1105_recloankha11_5 already numeric; no {res}replace
+{txt}q1105_recloankha11_6 already numeric; no {res}replace
+{txt}q1105_recloankha11_7 already numeric; no {res}replace
+{txt}q1105_recloankha11_8 already numeric; no {res}replace
+{txt}q1105_recloankha11_9 already numeric; no {res}replace
+{txt}q1105_recloankha11_10 already numeric; no {res}replace
+{txt}q1105_recloankha11_11 already numeric; no {res}replace
+{txt}q1105_recloankha11_12 already numeric; no {res}replace
+{txt}q1105_recloankha11_13 already numeric; no {res}replace
+{txt}q1105_recloankha11_14 already numeric; no {res}replace
+{txt}q1105_recloankha11_oth_14 contains nonnumeric characters; no {res}replace
+{txt}q1106_amtloanrec_1 already numeric; no {res}replace
+{txt}q1106_amtloanrec_2 already numeric; no {res}replace
+{txt}q1106_amtloanrec_3 already numeric; no {res}replace
+{txt}q1106_amtloanrec_4 already numeric; no {res}replace
+{txt}q1106_amtloanrec_5 already numeric; no {res}replace
+{txt}q1106_amtloanrec_6 already numeric; no {res}replace
+{txt}q1106_amtloanrec_7 already numeric; no {res}replace
+{txt}q1106_amtloanrec_8 already numeric; no {res}replace
+{txt}q1106_amtloanrec_9 already numeric; no {res}replace
+{txt}q1106_amtloanrec_10 already numeric; no {res}replace
+{txt}q1106_amtloanrec_11 already numeric; no {res}replace
+{txt}q1106_amtloanrec_12 already numeric; no {res}replace
+{txt}q1106_amtloanrec_13 already numeric; no {res}replace
+{txt}q1106_amtloanrec_14 already numeric; no {res}replace
+{txt}q1107_totmonownloan_1 already numeric; no {res}replace
+{txt}q1107_totmonownloan_2 already numeric; no {res}replace
+{txt}q1107_totmonownloan_3 already numeric; no {res}replace
+{txt}q1107_totmonownloan_4 already numeric; no {res}replace
+{txt}q1107_totmonownloan_5 already numeric; no {res}replace
+{txt}q1107_totmonownloan_6 already numeric; no {res}replace
+{txt}q1107_totmonownloan_7 already numeric; no {res}replace
+{txt}q1107_totmonownloan_8 already numeric; no {res}replace
+{txt}q1107_totmonownloan_9 already numeric; no {res}replace
+{txt}q1107_totmonownloan_10 already numeric; no {res}replace
+{txt}q1107_totmonownloan_11 already numeric; no {res}replace
+{txt}q1107_totmonownloan_12 already numeric; no {res}replace
+{txt}q1107_totmonownloan_13 already numeric; no {res}replace
+{txt}q1107_totmonownloan_14 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_1 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_2 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_3 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_4 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_5 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_6 contains nonnumeric characters; no {res}replace
+{txt}q1108_1_totMMloanper_7 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_8 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_9 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_10 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_11 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_12 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_13 already numeric; no {res}replace
+{txt}q1108_1_totMMloanper_14 already numeric; no {res}replace
+{txt}q1108_numpayloanper_1 already numeric; no {res}replace
+{txt}q1108_numpayloanper_2 already numeric; no {res}replace
+{txt}q1108_numpayloanper_3 already numeric; no {res}replace
+{txt}q1108_numpayloanper_4 already numeric; no {res}replace
+{txt}q1108_numpayloanper_5 already numeric; no {res}replace
+{txt}q1108_numpayloanper_6 already numeric; no {res}replace
+{txt}q1108_numpayloanper_7 already numeric; no {res}replace
+{txt}q1108_numpayloanper_8 already numeric; no {res}replace
+{txt}q1108_numpayloanper_9 already numeric; no {res}replace
+{txt}q1108_numpayloanper_10 already numeric; no {res}replace
+{txt}q1108_numpayloanper_11 already numeric; no {res}replace
+{txt}q1108_numpayloanper_12 already numeric; no {res}replace
+{txt}q1108_numpayloanper_13 already numeric; no {res}replace
+{txt}q1108_numpayloanper_14 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_1 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_2 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_3 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_4 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_5 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_6 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_7 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_8 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_9 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_10 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_11 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_12 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_13 already numeric; no {res}replace
+{txt}q1109_1_totvalcol_14 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_1 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_2 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_3 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_4 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_5 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_6 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_7 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_8 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_9 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_10 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_11 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_12 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_13 already numeric; no {res}replace
+{txt}q1109_totpaidwitint_14 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1102_rec~_1{col 15}q1103_totv~7{col 29}q1104_tot~13{col 43}q1106_amtl~5{col 57}q1107_tot~11{col 71}q1108_num~_4{col 85}q1109_1_t~10
+{col 1}q1102_rec~_2{col 15}q1103_totv~8{col 29}q1104_tot~14{col 43}q1106_amtl~6{col 57}q1107_tot~12{col 71}q1108_nump~5{col 85}q1109_1_t~11
+{col 1}q1102_rec~_3{col 15}q1103_totv~9{col 29}q1105_rec~_1{col 43}q1106_amtl~7{col 57}q1107_tot~13{col 71}q1108_nump~6{col 85}q1109_1_t~12
+{col 1}q1102_rec~_4{col 15}q1103_tot~10{col 29}q1105_rec~_2{col 43}q1106_amtl~8{col 57}q1107_tot~14{col 71}q1108_nump~7{col 85}q1109_1_t~13
+{col 1}q1102_recg~5{col 15}q1103_tot~11{col 29}q1105_rec~_3{col 43}q1106_amtl~9{col 57}q1108_1_t~_1{col 71}q1108_nump~8{col 85}q1109_1_t~14
+{col 1}q1102_recg~6{col 15}q1103_tot~12{col 29}q1105_rec~_4{col 43}q1106_amt~10{col 57}q1108_1_t~_2{col 71}q1108_nump~9{col 85}q1109_tot~_1
+{col 1}q1102_recg~7{col 15}q1103_tot~13{col 29}q1105_recl~5{col 43}q1106_amt~11{col 57}q1108_1_t~_3{col 71}q1108_num~10{col 85}q1109_tot~_2
+{col 1}q1102_recg~8{col 15}q1103_tot~14{col 29}q1105_recl~6{col 43}q1106_amt~12{col 57}q1108_1_t~_4{col 71}q1108_num~11{col 85}q1109_tot~_3
+{col 1}q1102_recg~9{col 15}q1104_tot~_1{col 29}q1105_recl~7{col 43}q1106_amt~13{col 57}q1108_1_to~5{col 71}q1108_num~12{col 85}q1109_tot~_4
+{col 1}q1102_rec~10{col 15}q1104_tot~_2{col 29}q1105_recl~8{col 43}q1106_amt~14{col 57}q1108_1_to~7{col 71}q1108_num~13{col 85}q1109_totp~5
+{col 1}q1102_rec~11{col 15}q1104_tot~_3{col 29}q1105_recl~9{col 43}q1107_tot~_1{col 57}q1108_1_to~8{col 71}q1108_num~14{col 85}q1109_totp~6
+{col 1}q1102_rec~12{col 15}q1104_tot~_4{col 29}q1105_rec~10{col 43}q1107_tot~_2{col 57}q1108_1_to~9{col 71}q1109_1_t~_1{col 85}q1109_totp~7
+{col 1}q1102_rec~13{col 15}q1104_totv~5{col 29}q1105_rec~11{col 43}q1107_tot~_3{col 57}q1108_1_t~10{col 71}q1109_1_t~_2{col 85}q1109_totp~8
+{col 1}q1102_r~1_14{col 15}q1104_totv~6{col 29}q1105_rec~12{col 43}q1107_tot~_4{col 57}q1108_1_t~11{col 71}q1109_1_t~_3{col 85}q1109_totp~9
+{col 1}q1103_tot~_1{col 15}q1104_totv~7{col 29}q1105_rec~13{col 43}q1107_totm~5{col 57}q1108_1_t~12{col 71}q1109_1_t~_4{col 85}q1109_tot~10
+{col 1}q1103_tot~_2{col 15}q1104_totv~8{col 29}q1105_r~1_14{col 43}q1107_totm~6{col 57}q1108_1_t~13{col 71}q1109_1_to~5{col 85}q1109_tot~11
+{col 1}q1103_tot~_3{col 15}q1104_totv~9{col 29}q1106_amt~_1{col 43}q1107_totm~7{col 57}q1108_1_t~14{col 71}q1109_1_to~6{col 85}q1109_tot~12
+{col 1}q1103_tot~_4{col 15}q1104_tot~10{col 29}q1106_amt~_2{col 43}q1107_totm~8{col 57}q1108_num~_1{col 71}q1109_1_to~7{col 85}q1109_tot~13
+{col 1}q1103_totv~5{col 15}q1104_tot~11{col 29}q1106_amt~_3{col 43}q1107_totm~9{col 57}q1108_num~_2{col 71}q1109_1_to~8{col 85}q1109_tot~14
+{col 1}q1103_totv~6{col 15}q1104_tot~12{col 29}q1106_amt~_4{col 43}q1107_tot~10{col 57}q1108_num~_3{col 71}q1109_1_to~9
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionI2_Gifts_Loans_cleaned.dta", replace
+{txt}(note: file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionI2_Gifts_Loans_cleaned.dta not found)
+file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionI2_Gifts_Loans_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

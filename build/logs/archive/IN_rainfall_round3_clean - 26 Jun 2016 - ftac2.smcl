@@ -1,0 +1,283 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_round3_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:11:20
+{txt}
+{com}. 
+.                 
+. /****************************************************************
+>         SECTION 1: Analysis Preparation                                                                                                         
+> ****************************************************************/
+. use "${c -(}builddta{c )-}/round3/IN_rainfall_r3_cleaned.dta", clear
+{txt}
+{com}. 
+. 
+. ***** Section C: Seasonal migration during 2014 lean season *****
+. 
+. * Migrated during lean 2014
+. loc var migrated_lean14
+{txt}
+{com}. clonevar `var'=c_1_seasonal_mig
+{txt}(189 missing values generated)
+
+{com}. 
+. * Members migrated
+. forval i=1/3{c -(}
+{txt}  2{com}.         loc var`i' migmember`i'_lean14
+{txt}  3{com}.         clonevar `var`i''=c_1_a_member_mig`i'
+{txt}  4{com}. {c )-}
+{txt}(2,672 missing values generated)
+(2,783 missing values generated)
+(2,796 missing values generated)
+
+{com}. *
+. 
+. * Migrated days
+. loc var migdays_lean14
+{txt}
+{com}. clonevar `var'=c_1_b_daysaway
+{txt}(2,671 missing values generated)
+
+{com}. 
+. * Migration destination
+. loc var1 migstate_lean14
+{txt}
+{com}. loc var2 migdistrict_lean14
+{txt}
+{com}. loc var3 migcity_lean14
+{txt}
+{com}. clonevar `var1'=statemig
+{txt}(2,671 missing values generated)
+
+{com}. clonevar `var2'=districtmig
+{txt}(2,671 missing values generated)
+
+{com}. clonevar `var3'=c_1_c_1_c_towncity
+{txt}(2,654 missing values generated)
+
+{com}. lab var `var3' "To which city did they migrate?"
+{txt}
+{com}. forval i=1/3{c -(}
+{txt}  2{com}.         loc var`i' whymigdest`i'_lean14
+{txt}  3{com}.         clonevar `var`i''=c_1_d_whymigdest`i'
+{txt}  4{com}. {c )-}
+{txt}(2,671 missing values generated)
+(2,773 missing values generated)
+(2,794 missing values generated)
+
+{com}. loc var4 migabroad_lean14
+{txt}
+{com}. clonevar `var4'=statecategory
+{txt}
+{com}. 
+. * Migration result
+. loc var1 foundjob_lean14
+{txt}
+{com}. loc var2 waytojob1_lean14
+{txt}
+{com}. loc var3 waytojob2_lean14
+{txt}
+{com}. loc var4 waytojoboth_lean14
+{txt}
+{com}. loc var5 migjob_lean14
+{txt}
+{com}. loc var6 migjoboth_lean14
+{txt}
+{com}. loc var7 mighrsworked_lean14
+{txt}
+{com}. loc var8 migwksworked_lean14
+{txt}
+{com}. loc var9 migsalary_lean14
+{txt}
+{com}. loc var10 miginkind_lean14
+{txt}
+{com}. loc var11 migearning_lean14
+{txt}
+{com}. loc var12 migearnmore_lean14
+{txt}
+{com}. clonevar `var1'=c_1_e_success
+{txt}(2,671 missing values generated)
+
+{com}. clonevar `var2'=c_1_f_findjob1
+{txt}(2,679 missing values generated)
+
+{com}. clonevar `var3'=c_1_f_findjob2
+{txt}(2,786 missing values generated)
+
+{com}. clonevar `var4'=c_1_f_other
+{txt}(2,797 missing values generated)
+
+{com}. clonevar `var5'=c_1_g_occupation
+{txt}(2,679 missing values generated)
+
+{com}. clonevar `var6'=c_1_g_other
+{txt}(2,602 missing values generated)
+
+{com}. clonevar `var7'=c_1_h_hours
+{txt}(2,679 missing values generated)
+
+{com}. clonevar `var8'=c_1_i_months
+{txt}(2,679 missing values generated)
+
+{com}. clonevar `var9'=c_1_j_1_j_salary
+{txt}(2,680 missing values generated)
+
+{com}. clonevar `var10'=c_1_j_1_j_kind
+{txt}(2,744 missing values generated)
+
+{com}. egen `var11'=rowtotal(`var9' `var10'), missing
+{txt}(2680 missing values generated)
+
+{com}. lab var `var11' "Total migration earning (salary+in-kind) during Lean 2014 season"
+{txt}
+{com}. clonevar `var12'=c_1_k_earninglevel
+{txt}(2,679 missing values generated)
+
+{com}. 
+. * Reason for Migration/no-migration
+. forval i=1/5{c -(}
+{txt}  2{com}.         loc var`i' whynotmig`i'_lean14
+{txt}  3{com}.         clonevar `var`i''=c_1_l_nomigrate`i'
+{txt}  4{com}. {c )-}
+{txt}(315 missing values generated)
+(1,914 missing values generated)
+(2,629 missing values generated)
+(2,783 missing values generated)
+(2,796 missing values generated)
+
+{com}. *
+. 
+. ***** Section D: Insurance Offer *****
+. 
+. * Insurance investment decision
+. loc var1 insur_purch1st
+{txt}
+{com}. loc var2 insur_unitpurch1st
+{txt}
+{com}. loc var3 insur_purch2nd
+{txt}
+{com}. loc var4 insur_unitpurch2nd
+{txt}
+{com}. clonevar `var1'=d_1purchasins
+{txt}(189 missing values generated)
+
+{com}. clonevar `var2'=d_2unitsins
+{txt}(2,509 missing values generated)
+
+{com}. clonevar `var3'=d_6purchasins
+{txt}(477 missing values generated)
+
+{com}. clonevar `var4'=d_7unitsins
+{txt}(2,611 missing values generated)
+
+{com}. 
+. ** Insurance investment across 2 visits
+. loc var1 insur_agreed
+{txt}
+{com}. gen `var1' = (d_1purchasins==1 |d_6purchasins==1)
+{txt}
+{com}. replace `var1'=. if (d_1purchasins!=1) // Correctedly skipped
+{txt}(2,509 real changes made, 2,509 to missing)
+
+{com}. label var `var1' "Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance? " 
+{txt}
+{com}. label value `var1' yesno
+{txt}
+{com}.                 
+. ** Total insurance units sold
+. loc var2 insur_unitpurchased
+{txt}
+{com}. egen `var2'=rowtotal(d_2unitsins d_7unitsins) if (attrition==0), missing
+{txt}(2323 missing values generated)
+
+{com}. replace `var2'=. if (`var1'!=1) // Correctedly skipped
+{txt}(186 real changes made, 186 to missing)
+
+{com}. label var `var2' "total insurance unit purchased from 2 visits"
+{txt}
+{com}. 
+. replace `var1'=0 if (`var2'==0) // If no units were purchased, then it means it did not purchase
+{txt}(0 real changes made)
+
+{com}. replace `var2'=. if (`var1'!=1)
+{txt}(0 real changes made)
+
+{com}. 
+. ** Reason for investment/non-investment
+. forval i=1/4{c -(}
+{txt}  2{com}. 
+.         loc var`i' whyinsur1st_`i'
+{txt}  3{com}.         clonevar `var`i''=d_2_a_whybuy`i'
+{txt}  4{com}.                 
+.         if inrange(`i',1,3) {c -(}
+{txt}  5{com}.                 loc var`i' whyinsur2nd_`i'
+{txt}  6{com}.                 clonevar `var`i''=d_7_a_whybuy`i'
+{txt}  7{com}.         {c )-}
+{txt}  8{com}.         
+.         loc var`i' whynoinsur_`i'
+{txt}  9{com}.         clonevar `var`i''=d_8nobuyins`i'
+{txt} 10{com}. 
+. {c )-}
+{txt}(2,541 missing values generated)
+(2,640 missing values generated)
+(663 missing values generated)
+(2,709 missing values generated)
+(2,710 missing values generated)
+(2,229 missing values generated)
+(2,764 missing values generated)
+(2,766 missing values generated)
+(2,732 missing values generated)
+(2,796 missing values generated)
+(2,794 missing values generated)
+
+{com}. *
+. 
+. * Automatic Weather Station (AWS)
+. loc var1 knowAWSlocation
+{txt}
+{com}. loc var2 AWSlocation
+{txt}
+{com}. loc var3 AWSdistanceKm
+{txt}
+{com}. clonevar `var1'=d_3awstation
+{txt}(189 missing values generated)
+
+{com}. clonevar `var2'=d_4awslocation
+{txt}(2,425 missing values generated)
+
+{com}. clonevar `var3'=d_4awskms
+{txt}(2,425 missing values generated)
+
+{com}. 
+. // Keep only variables for analysis
+. drop submissiondate-d_7_a_whybuy3
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 3: Save and Exit                                                                                        
+> ****************************************************************/
+. 
+. foreach x of varlist _all {c -(}
+{txt}  2{com}.         rename `x' r3_`x'
+{txt}  3{com}. {c )-}
+{res}{txt}
+{com}. 
+. rename (r3_a_1hhid r3_states) (a_1hhid state)
+{res}{txt}
+{com}. 
+. compress
+  {txt}variable {bf}r3_insur_agreed{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}r3_insur_unitpurchased{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+{txt}  (16,782 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/round3/IN_rainfall_r3_prep.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/round3/IN_rainfall_r3_prep.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

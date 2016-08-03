@@ -1,0 +1,239 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionE7_KharifCrop_PostHarvest_LaborCost_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Jun 2016, 20:51:27
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. keep Id q400_cultivate q401_decculkhar q401_decculkhar_cou
+{txt}
+{com}. order Id q400_cultivate q401_decculkhar q401_decculkhar_cou
+{txt}
+{com}. * keep if (q218_2_mwl==1) // Only those who answered "Yes" answered the rest of M2 section.
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q400_cultivate already numeric; no {res}replace
+{txt}q401_decculkhar already numeric; no {res}replace
+{txt}q401_decculkhar_cou already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q400_culti~e{col 15}q401_deccu~r{col 29}q401_deccu~u
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}.         if ("`var'" == "q218_4_migratetemptaer") {c -(}
+{txt}  5{com}.                 qui recode `var' (-222=.n)
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. /// Label variable
+> label var q400_cultivate "Did your household cultivate crops during 2014 Kharif season?"
+{txt}
+{com}. label var q401_decculkhar "Did you make decision on cultivating during 2014 Kharif season?"
+{txt}
+{com}. 
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. label value q400_cultivate q401_decculkhar yesno
+{txt}
+{com}. 
+. /// Save
+> tempfile q400
+{txt}
+{com}. save `q400'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. 
+. // Section E7
+. use "${c -(}followup_data{c )-}/AP Raw/SectionELabor5_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionELabor5_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q525_outproquan was 
+str4, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q526_outprounitoth was 
+str10, now str29 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionELabor5_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q526_outprounitoth was 
+str29, now str79 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q531_expoutunitkha11oth was 
+str8, now str24 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q564_2_pasprounitkha10oth was 
+str22, now str32 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q526_outpr~t{col 29}q528_outav~i{col 43}q530_expo~11{col 57}q531_1_exp~t{col 71}q564_2_pa~10
+{col 1}q525_outpr~n{col 15}q527_outpr~t{col 29}q529_valt~11{col 43}q531_expo~11{col 57}q564_1_pa~10{col 71}q564_3_pas~t
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /// Label variables
+> label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label   var     q525_outproquan "Output - Quantity"
+{txt}
+{com}. label   var     q526_outprounit "Output - Units"
+{txt}
+{com}. label   var     q526_outprounitoth      "Output - Units (Other)"
+{txt}
+{com}. label   var     q527_outprokgsunit      "Output - KG/Unit"
+{txt}
+{com}. label   var     q528_outavmarpri        "Output - Average Market Price"
+{txt}
+{com}. label   var     q529_valtotout11        "Output - Total Value"
+{txt}
+{com}. label   var     q530_expoutquankha11    "Expected Output - Quantity"
+{txt}
+{com}. label   var     q531_expoutunitkha11    "Expected Output - Units"
+{txt}
+{com}. label   var     q531_expoutunitkha11oth "Expected Output - Units (Others)"
+{txt}
+{com}. label   var     q531_1_exppriperunit    "Expected - Price/Unit"
+{txt}
+{com}. label   var     q564_1_pasproquankha10  "Past Output - Quantity"
+{txt}
+{com}. label   var     q564_2_pasprounitkha10  "Past Output - Units"
+{txt}
+{com}. label   var     q564_2_pasprounitkha10oth       "Past Output - Units (Others)"
+{txt}
+{com}. label   var     q564_3_paspriceperunit  "Past Output - Actual Price/Unit"
+{txt}
+{com}. 
+. /// Merge with q400
+> merge m:1 Id using `q400', nogen keep(2 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           2,777
+{txt}{col 9}from master{col 30}{res}               0{txt}  
+{col 9}from using{col 30}{res}           2,777{txt}  
+
+{col 5}matched{col 30}{res}           2,421{txt}  
+{col 5}{hline 41}
+
+{com}. order q400_cultivate q401_decculkhar q401_decculkhar_cou, after(Id)
+{txt}
+{com}. 
+. // Apply logic check
+. ds subid-q564_3_paspriceperunit, has(type numeric)
+{txt}{col 1}subid{col 15}q526_outpr~t{col 29}q528_outav~i{col 43}q530_expo~11{col 57}q531_1_exp~t{col 71}q564_2_pa~10
+{col 1}q525_outpr~n{col 15}q527_outpr~t{col 29}q529_valt~11{col 43}q531_expo~11{col 57}q564_1_pa~10{col 71}q564_3_pas~t
+
+{com}. loc E7vars_num `r(varlist)'
+{txt}
+{com}. ds subid-q564_3_paspriceperunit, has(type string)
+{txt}{col 1}q526_outpr~h{col 15}q531_expou~h{col 29}q564_2_pas~h
+
+{com}. loc E7vars_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local E7vars_num {c -(}
+{txt}  2{com}.         replace `var'=.m if ((q400_cultivate==2) & (!mi(`var')))
+{txt}  3{com}.         
+.         * Some observations have negative subid with strange values. I (SL) will replace them as missing.
+.         replace `var'=.m if ((subid==.m) | (subid<0))
+{txt}  4{com}. {c )-}
+{txt}(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(14 real changes made, 14 to missing)
+(28 real changes made, 28 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(14 real changes made, 14 to missing)
+(28 real changes made, 28 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+(15 real changes made, 15 to missing)
+(27 real changes made, 27 to missing)
+
+{com}. foreach var of local E7vars_str {c -(}
+{txt}  2{com}.         replace `var'="Valid Skip" if (q400_cultivate==2)
+{txt}  3{com}.         
+.         * Some observations have negative subid with strange values. I (SL) will replace them as missing.
+.         replace `var'="" if ((subid==.m) | (subid<0))
+{txt}  4{com}. {c )-}
+{txt}(2756 real changes made)
+(42 real changes made)
+(2756 real changes made)
+(42 real changes made)
+(2756 real changes made)
+(42 real changes made)
+
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionE7_KharifCrop_PostHarvest_LaborCost_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE7_KharifCrop_PostHarvest_LaborCost_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

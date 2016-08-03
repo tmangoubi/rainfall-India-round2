@@ -1,0 +1,336 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionH2_IrregularCrops_Costs_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:36
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q600*
+{txt}
+{com}. label var q600_culirrcrop "DID your household cultivate irregular crops in 2014 OR PLAN to cultivate by May 2015?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. tempfile q600
+{txt}
+{com}. save `q600'
+{txt}file C:\Users\mbrooks\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. // Section H2 (part 1)
+. use "${c -(}followup_data{c )-}/AP Raw/SectionH2Roster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionH2Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q612_orgmanfamprovqua was 
+str4, now str6 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionH2Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q602_cropcode was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q603_cosra~s{col 29}q605_seedf~t{col 43}q607_seedp~l{col 57}q609_sdlin~t{col 71}q611_sdlin~l{col 85}q612_1_units{col 99}q614_orgma~l
+{col 1}q602_cropc~e{col 15}q604_seedf~a{col 29}q606_seedp~t{col 43}q608_sdlin~t{col 57}q610_sdlin~t{col 71}q612_orgma~a{col 85}q613_orgma~n
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label variables
+. label var Id "HHID"
+{txt}
+{com}. label var subid "Roster ID"
+{txt}
+{com}. 
+. label var q602_cropcode "Crop Code"
+{txt}
+{com}. label define cropcode1 1 "Paddy "2 "Wheat"3 "Barley"4 "Maize"5 "Jawar"6 "Bajra"7 "Ragi"8 "Other Cereals and millets"9 "Black Gram (Urd)"10 "Green Gram (Moong)"11 "Pigeon Pea (Arhar,Tur)"12 "Horse Gram (Kulthi)"13 "Cowpea (Lobia)"14 "Kidney Bean (Moth)"15 "Lentil (Massor)"16 "Fiels Pea (Matar)]"17 "Bengal Gram (Chana)"18 "Other Pulses"19 "Sesamam ( Til )"20 "Groundnut"21 "Castor"22 "Sunflower"23 "Niger ( Ramtil)"24 "Soyabean"25 "Safflower ( Kusum, Kardi)"26 "Rapeseed/ Mustard ( Sarsoan)'"27 "Indian Mustard (Rai)"28 "Lineseed (Alsi)"29 "Other Oilseeds"30 "Cotton (Kapas)"31 "Brown Hemp ( Patsan ,Mesta)"32 "Jute"33 "Rozelle (Patua)"34 "Sannehemp : Bombay Hemp ( Sann) "35 "Sisal Hemp : Agava ( Seesal)"36 "Other fibre crops"37 "Sugarcane"38 "Tapioca"39 "Othere Sugar & Starch Crops"40 "Baramuda Grass ( Doob)"41 "Blue Panic ( Neelon Ghas)"42 "Carpet Legume ( Sem)"43 "Common Vetch ( Bakla)"44 "Elephant grass,Napier Grass"45 "Egyptian Clover ( Berseem )"46 "Guinea Grass"47 "Indian Clover (Senji)"48 "Lucerne ,Alfalfa ( Rajka)"49 "Para Grass"50 "Rhodes Grass"51 "Soyabean"52 "Star Grass"53 "Sudan Grass"54 "Canary Grass"55 "Other Grasses ( Other Fodder)"56 "Jawar Fodder"57 "Bajra Fodder"58 "Maize Fodder"59 "Ragi Fodder"60 "Oat/Jai Fooder"61 "Lobiya Fodder"62 "Other food Crops Grown as Fodder"63 "Ash Gourd (Kohla)"64 "Beet Root ( Chukandar)"65 "Bitter Gourd ( Kerela)"66 "Bottle Gourd (Louki)"67 "Brinjal ,Eggplant ( Baingan)"68 "Broad Bean ( Baakla )"69 "Cabbage (Pattagobby )"70 "Carrot ( Gajat)"71 "Cauliflower ( Phool Gobby )"72 "Cluster Bean ( Guvar Ki Fali)"73 "Cowpea (Lobia)"74 "Cress ,Garden Cress( Pani Dhleem)"75 "Cucumber ( Khera)"76 "Double Bean"77 "Drum Stick ( Sejana)"78 "Elephant Ear, Edible Arum (Akhi ,Arvi)"79 "Elephant Foot (Gimmy Kand )"80 "French Bean ( Jungli Sem , Frans Bean)"81 "Garden Pea, Pea,(Matar)"82 "Goose Foot ( Bathua )"83 "Indian Bean ( Sem)"84 "Knolknol ( Gaath Gobhi)"85 "Lady's Finger( Bhindi)"86 "Lettuce (Salad)"87 "Lime Bean"88 "Little Gourd (Kundroo, Tindora)"89 "Mountain Spinach ( Pahari Palak)"90 "Musk Melon (Kharbooja)"91 "Onion (Piaz)"92 "Pointed Gourd ( Parwal)"93 "Potato (Aaloo)"94 "Pumpkin ( Petha)"95 "Radish ( Mooli)"96 "Red Pumpkin ( Sitaphal ,Kaddu)"97 "Ridge Gourd ( Tori)"98 "Round Gourd ( Tinda)"99 "Smoth Gourd ( Kali Tori)"100 "Snake Guard ( Chachera, Chachinda)"101 "Spinach ( Palak)"102 "Sword Bean"103 "Sweet Potato ( Sakar Kandi)"104 "Tomato ( Tamattar)"105 "Turnip ( Saljam)"106 "Velet Bean ( Khamch ,Tohar Sem)"107 "Water Melon ( Tarbooj)"108 "Yam ( Tataaloo )"109 "Other Vegetables"110 " Almond ( Badam)"111 "Apple ( Seb)"112 "Apricot (Khumani)"113 "Banana (Kela)"114 "Bread Fruit ( Khadel)"115 "Bullock Heart (Ramphal )"116 "Cape Gooseberry ( Rasbhari)"117 "Cashew ( Kaju)"118 "Cherry (Cherry )"119 "Citron ( Gulgul )"120 "Custard Apple ( Sarifa)"121 "Date Palm (Khajoor)"122 "Fig (Anjeer)"123 "Grape Fruit(Grape Fruit)"124 "Grapevine (Angur)"125 "Guava ( Armood)"126 "Jack Fruit ( Kat-Hal )"127 "Jujube ( Ber)"128 "Lemon ( Bara- Nemboo)"129 "Lime, Acid lime,Sour lime (Kagzi Nemboo)"130 "Litchi ( Leechi )"131 "Laquat( Lokat)"132 "Mango (Aam)"133 "Mangosteen (Mangosteen )"134 "Malbuerry (Raitun)"135 "Papaya (Papita)"136 "Peach ( Aaroo)"137 "Pear (Naaspaati)"138 "Pineapple (Annanas)"139 "Pulm ( Aaloo Bhukhara)"140 "Pomegranate ( Anaar,Dadim)"141 "Raspberry, (Raspbherry, Rasbhary)"142 "Rough Lemon (Nemboo)"143 "Sapota ,Sapodilla Plum (Cheeku)"144 "Shaddock ,Pomelo ( Chakotra)"145 "Santra Orange,Mandarian Orange"146 "Strawberry (Strawberry )"147 "Sweet Lime ( Meetha Nemboo)"148 "Sweet Orange ,Malta ( Mausmee)"149 "Walnut (Akhroat )"150 "Other Fruits"151 "Other Dry Fruits"152 "Amise"153 "Aromatic Cardamon ( Chhoti Elaichi )"154 "Betelvine (Pan)"155 "Bishop's Weed ( Ajwan,Ajamo)"156 "Black Mustard ( Kali Sarson ,Kali Rai') "157 "Black Pepper ( Kali Mirch )"158 "Cardomam (Elaichi )"159 "Chilli' ( Lal Mirch)"160 "Coriander ( Dhaniya)"161 "Cumin ( Jeera)"162 "Dill Seed ( Soya, Suwa)"163 "Fennel ( Sonf ,Variali)"164 "Fanugreek ( Maythik, Methi)"165 "Garlic ( Lehsoon ,Lasan)"166 "Ginger ( Adrakh )"167 "Indian Mustard ( Raie)"168 "Large Cardamon ( Bari Elaichy)"169 "Long Pepper ( Mirchi)"170 "Mint ( Pudeena)"171 "Ntmeg ( Jaiphal )"172 "Turmeric ( Haldi )"173 "White Mustard ( Banarsi Raie)"174 "Other Condiments & Spices)"175 "Indian Hemp ( Bhang)"176 "Indigo (Kneel)"177 "Poppy -Opium Poppy( Aphim)"178 "Poppy (Posta)"179 "Saffron (Kesar)"180 "Tobaccco ( Tambaku)"181 "Blonde Psyllium (Isapgol )"182 "Indian Privet ( Mehandi)"183 "Cluster Bean(Gawar)"184 "Other Drugs ,Dyes & Narcotiecs"185 "Areca Palm( Kattha)"186 "Cocao (Koka ,Kahva)"187 "Chinchona ( Quinine)"188 "Coconut ( Narial)"189 "Coffee ( Coffee)"190 "Para Rubber ( Rubber)"191 "Tea ( Chaie)"192 "Banana"193 "Mango"194 "Arcanut"195 "Other Plantations"196 "Rose"197 "Tube Rose"198 "Jasmine"199 "Marigold"200 "Gladiolus"201 "Orchids"202 "Other Flowers"203 "Barseem Seed"
+{txt}
+{com}. label value q602_cropcode cropcode1
+{txt}
+{com}. label var q603_cosraisnurs "Cost of Raising Nursery"
+{txt}
+{com}. label var q604_seedfamprovqua "Quantity of Seed Provided by Family"
+{txt}
+{com}. label var q605_seedfamprovunit "Unit"
+{txt}
+{com}. label var q605_oth_seedfamunit "Unit - Other"
+{txt}
+{com}. label var q606_seedpurquant "Quantity of Seed Purchased"
+{txt}
+{com}. label var q607_seedpurval "Value of Seed Purchased"
+{txt}
+{com}. label var q608_sdlingfamproquant "Quantity of Seedling Provided by Family"
+{txt}
+{com}. label var q609_sdlingfamprounit "Unit"
+{txt}
+{com}. label var q609_oth_sdlingfampro "Unit-Other"
+{txt}
+{com}. label var q610_sdlingpurquant "Quantity of Seedling Purchased"
+{txt}
+{com}. label var q611_sdlingpurval "Value of Seedlings purchased"
+{txt}
+{com}. label var q612_orgmanfamprovqua "Quantity of family-provided Organic measure used (Kg)"
+{txt}
+{com}. label var q612_1_units "Unit"
+{txt}
+{com}. label var q612_1_oth "Unit - Other"
+{txt}
+{com}. label var q613_orgmanpurquan "Organic Manure Used (Kg)
+{txt}
+{com}. label var q614_orgmanpurval "Value of Organic Manure Used"
+{txt}
+{com}. 
+. label define seed 1 "Kg" 2 "Ton" 3 "Quintal" 4 "Knot" -888 "Other"
+{txt}
+{com}. label value q605_seedfamprovunit q609_sdlingfamprounit q612_1_units
+{txt}
+{com}. 
+. tempfile H2_part1
+{txt}
+{com}. save `H2_part1'
+{txt}file C:\Users\mbrooks\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. // Section H2 (part 2)
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q600*
+{txt}
+{com}. label var q600_culirrcrop "DID your household cultivate irregular crops in 2014 OR PLAN to cultivate by May 2015?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. tempfile q600
+{txt}
+{com}. save `q600'
+{txt}file C:\Users\mbrooks\AppData\Local\Temp\ST_01000003.tmp saved
+
+{com}. 
+. // Section H2 (part 1)
+. use "${c -(}followup_data{c )-}/AP Raw/SectionH2RosterPart2_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionH2RosterPart2_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q622_ownirrexpe was 
+str4, now str5 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionH2RosterPart2_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q614_2_cropcode was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q615_2_bul~e{col 29}q618_trao~ts{col 43}q619_1_day~d{col 57}q622_ownir~e{col 71}q625_irrpu~t
+{col 1}q614_2_cro~e{col 15}q616_bulhi~t{col 29}q618_trao~ys{col 43}q620_trahi~l{col 57}q623_irrpu~e{col 71}q626_tranc~t
+{col 1}q615_1_bul~t{col 15}q617_bulhi~s{col 29}q619_trahi~t{col 43}q621_ownir~e{col 57}q624_irrpu~l{col 71}q627_othma~t
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label variables
+. label var Id "HHID"
+{txt}
+{com}. label var subid "Roster ID"
+{txt}
+{com}. 
+. label var q614_2_cropcode "Crop Code"
+{txt}
+{com}. label define cropcode1 1 "Paddy "2 "Wheat"3 "Barley"4 "Maize"5 "Jawar"6 "Bajra"7 "Ragi"8 "Other Cereals and millets"9 "Black Gram (Urd)"10 "Green Gram (Moong)"11 "Pigeon Pea (Arhar,Tur)"12 "Horse Gram (Kulthi)"13 "Cowpea (Lobia)"14 "Kidney Bean (Moth)"15 "Lentil (Massor)"16 "Fiels Pea (Matar)]"17 "Bengal Gram (Chana)"18 "Other Pulses"19 "Sesamam ( Til )"20 "Groundnut"21 "Castor"22 "Sunflower"23 "Niger ( Ramtil)"24 "Soyabean"25 "Safflower ( Kusum, Kardi)"26 "Rapeseed/ Mustard ( Sarsoan)'"27 "Indian Mustard (Rai)"28 "Lineseed (Alsi)"29 "Other Oilseeds"30 "Cotton (Kapas)"31 "Brown Hemp ( Patsan ,Mesta)"32 "Jute"33 "Rozelle (Patua)"34 "Sannehemp : Bombay Hemp ( Sann) "35 "Sisal Hemp : Agava ( Seesal)"36 "Other fibre crops"37 "Sugarcane"38 "Tapioca"39 "Othere Sugar & Starch Crops"40 "Baramuda Grass ( Doob)"41 "Blue Panic ( Neelon Ghas)"42 "Carpet Legume ( Sem)"43 "Common Vetch ( Bakla)"44 "Elephant grass,Napier Grass"45 "Egyptian Clover ( Berseem )"46 "Guinea Grass"47 "Indian Clover (Senji)"48 "Lucerne ,Alfalfa ( Rajka)"49 "Para Grass"50 "Rhodes Grass"51 "Soyabean"52 "Star Grass"53 "Sudan Grass"54 "Canary Grass"55 "Other Grasses ( Other Fodder)"56 "Jawar Fodder"57 "Bajra Fodder"58 "Maize Fodder"59 "Ragi Fodder"60 "Oat/Jai Fooder"61 "Lobiya Fodder"62 "Other food Crops Grown as Fodder"63 "Ash Gourd (Kohla)"64 "Beet Root ( Chukandar)"65 "Bitter Gourd ( Kerela)"66 "Bottle Gourd (Louki)"67 "Brinjal ,Eggplant ( Baingan)"68 "Broad Bean ( Baakla )"69 "Cabbage (Pattagobby )"70 "Carrot ( Gajat)"71 "Cauliflower ( Phool Gobby )"72 "Cluster Bean ( Guvar Ki Fali)"73 "Cowpea (Lobia)"74 "Cress ,Garden Cress( Pani Dhleem)"75 "Cucumber ( Khera)"76 "Double Bean"77 "Drum Stick ( Sejana)"78 "Elephant Ear, Edible Arum (Akhi ,Arvi)"79 "Elephant Foot (Gimmy Kand )"80 "French Bean ( Jungli Sem , Frans Bean)"81 "Garden Pea, Pea,(Matar)"82 "Goose Foot ( Bathua )"83 "Indian Bean ( Sem)"84 "Knolknol ( Gaath Gobhi)"85 "Lady's Finger( Bhindi)"86 "Lettuce (Salad)"87 "Lime Bean"88 "Little Gourd (Kundroo, Tindora)"89 "Mountain Spinach ( Pahari Palak)"90 "Musk Melon (Kharbooja)"91 "Onion (Piaz)"92 "Pointed Gourd ( Parwal)"93 "Potato (Aaloo)"94 "Pumpkin ( Petha)"95 "Radish ( Mooli)"96 "Red Pumpkin ( Sitaphal ,Kaddu)"97 "Ridge Gourd ( Tori)"98 "Round Gourd ( Tinda)"99 "Smoth Gourd ( Kali Tori)"100 "Snake Guard ( Chachera, Chachinda)"101 "Spinach ( Palak)"102 "Sword Bean"103 "Sweet Potato ( Sakar Kandi)"104 "Tomato ( Tamattar)"105 "Turnip ( Saljam)"106 "Velet Bean ( Khamch ,Tohar Sem)"107 "Water Melon ( Tarbooj)"108 "Yam ( Tataaloo )"109 "Other Vegetables"110 " Almond ( Badam)"111 "Apple ( Seb)"112 "Apricot (Khumani)"113 "Banana (Kela)"114 "Bread Fruit ( Khadel)"115 "Bullock Heart (Ramphal )"116 "Cape Gooseberry ( Rasbhari)"117 "Cashew ( Kaju)"118 "Cherry (Cherry )"119 "Citron ( Gulgul )"120 "Custard Apple ( Sarifa)"121 "Date Palm (Khajoor)"122 "Fig (Anjeer)"123 "Grape Fruit(Grape Fruit)"124 "Grapevine (Angur)"125 "Guava ( Armood)"126 "Jack Fruit ( Kat-Hal )"127 "Jujube ( Ber)"128 "Lemon ( Bara- Nemboo)"129 "Lime, Acid lime,Sour lime (Kagzi Nemboo)"130 "Litchi ( Leechi )"131 "Laquat( Lokat)"132 "Mango (Aam)"133 "Mangosteen (Mangosteen )"134 "Malbuerry (Raitun)"135 "Papaya (Papita)"136 "Peach ( Aaroo)"137 "Pear (Naaspaati)"138 "Pineapple (Annanas)"139 "Pulm ( Aaloo Bhukhara)"140 "Pomegranate ( Anaar,Dadim)"141 "Raspberry, (Raspbherry, Rasbhary)"142 "Rough Lemon (Nemboo)"143 "Sapota ,Sapodilla Plum (Cheeku)"144 "Shaddock ,Pomelo ( Chakotra)"145 "Santra Orange,Mandarian Orange"146 "Strawberry (Strawberry )"147 "Sweet Lime ( Meetha Nemboo)"148 "Sweet Orange ,Malta ( Mausmee)"149 "Walnut (Akhroat )"150 "Other Fruits"151 "Other Dry Fruits"152 "Amise"153 "Aromatic Cardamon ( Chhoti Elaichi )"154 "Betelvine (Pan)"155 "Bishop's Weed ( Ajwan,Ajamo)"156 "Black Mustard ( Kali Sarson ,Kali Rai') "157 "Black Pepper ( Kali Mirch )"158 "Cardomam (Elaichi )"159 "Chilli' ( Lal Mirch)"160 "Coriander ( Dhaniya)"161 "Cumin ( Jeera)"162 "Dill Seed ( Soya, Suwa)"163 "Fennel ( Sonf ,Variali)"164 "Fanugreek ( Maythik, Methi)"165 "Garlic ( Lehsoon ,Lasan)"166 "Ginger ( Adrakh )"167 "Indian Mustard ( Raie)"168 "Large Cardamon ( Bari Elaichy)"169 "Long Pepper ( Mirchi)"170 "Mint ( Pudeena)"171 "Ntmeg ( Jaiphal )"172 "Turmeric ( Haldi )"173 "White Mustard ( Banarsi Raie)"174 "Other Condiments & Spices)"175 "Indian Hemp ( Bhang)"176 "Indigo (Kneel)"177 "Poppy -Opium Poppy( Aphim)"178 "Poppy (Posta)"179 "Saffron (Kesar)"180 "Tobaccco ( Tambaku)"181 "Blonde Psyllium (Isapgol )"182 "Indian Privet ( Mehandi)"183 "Cluster Bean(Gawar)"184 "Other Drugs ,Dyes & Narcotiecs"185 "Areca Palm( Kattha)"186 "Cocao (Koka ,Kahva)"187 "Chinchona ( Quinine)"188 "Coconut ( Narial)"189 "Coffee ( Coffee)"190 "Para Rubber ( Rubber)"191 "Tea ( Chaie)"192 "Banana"193 "Mango"194 "Arcanut"195 "Other Plantations"196 "Rose"197 "Tube Rose"198 "Jasmine"199 "Marigold"200 "Gladiolus"201 "Orchids"202 "Other Flowers"203 "Barseem Seed"
+{txt}
+{com}. label value q614_2_cropcode cropcode1
+{txt}
+{com}. label var q615_1_bulownunit "Bulls Owned"
+{txt}
+{com}. label var q615_2_bulowndayuse "Days Used - Owned Bulls"
+{txt}
+{com}. label var q616_bulhireunit "Bulls Hired"
+{txt}
+{com}. label var q617_bulhiredays "Days Used - Hired Bulls"
+{txt}
+{com}. label var q618_traownunits "Tractor/Thresher/Harvester Owned"
+{txt}
+{com}. label var q618_traowndays "Days Used - Owned Tractor/Thresher/Harvester"
+{txt}
+{com}. label var q619_trahireunit "Tractor/Thresher/Harvester Hired"
+{txt}
+{com}. label var q619_1_daysrented "Days Used - Hired Tractor/Thresher/Harvester"
+{txt}
+{com}. label var q620_trahireval "Value of Tractor/Thresher/Harvester Hired"
+{txt}
+{com}. label var q621_ownirrdayuse "Days Used - Open well / borewell"
+{txt}
+{com}. label var q622_ownirrexpe "Expenditure on open well / borewell"
+{txt}
+{com}. label var q623_irrpurdayuse "Days Used - Purchased Irrigation"
+{txt}
+{com}. label var q624_irrpurval "Value of Purchased Irrigation"
+{txt}
+{com}. label var q625_irrpurrelat "Relationship to Source of Irrigation"
+{txt}
+{com}. label define relationship 1 " Immediate Family" 2 "Same sub-caste" 3 "Same caste" 4 "Friend" 5 "No Relation" 6 -888 "Other (Specify)" -777 "Refuse"
+{txt}
+{com}. label value q625_irrpurrelat relationship
+{txt}
+{com}. label var q625_irrpurrelatoth "Other Relationship to Source of Irrigation"
+{txt}
+{com}. label var q626_trancost "Transportation Cost"
+{txt}
+{com}. label var q627_othmatinputcost "Other Input Costs"
+{txt}
+{com}. 
+. tempfile H2_part2
+{txt}
+{com}. save `H2_part2'
+{txt}file C:\Users\mbrooks\AppData\Local\Temp\ST_01000004.tmp saved
+
+{com}. 
+. // Compile part 1 & 2
+. use `q600', clear
+{txt}
+{com}. merge 1:m Id using `H2_part1', nogen keep(1 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,639
+{txt}{col 9}from master{col 30}{res}           4,639{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}             491{txt}  
+{col 5}{hline 41}
+
+{com}. merge 1:1 Id subid using `H2_part2', nogen keep(1 3)
+{res}{txt}(label cropcode1 already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,642
+{txt}{col 9}from master{col 30}{res}           4,642{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}             488{txt}  
+{col 5}{hline 41}
+
+{com}. order Id q600_culirrcrop q600_culirrcrop_count subid 
+{txt}
+{com}. 
+. // Logic check
+. ds subid-q627_othmatinputcost, has(type numeric)
+{txt}{col 1}subid{col 15}q605_seedf~t{col 29}q609_sdlin~t{col 43}q612_1_units{col 57}q615_1_bul~t{col 71}q618_trao~ts{col 85}q620_trahi~l{col 99}q624_irrpu~l
+{col 1}q602_cropc~e{col 15}q606_seedp~t{col 29}q610_sdlin~t{col 43}q613_orgma~n{col 57}q615_2_bul~e{col 71}q618_trao~ys{col 85}q621_ownir~e{col 99}q625_irrpu~t
+{col 1}q603_cosra~s{col 15}q607_seedp~l{col 29}q611_sdlin~l{col 43}q614_orgma~l{col 57}q616_bulhi~t{col 71}q619_trahi~t{col 85}q622_ownir~e{col 99}q626_tranc~t
+{col 1}q604_seedf~a{col 15}q608_sdlin~t{col 29}q612_orgma~a{col 43}q614_2_cro~e{col 57}q617_bulhi~s{col 71}q619_1_day~d{col 85}q623_irrpu~e{col 99}q627_othma~t
+
+{com}. loc H2vars_num `r(varlist)'
+{txt}
+{com}. ds subid-q627_othmatinputcost, has(type string)
+{txt}{col 1}q605_oth_s~t{col 15}q609_oth_s~o{col 29}q612_1_oth{col 43}q625_irrpu~h
+
+{com}. loc H2vars_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local H2vars_num {c -(}
+{txt}  2{com}.         replace `var'=.m if ((q600_culirrcrop==2) & (!mi(`var')))
+{txt}  3{com}. {c )-}
+{txt}(14 real changes made, 14 to missing)
+(14 real changes made, 14 to missing)
+(13 real changes made, 13 to missing)
+(14 real changes made, 14 to missing)
+(4 real changes made, 4 to missing)
+(14 real changes made, 14 to missing)
+(6 real changes made, 6 to missing)
+(14 real changes made, 14 to missing)
+(0 real changes made)
+(14 real changes made, 14 to missing)
+(0 real changes made)
+(14 real changes made, 14 to missing)
+(5 real changes made, 5 to missing)
+(14 real changes made, 14 to missing)
+(1 real change made, 1 to missing)
+(12 real changes made, 12 to missing)
+(12 real changes made, 12 to missing)
+(0 real changes made)
+(12 real changes made, 12 to missing)
+(0 real changes made)
+(12 real changes made, 12 to missing)
+(0 real changes made)
+(12 real changes made, 12 to missing)
+(8 real changes made, 8 to missing)
+(12 real changes made, 12 to missing)
+(12 real changes made, 12 to missing)
+(4 real changes made, 4 to missing)
+(12 real changes made, 12 to missing)
+(3 real changes made, 3 to missing)
+(3 real changes made, 3 to missing)
+(12 real changes made, 12 to missing)
+(12 real changes made, 12 to missing)
+
+{com}. foreach var of local H2vars_str {c -(}
+{txt}  2{com}.         replace `var'="Valid Skip" if (q600_culirrcrop==2)
+{txt}  3{com}. {c )-}
+{txt}q605_oth_seedfamunit was {res}str7{txt} now {res}str10
+{txt}(4603 real changes made)
+(4603 real changes made)
+(4603 real changes made)
+(4603 real changes made)
+
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionH2_IrregularCrops_Costs_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionH2_IrregularCrops_Costs_cleaned.dta saved
+
+{com}. 
+. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

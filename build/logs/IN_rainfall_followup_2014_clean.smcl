@@ -1,0 +1,477 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_followup_2014_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 8 Apr 2016, 10:00:26
+{txt}
+{com}. 
+. 
+. // Currently missing values are recoded as negative values which can distort future analyses
+. // We will recode those nagative numbers as various missing codes.
+. program var_recode
+{txt}  1{com}.         quietly ds _all
+{txt}  2{com}.         loc allvar `r(varlist)'
+{txt}  3{com}.         foreach var of loc allvar {c -(}
+{txt}  4{com}.                 cap confirm numeric variable `var'
+{txt}  5{com}.                 if !_rc {c -(} // If a variable is a numeric variable
+{txt}  6{com}.                         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  7{com}.                         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  8{com}.                 {c )-}
+{txt}  9{com}.                 /* Let's not recode string variables for now.
+>                 else {c -(} // If a variable is a non-numeric variable (string)
+>                         replace `var'="blank" if (mi(`var') | `var'=="" | `var'=="-333") // Blank response (but not a valid response)
+>                         replace `var'="don't know" if (`var'=="-999")
+>                         replace `var'="refusal" if (`var'=="-777")
+>                         replace `var'="" if (`var'=="-555")
+>                 {c )-}
+>                 */
+.         {c )-}
+{txt} 10{com}. end
+{txt}
+{com}. 
+. use "${c -(}followup_data{c )-}/Final Data/AICWIUP.dta", clear
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 2: Cover page                                                                                           
+> ****************************************************************/
+. 
+. // Variable labeling
+. label var Id                    "Household ID"
+{txt}
+{com}. label var RespName              "Respondent Name"
+{txt}
+{com}. label var DressHofH             "DRES HofH"
+{txt}
+{com}. label var PhoneNumber   "Phone Number"
+{txt}
+{com}. label var DoorNumber    "Door Number"
+{txt}
+{com}. label var StreetName    "Street Name"
+{txt}
+{com}. label var DistrictID    "District ID"
+{txt}
+{com}. label var TehsilID              "Tehsil ID"
+{txt}
+{com}. label var BlockID               "Block ID"
+{txt}
+{com}. label var VillageID             "VillageID"
+{txt}
+{com}. label var VisitDay              "Day of Visit"
+{txt}
+{com}. label var VisitMonth    "Month of Visit"
+{txt}
+{com}. label var VisitYear             "Year of Visit"
+{txt}
+{com}. label var RevisitMade   "Revisit Made?"
+{txt}
+{com}. label var ReVisitDay    "Day of Revisit"
+{txt}
+{com}. label var ReVisitMonth  "Month of Revisit"
+{txt}
+{com}. label var ReVisitYear   "Year of Revisit"
+{txt}
+{com}. label var Intvrname             "Interviewer Name"
+{txt}
+{com}. label var IntvrID               "Interviewer ID"
+{txt}
+{com}. label var SuprName              "Supervisor Name"
+{txt}
+{com}. label var SuprID                "Supervisor ID"
+{txt}
+{com}. label var StartTimeHr   "Hour of Survey Started"
+{txt}
+{com}. label var StartTimeMin  "Minute of Survey Started"
+{txt}
+{com}. 
+. 
+. // Variable cleaning
+. 
+. // ID
+. // Drop duplicate observations or improper observations
+. duplicates tag Id, gen(ID_dup)
+
+{p 0 4}{txt}Duplicates in terms of {res} Id{p_end}
+{txt}
+{com}. sort Id
+{txt}
+{com}. list Id if (ID_dup==1)
+{txt}
+      {c TLC}{hline 7}{c TRC}
+      {c |} {res}   Id {txt}{c |}
+      {c LT}{hline 7}{c RT}
+  72. {c |} {res}A1145 {txt}{c |}
+  73. {c |} {res}A1145 {txt}{c |}
+ 213. {c |} {res}A2040 {txt}{c |}
+ 214. {c |} {res}A2040 {txt}{c |}
+ 644. {c |} {res}F1285 {txt}{c |}
+      {c LT}{hline 7}{c RT}
+ 645. {c |} {res}F1285 {txt}{c |}
+2918. {c |} {res} P244 {txt}{c |}
+2919. {c |} {res} P244 {txt}{c |}
+4297. {c |} {res}P4537 {txt}{c |}
+4298. {c |} {res}P4537 {txt}{c |}
+      {c BLC}{hline 7}{c BRC}
+
+{com}. /// There are 5 households with duplicates (10 obs total)
+> /// 4 of them can be distinguished, since only one of the two has complete observation.
+> /// Unfortunately, Id=="P4537" can't be determined which observation has more complete information - this household will be dropped.
+> drop if (Id=="A1145" & DoorNumber=="-999")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="A2040" & DoorNumber=="RR")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & DoorNumber=="6F6")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & DoorNumber=="66")
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P4537")
+{txt}(2 observations deleted)
+
+{com}. drop ID_dup
+{txt}
+{com}. 
+. drop if (Id=="-555") // Invalid household ID
+{txt}(1 observation deleted)
+
+{com}. isid Id // Confirm there is no more duplicates.
+{txt}
+{com}. 
+. /// StartTimeHr
+> replace StartTimeMin=15 if (StartTimeHr=="04:15")
+{txt}(1 real change made)
+
+{com}. replace StartTimeHr="04" if (StartTimeHr=="04:15")
+{txt}(1 real change made)
+
+{com}. destring StartTimeHr, replace
+{txt}StartTimeHr has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(88 missing values generated)
+
+{com}. 
+. /*
+> /// dups
+> drop dups // "0" across all observations except 88 obs - why do these 88 obs have missing dups? It seems all 88 obs with missing survey start time have missing dups.
+> */
+. 
+. 
+. // Save
+. tempfile base cover_cleaned
+{txt}
+{com}. save `base'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. keep Id-dups
+{txt}
+{com}. var_recode // Recode missing numeric variables
+{txt}
+{com}. save `cover_cleaned'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. /****************************************************************
+>         SECTION A: Household Roster
+> ****************************************************************/
+. 
+. // A1: q101 ~ q110
+. use "${c -(}followup_data{c )-}/Final Data/SectionAHouseholdRoster_1.dta", clear
+{txt}
+{com}. 
+. // Variable labeling
+. label var Id    "Household ID"
+{txt}
+{com}. label var subid "Household Member ID"
+{txt}
+{com}. 
+. // Variable cleaning
+. 
+. /// subid
+> destring subid, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. 
+. /// Year of birth
+> label var q105_1_ageYYYY "Year of Birth"
+{txt}
+{com}. replace q105_1_ageYYYY="" if (q105_1_ageYYYY=="-")
+{txt}(1 real change made)
+
+{com}. destring q105_1_ageYYYY, replace
+{txt}q105_1_ageYYYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(21029 missing values generated)
+
+{com}. 
+. /// Daily Wage Employment
+> label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. label value q106_engdlywageemp yesno
+{txt}
+{com}. 
+. /// Kharif Health Expenditure
+> label var q110_hlthexpkha "Health Expenditure since the start of Kharif Season"
+{txt}
+{com}. replace q110_hlthexpkha="0" if (q110_hlthexpkha=="-0")
+{txt}(3 real changes made)
+
+{com}. replace q110_hlthexpkha="" if (q110_hlthexpkha=="-")
+{txt}(2 real changes made)
+
+{com}. destring q110_hlthexpkha, replace
+{txt}q110_hlthexpkha has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(2 missing values generated)
+
+{com}. 
+. // Drop duplicates subid within a household
+. 
+. /// There are couple of observations with duplicate subid within a household.
+> /// We can distinguish proper member from improper member by observing ages, name, etc.
+> duplicates tag Id subid, gen(dup)
+
+{p 0 4}{txt}Duplicates in terms of {res} Id subid{p_end}
+{txt}
+{com}. browse if dup==1
+{txt}
+{com}. 
+. drop if (Id=="F1285" & q101_Hhmemnam=="GJHGHG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & q101_Hhmemnam=="HGJGJH") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="EYTWGW") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="YFG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. 
+. /// Household "P4537" has duplicates obs which cannot be distinguished easily.
+> /// However, since "P4537" does not exist in the base dataset, it can be dropped.
+> drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. 
+. isid Id subid
+{txt}
+{com}. drop dup
+{txt}
+{com}. 
+. // Save (Long)
+. tempfile SectionA1 SectionA2
+{txt}
+{com}. save `SectionA1'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000003.tmp saved
+
+{com}. 
+. // Collapse data to be merged with the main dataset later
+. collapse (sum) q110_hlthexpkha (count) subid, by(Id)
+{txt}
+{com}. rename (subid q110_hlthexpkha) (NumberOfHHmembers Health_Expenditure_Kharif)
+{res}{txt}
+{com}. label var NumberOfHHmembers "Number of HH members"
+{txt}
+{com}. label var Health_Expenditure_Kharif "Total household health expenditure since the beginning of Kharif season"
+{txt}
+{com}. 
+. tempfile SectionA1_collapsed
+{txt}
+{com}. save `SectionA1_collapsed' // This dataset will be later merged with base dataset
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000005.tmp saved
+
+{com}. 
+. // A2: q111 ~ q115
+. use "${c -(}followup_data{c )-}/Final Data/SectionAHouseholdRoster2_1.dta", clear
+{txt}
+{com}. destring subid, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. 
+. // Like SectionA1, there are duplicates subid within a household.
+. // Duplicates in this dataset are more difficult (and sometimes impossible) to be distinguished, unfortunately.
+. duplicates drop // This drops one of the duplicates
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & subid==2 & q112_2esttotschfeeyear==454) // Improper school fee (last year's fee is lower than Kharif school fee)
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q111_highedulev==1) // For duplicates impossible to be distingushed, drop "Not eeducated" observation (This is a random criteria, so can be modified later)
+{txt}(2 observations deleted)
+
+{com}. drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Merge A1, A2
+. save `SectionA2'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000004.tmp saved
+
+{com}. use `SectionA1', clear
+{txt}
+{com}. merge 1:1 Id subid using `SectionA2', gen(SecA1_A2)
+{res}{txt}(label general already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               3
+{txt}{col 9}from master{col 30}{res}               1{txt}  (SecA1_A2==1)
+{col 9}from using{col 30}{res}               2{txt}  (SecA1_A2==2)
+
+{col 5}matched{col 30}{res}          24,153{txt}  (SecA1_A2==3)
+{col 5}{hline 41}
+
+{com}. labe var SecA1_A2 "Household member data exist in Section A and A2"
+{txt}
+{com}. label define SecA1_A2 1 "q101 ~ q110 only" 2 "q111 ~ q115 only" 3 "All section A questions (q101 ~ q115)"
+{txt}
+{com}. label value SecA1_A2 SecA1_A2
+{txt}
+{com}. 
+. // Save
+. var_recode // Recode variables
+{txt}
+{com}. compress
+  {txt}q102_relHH was {res}int{txt} now {res}byte
+  {txt}q103_gender was {res}int{txt} now {res}byte
+  {txt}q106_engdlywageemp was {res}int{txt} now {res}byte
+  {txt}q112_schlastyr was {res}int{txt} now {res}byte
+  {txt}q104_caste was {res}str21{txt} now {res}str20
+{txt}  (120,780 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionA1_HHroster_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionA1_HHroster_cleaned.dta saved
+
+{com}. 
+. /****************************************************************
+>         SECTION B : Wage Income & Employment
+> ****************************************************************/
+. 
+. use "${c -(}followup_data{c )-}/Final Data/SectionBWageIncomeP2_1_clean.dta", clear
+{txt}
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Variable cleaning
+. 
+. /// subid
+> destring subid, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. 
+. /// Total agricultural earning in Kharif season - monetary + non-monetary
+> egen Total_agri_earning_kharif = rowtotal (q208_totearnlolagrikha11 q211_totvalnonmonkha11)
+{txt}
+{com}. gen Daily_agri_earning_kharif = (Total_agri_earning_kharif / q206_totdaylocagrikhar11) // Total earning (money + non_money) divided by # of days worked
+{txt}(6 missing values generated)
+
+{com}. notes Total_agri_earning_kharif: Daily_agri_earning_kharif = (Total_agri_earning_kharif / q206_totdaylocagrikhar11)
+{res}{txt}
+{com}. notes Daily_agri_earning_kharif: Daily_agri_earning_kharif = (Total_agri_earning_kharif / q206_totdaylocagrikhar11)
+{res}{txt}
+{com}. label var Total_agri_earning_kharif "Total earning (monetary + non-monetary compensation) from agricultural wage employment - Kharif"
+{txt}note: label truncated to 80 characters
+
+{com}. label var Daily_agri_earning_kharif "Average daily earning from agricultrual employment - Kharif"
+{txt}
+{com}. 
+. // Save
+. var_recode // Recode variables
+{txt}
+{com}. compress
+  {txt}q204_prefillname was {res}int{txt} now {res}byte
+  {txt}q209_nonmonlolagriwork11 was {res}int{txt} now {res}byte
+{txt}  (6,006 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionB1_WageEmployment_cleaned.dta", replace
+{txt}(note: file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionB1_WageEmployment_cleaned.dta not found)
+file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionB1_WageEmployment_cleaned.dta saved
+
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+{txt}end of do-file
+
+{com}. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionDP2_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionM2A_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionM1Roster_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionESowingCostRoster_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionE2014KCRoster_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionDP2_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionPRoster_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionF1Roster_1.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\AICWIUP.dta"
+
+. preserve
+
+. keep q2*
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionBWageIncomeP2_1_clean.dta", clear
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\AICWIUP.dta"
+
+. use "C:\Users\SLee\Dropbox\Rainfall insurance India - Round 2\Data\StataData_2014_follow-up_survey\Final Data\SectionE2014KCRoster_1.dta"
+
+. do "C:\Users\SLee\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. /*****************************************************************
+> PROJECT:                IN_Rainfall, India Rainfall Insurance
+>                                 
+> TITLE:                  SectionA_HHRoster_clean.do
+>                         
+> AUTHOR:                 Seungmin Lee (seungmin.lee@yale.edu, eatorange@gmail.com)
+> 
+> DATE CREATED:   April 8, 2016
+> 
+> LAST EDITED:    April 8, 2016 by Seungmin Lee
+> 
+> DESCRIPTION:    Import & clean Section A of 2014 follow-up survey data
+>         
+> ORGANIZATION:   0 - Preamble
+>                                 1 - Import raw data
+>                                 2 - Clean
+>                                 3 - Save and Exit
+>                                 
+> INPUTS:                 ${c -(}followup_data{c )-}/AP Raw/SectionAHouseholdRoster_1.dta
+>                                 ${c -(}followup_data{c )-}/TN Raw/SectionAHouseholdRoster_1.dta
+>                                 ${c -(}followup_data{c )-}/UP Raw/SectionAHouseholdRoster_1.dta
+> 
+> OUTPUTS:                ${c -(}builddta{c )-}/followup_2014/SectionA_HHRoster_cleaned.dta
+>                                 
+> NOTE:                   This do-file is based on
+>                                 - "${c -(}follow_data{c )-}/Do Files/SectionAHouseholdRoster_1.do"
+>                                 - "${c -(}follow_data{c )-}/Do Files/SectionAHouseholdRoster2_1.do" 
+>                                 with additional modifications.
+> ******************************************************************/
+. 
+. /****************************************************************
+>         SECTION 0: Preamble                                                                                                             
+> ****************************************************************/
+. 
+. version 13.1
+{txt}
+{com}. 
+. set more off
+{txt}
+{com}. clear all
+{txt}
+{com}. cap log close 
+{smcl}
+{com}{sf}{ul off}

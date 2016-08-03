@@ -1,0 +1,220 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionB_WageIncome_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 May 2016, 14:37:03
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section G
+> keep Id q434_pestname_1-q433_plausekha12_10
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. order q431_1_chemfertquauni_1-q431_2_chemfertval_9, after(q431_chemfertquant_9)
+{txt}
+{com}. order q436_pestunit_1-q436_pestunit_9, before(q436_1_pestunitval_1)
+{txt}
+{com}. order q437_usekha11_1-q437_usekha11_9, before(q437_1_planusekha12_1)
+{txt}
+{com}. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_1 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_10 already numeric; no {res}replace
+{txt}q430_chemfertname_2 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_3 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_4 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_5 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_6 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_7 contains nonnumeric characters; no {res}replace
+{txt}q430_chemfertname_8 already numeric; no {res}replace
+{txt}q430_chemfertname_9 already numeric; no {res}replace
+{txt}q431_chemfertquant_1 already numeric; no {res}replace
+{txt}q431_chemfertquant_10 already numeric; no {res}replace
+{txt}q431_chemfertquant_2 already numeric; no {res}replace
+{txt}q431_chemfertquant_3 already numeric; no {res}replace
+{txt}q431_chemfertquant_4 already numeric; no {res}replace
+{txt}q431_chemfertquant_5 already numeric; no {res}replace
+{txt}q431_chemfertquant_6 already numeric; no {res}replace
+{txt}q431_chemfertquant_7 already numeric; no {res}replace
+{txt}q431_chemfertquant_8 already numeric; no {res}replace
+{txt}q431_chemfertquant_9 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_1 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_10 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_2 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_3 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_4 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_5 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_6 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_7 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_8 already numeric; no {res}replace
+{txt}q431_1_chemfertquauni_9 already numeric; no {res}replace
+{txt}q431_1_chemfertquaunioth_1 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_10 already numeric; no {res}replace
+{txt}q431_1_chemfertquaunioth_2 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_3 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_4 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_5 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_6 contains nonnumeric characters; no {res}replace
+{txt}q431_1_chemfertquaunioth_7 already numeric; no {res}replace
+{txt}q431_1_chemfertquaunioth_8 already numeric; no {res}replace
+{txt}q431_1_chemfertquaunioth_9 already numeric; no {res}replace
+{txt}q431_2_chemfertval_1 already numeric; no {res}replace
+{txt}q431_2_chemfertval_10 already numeric; no {res}replace
+{txt}q431_2_chemfertval_2 already numeric; no {res}replace
+{txt}q431_2_chemfertval_3 already numeric; no {res}replace
+{txt}q431_2_chemfertval_4 already numeric; no {res}replace
+{txt}q431_2_chemfertval_5 already numeric; no {res}replace
+{txt}q431_2_chemfertval_6 contains nonnumeric characters; no {res}replace
+{txt}q431_2_chemfertval_7 already numeric; no {res}replace
+{txt}q431_2_chemfertval_8 already numeric; no {res}replace
+{txt}q431_2_chemfertval_9 contains nonnumeric characters; no {res}replace
+{txt}q432_usekha2011_1 already numeric; no {res}replace
+{txt}q432_usekha2011_10 already numeric; no {res}replace
+{txt}q432_usekha2011_2 already numeric; no {res}replace
+{txt}q432_usekha2011_3 already numeric; no {res}replace
+{txt}q432_usekha2011_4 already numeric; no {res}replace
+{txt}q432_usekha2011_5 already numeric; no {res}replace
+{txt}q432_usekha2011_6 already numeric; no {res}replace
+{txt}q432_usekha2011_7 already numeric; no {res}replace
+{txt}q432_usekha2011_8 already numeric; no {res}replace
+{txt}q432_usekha2011_9 already numeric; no {res}replace
+{txt}q433_plausekha12_1 already numeric; no {res}replace
+{txt}q433_plausekha12_10 already numeric; no {res}replace
+{txt}q433_plausekha12_2 already numeric; no {res}replace
+{txt}q433_plausekha12_3 already numeric; no {res}replace
+{txt}q433_plausekha12_4 already numeric; no {res}replace
+{txt}q433_plausekha12_5 already numeric; no {res}replace
+{txt}q433_plausekha12_6 already numeric; no {res}replace
+{txt}q433_plausekha12_7 already numeric; no {res}replace
+{txt}q433_plausekha12_8 already numeric; no {res}replace
+{txt}q433_plausekha12_9 already numeric; no {res}replace
+{txt}q434_pestname_1 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_10 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_2 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_3 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_4 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_5 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_6 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_7 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_8 contains nonnumeric characters; no {res}replace
+{txt}q434_pestname_9 contains nonnumeric characters; no {res}replace
+{txt}q435_pestquant_1 already numeric; no {res}replace
+{txt}q435_pestquant_10 already numeric; no {res}replace
+{txt}q435_pestquant_2 already numeric; no {res}replace
+{txt}q435_pestquant_3 already numeric; no {res}replace
+{txt}q435_pestquant_4 already numeric; no {res}replace
+{txt}q435_pestquant_5 already numeric; no {res}replace
+{txt}q435_pestquant_6 already numeric; no {res}replace
+{txt}q435_pestquant_7 already numeric; no {res}replace
+{txt}q435_pestquant_8 already numeric; no {res}replace
+{txt}q435_pestquant_9 already numeric; no {res}replace
+{txt}q436_pestunit_1 already numeric; no {res}replace
+{txt}q436_pestunit_10 already numeric; no {res}replace
+{txt}q436_pestunit_2 already numeric; no {res}replace
+{txt}q436_pestunit_3 already numeric; no {res}replace
+{txt}q436_pestunit_4 already numeric; no {res}replace
+{txt}q436_pestunit_5 already numeric; no {res}replace
+{txt}q436_pestunit_6 already numeric; no {res}replace
+{txt}q436_pestunit_7 already numeric; no {res}replace
+{txt}q436_pestunit_8 already numeric; no {res}replace
+{txt}q436_pestunit_9 already numeric; no {res}replace
+{txt}q436_1_pestunitval_1 already numeric; no {res}replace
+{txt}q436_1_pestunitval_10 already numeric; no {res}replace
+{txt}q436_1_pestunitval_2 already numeric; no {res}replace
+{txt}q436_1_pestunitval_3 already numeric; no {res}replace
+{txt}q436_1_pestunitval_4 already numeric; no {res}replace
+{txt}q436_1_pestunitval_5 already numeric; no {res}replace
+{txt}q436_1_pestunitval_6 already numeric; no {res}replace
+{txt}q436_1_pestunitval_7 already numeric; no {res}replace
+{txt}q436_1_pestunitval_8 already numeric; no {res}replace
+{txt}q436_1_pestunitval_9 already numeric; no {res}replace
+{txt}q436_pestunitoth_1 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_10 already numeric; no {res}replace
+{txt}q436_pestunitoth_2 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_3 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_4 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_5 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_6 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_7 contains nonnumeric characters; no {res}replace
+{txt}q436_pestunitoth_8 already numeric; no {res}replace
+{txt}q436_pestunitoth_9 already numeric; no {res}replace
+{txt}q437_usekha11_1 already numeric; no {res}replace
+{txt}q437_usekha11_10 already numeric; no {res}replace
+{txt}q437_usekha11_2 already numeric; no {res}replace
+{txt}q437_usekha11_3 already numeric; no {res}replace
+{txt}q437_usekha11_4 already numeric; no {res}replace
+{txt}q437_usekha11_5 already numeric; no {res}replace
+{txt}q437_usekha11_6 already numeric; no {res}replace
+{txt}q437_usekha11_7 already numeric; no {res}replace
+{txt}q437_usekha11_8 already numeric; no {res}replace
+{txt}q437_usekha11_9 already numeric; no {res}replace
+{txt}q437_1_planusekha12_1 already numeric; no {res}replace
+{txt}q437_1_planusekha12_10 already numeric; no {res}replace
+{txt}q437_1_planusekha12_2 already numeric; no {res}replace
+{txt}q437_1_planusekha12_3 already numeric; no {res}replace
+{txt}q437_1_planusekha12_4 already numeric; no {res}replace
+{txt}q437_1_planusekha12_5 already numeric; no {res}replace
+{txt}q437_1_planusekha12_6 already numeric; no {res}replace
+{txt}q437_1_planusekha12_7 already numeric; no {res}replace
+{txt}q437_1_planusekha12_8 already numeric; no {res}replace
+{txt}q437_1_planusekha12_9 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q430_chem~10{col 15}q431_1_c~i_3{col 29}q431_2_che~5{col 43}q433_plaus~3{col 57}q435_pestq~9{col 71}q436_1_pes~5{col 85}q437_usekh~8
+{col 1}q430_chemf~8{col 15}q431_1_c~i_4{col 29}q431_2_che~7{col 43}q433_plaus~4{col 57}q436_pes~t_1{col 71}q436_1_pes~6{col 85}q437_usekh~9
+{col 1}q430_chemf~9{col 15}q431_1_c~i_5{col 29}q431_2_che~8{col 43}q433_plaus~5{col 57}q436_pe~t_10{col 71}q436_1_pes~7{col 85}q437_1_pla~1
+{col 1}q431_chemf~1{col 15}q431_1_c~i_6{col 29}q432_usekh~1{col 43}q433_plaus~6{col 57}q436_pes~t_2{col 71}q436_1_pes~8{col 85}q437_1_pl~10
+{col 1}q431_chem~10{col 15}q431_1_c~i_7{col 29}q432_usek~10{col 43}q433_plaus~7{col 57}q436_pes~t_3{col 71}q436_1_pes~9{col 85}q437_1_pla~2
+{col 1}q431_chemf~2{col 15}q431_1_c~i_8{col 29}q432_usekh~2{col 43}q433_plaus~8{col 57}q436_pes~t_4{col 71}q436_pe~h_10{col 85}q437_1_pla~3
+{col 1}q431_chemf~3{col 15}q431_1_c~i_9{col 29}q432_usekh~3{col 43}q433_plaus~9{col 57}q436_pes~t_5{col 71}q436_pes~h_8{col 85}q437_1_pla~4
+{col 1}q431_chemf~4{col 15}q431_1_~h_10{col 29}q432_usekh~4{col 43}q435_pestq~1{col 57}q436_pes~t_6{col 71}q436_pes~h_9{col 85}q437_1_pla~5
+{col 1}q431_chemf~5{col 15}q431_1_c~h_7{col 29}q432_usekh~5{col 43}q435_pest~10{col 57}q436_pes~t_7{col 71}q437_usekh~1{col 85}q437_1_pla~6
+{col 1}q431_chemf~6{col 15}q431_1_c~h_8{col 29}q432_usekh~6{col 43}q435_pestq~2{col 57}q436_pes~t_8{col 71}q437_usek~10{col 85}q437_1_pla~7
+{col 1}q431_chemf~7{col 15}q431_1_c~h_9{col 29}q432_usekh~7{col 43}q435_pestq~3{col 57}q436_pes~t_9{col 71}q437_usekh~2{col 85}q437_1_pla~8
+{col 1}q431_chemf~8{col 15}q431_2_che~1{col 29}q432_usekh~8{col 43}q435_pestq~4{col 57}q436_1_pes~1{col 71}q437_usekh~3{col 85}q437_1_pla~9
+{col 1}q431_chemf~9{col 15}q431_2_ch~10{col 29}q432_usekh~9{col 43}q435_pestq~5{col 57}q436_1_pe~10{col 71}q437_usekh~4
+{col 1}q431_1_c~i_1{col 15}q431_2_che~2{col 29}q433_plaus~1{col 43}q435_pestq~6{col 57}q436_1_pes~2{col 71}q437_usekh~5
+{col 1}q431_1_~i_10{col 15}q431_2_che~3{col 29}q433_plau~10{col 43}q435_pestq~7{col 57}q436_1_pes~3{col 71}q437_usekh~6
+{col 1}q431_1_c~i_2{col 15}q431_2_che~4{col 29}q433_plaus~2{col 43}q435_pestq~8{col 57}q436_1_pes~4{col 71}q437_usekh~7
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // The line below could be useful when cleaning fertilizer names later
+. *gen fertilizer_1=soundex( q430_chemfertname_1 )
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionE3_KharifCrop_InputCost_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE3_KharifCrop_InputCost_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

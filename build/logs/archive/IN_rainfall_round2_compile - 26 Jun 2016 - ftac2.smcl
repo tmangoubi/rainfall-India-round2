@@ -1,0 +1,1456 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_round2_compile.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:09:53
+{txt}
+{com}. 
+. global mk "${c -(}r2_data{c )-}"
+{txt}
+{com}. cap mkdir "$mk\Intervention Analysis"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import cleaned round 2 datasets from each state
+> ****************************************************************/
+. 
+. // 1.1 AP
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_AP.dta"
+{txt}
+{com}. gen states = "Andhra Pradesh"
+{txt}
+{com}. tostring g_a_6chooseincent1 d_1_c_other d_1_c_other e_4_other /*g_a_4whymigcity*/ g_a_4otherwhycity d_4_nomigrate4, replace
+{txt}g_a_6chooseincent1 has value label; no {res}replace
+{txt}d_1_c_other was {res:byte} now {res:str1}
+d_1_c_other already string; no {res}replace
+{txt}e_4_other was {res:byte} now {res:str1}
+g_a_4otherwhycity was {res:byte} now {res:str1}
+d_4_nomigrate4 has value label; no {res}replace
+{txt}
+{com}. 
+. /* // Disabled my SLee, 2016-1-25
+> foreach var in d_4_nomigrate4  {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         label values `var' nomigrate
+>         {c )-}
+> */
+. save "$mk\Intervention Analysis\APData.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\APData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. 
+. // 1.2 UP
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_UP.dta"
+{txt}
+{com}. // destring d_4_nomigrate4 , replace
+. /*
+> foreach var in g_a_6chooseincent1 /*d_1_k_findjob g_a_4whymigcity d_4_nomigrate4 */ {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         {c )-}
+> */
+. // gen state = "Uttar Pradesh" // Added by SLee - 2016-1-22
+. gen states = "Uttar Pradesh"
+{txt}
+{com}. save "$mk\Intervention Analysis\UPdata.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\UPdata.dta saved
+
+{com}. append using "$mk\Intervention Analysis\APData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distname was 
+str11, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+villname was 
+str19, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+stname was 
+str48, now str82 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+prevresp was 
+str34, now str45 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a_1hhid was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a1_2other was 
+str11, now str35 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_1findecmaker was 
+str27, now str40 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_3hhheadreplace was 
+str26, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4other was 
+str13, now str28 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_6_3surveyorname was 
+str19, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str5, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str47, now str52 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_3landmark was 
+str44, now str69 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_4fathersname was 
+str29, now str38 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_other was 
+str25, now str43 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_6_3cent was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_11_shocktype was 
+str7, now str10 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_c_migmember was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_district was 
+str11, now str17 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_towncity was 
+str15, now str18 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_whymigdest was 
+str4, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_other was 
+str16, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_f_other was 
+str10, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_k_other was 
+str16, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_4_nomigrate was 
+str11, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_1_kilometers was 
+byte, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_3_insurance was 
+str4, now str8 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+metainstancename was 
+str11, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+f_4choosedest was 
+str7, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str5, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_4_whybuyins1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept2 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+states was 
+str13, now str14 to accommodate using data's values)
+{p_end}
+(label noaccept already defined)
+(label chooseincent already defined)
+(label month already defined)
+(label migmember already defined)
+(label migaaccept already defined)
+(label nobuyings already defined)
+(label insurance already defined)
+(label distance_opinion already defined)
+(label nomigrate already defined)
+(label send_money already defined)
+(label mig_success already defined)
+(label earning_level already defined)
+(label income already defined)
+(label occupation already defined)
+(label find_job already defined)
+(label mig_group already defined)
+(label alone_group already defined)
+(label transport already defined)
+(label why_mig_dest already defined)
+(label india_abroad already defined)
+(label mig_member already defined)
+(label shock already defined)
+(label last_kharif already defined)
+(label land_cultivated already defined)
+(label income_source already defined)
+(label phone already defined)
+(label consent already defined)
+(label relationship already defined)
+(label nolocate already defined)
+(label yesno already defined)
+
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. // 1.3 TN
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_TN.dta"
+{txt}
+{com}. destring backch_accompsupervisor_other1, replace
+{txt}backch_accompsupervisor_other1 contains nonnumeric bytes; no {res}replace
+{txt}
+{com}. tostring f_7_othernobuy g_a_4otherwhycity  , replace
+{txt}f_7_othernobuy was {res:byte} now {res:str1}
+g_a_4otherwhycity was {res:byte} now {res:str1}
+
+{com}. 
+. gen states = "Tamil Nadu"
+{txt}
+{com}. save "$mk\Intervention Analysis\TNData.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\TNData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 2: Compile & Analysis Preparation
+> ****************************************************************/
+. 
+. use "$mk\Intervention Analysis\Round2.dta"
+{txt}
+{com}. foreach var in backch_accompsupervisor_other1 backch_accompsupervisor_other2 backch_accompsupervisor_other3 backch_accompmonitor_other2 {c -(}
+{txt}  2{com}.         tostring `var', gen(`var's)
+{txt}  3{com}.         drop `var'
+{txt}  4{com}.         gen `var' = `var's
+{txt}  5{com}.         drop `var's
+{txt}  6{com}.         {c )-}
+{txt}backch_accompsupervisor_other1s generated as {res:str1}
+backch_accompsupervisor_other2s generated as {res:str1}
+backch_accompsupervisor_other3s generated as {res:str1}
+backch_accompmonitor_other2s generated as {res:str1}
+
+{com}. 
+. append using "$mk\Intervention Analysis\TNData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distid was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+distname was 
+str13, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str12, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str52, now str55 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other1 was 
+str1, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other2 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other3 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompmonitor_other2 was 
+str1, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str9, now str11 to accommodate using data's values)
+{p_end}
+(label noaccept already defined)
+(label chooseincent already defined)
+(label whymigcity1 already defined)
+(label month already defined)
+(label migmember already defined)
+(label migaaccept already defined)
+(label yesno already defined)
+(label nolocate already defined)
+(label relationship already defined)
+(label consent already defined)
+(label phone already defined)
+(label income_source already defined)
+(label land_cultivated already defined)
+(label last_kharif already defined)
+(label shock already defined)
+(label mig_member already defined)
+(label india_abroad already defined)
+(label why_mig_dest already defined)
+(label transport already defined)
+(label alone_group already defined)
+(label mig_group already defined)
+(label find_job already defined)
+(label occupation already defined)
+(label income already defined)
+(label earning_level already defined)
+(label mig_success already defined)
+(label send_money already defined)
+(label nomigrate already defined)
+(label distance_opinion already defined)
+(label insurance already defined)
+(label whybuy2 already defined)
+(label nobuyings already defined)
+
+{com}. label var states "State of Survey"
+{txt}
+{com}. rename states state
+{res}{txt}
+{com}. drop backch*
+{txt}
+{com}. 
+. do "${c -(}builddo{c )-}/round2/IN_rainfall_round2_label.do" // Apply variable labels.
+{txt}
+{com}. 
+.                           
+. label variable a1_1locatehh "Able to Locate Household"
+{txt}
+{com}. label variable a1_2reasonfornofind "Reasons For Not Locating"
+{txt}
+{com}. label variable a1_2other "Other Reasons for Not Locating"
+{txt}
+{com}. label variable starttime "Start Time"
+{txt}
+{com}. label variable endtime "End Time"
+{txt}
+{com}. label variable a_1hhid "Household ID"
+{txt}
+{com}. 
+. *SECTION B
+. 
+. label variable b_1findecmaker "Name of Decision Maker"
+{txt}
+{com}. label variable b_2availability "Was Decision Maker Availabe?"
+{txt}
+{com}. label variable b_3hhheadreplace "Replacement Decision Maker"
+{txt}
+{com}. label variable b_4hhmember "Relationship of Respondent to Decision Maker"
+{txt}
+{com}. label variable b_4other "Other Relationship"
+{txt}
+{com}. label variable b_5consent "Consent"
+{txt}
+{com}. label variable b_6_1_respondentsign "Signature of Respondent"
+{txt}
+{com}. label variable b_6_2surveyorsign "Signature of Surveyor"
+{txt}
+{com}. label variable b_6_3surveyorname "Surveyor name"
+{txt}
+{com}. label variable b_7_4address "Address"   
+{txt}
+{com}. label variable b_7_1doorno "Door No"
+{txt}
+{com}. label variable b_7_2stname "Street Name"
+{txt}
+{com}. label variable b_7_3landmark "Landmark"
+{txt}
+{com}. label variable b_7_4fathersname "Father/Husband's Name"
+{txt}
+{com}. label variable b_8_contactno "Contact Number"
+{txt}
+{com}. label variable b_8_1confirmno "Contact Confirmation"
+{txt}
+{com}. 
+. *SECION C
+. 
+. label var c_1_incomesource "Primary Income Source Last Year"
+{txt}
+{com}. label var c_1_other "Other Income Source"
+{txt}
+{com}. label var c_2_weeksworked "Weeks worked during the last Kharif season"
+{txt}
+{com}. label var c_3_daysworked "Days worked during the last Kharif season"
+{txt}
+{com}. label var c_4_hoursworked "Hours worked during the last Kharif season"
+{txt}
+{com}. label var c_5_dailywage "Daily Wage during the last Kharif season"
+{txt}
+{com}. label var c_6_landcultivated "Unit of Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_1acre "(Acre) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_2bigha "(Bigha) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_3cent "(Cent) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_4kuzhi "(Kuzhi) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_5biswa "(Biswa) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_6hectare "(Hectare) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_7_kharifearnings "Total earning during the last Kharif season"
+{txt}
+{com}. label var c_8_annualincome "Total household income last year(2013)"
+{txt}
+{com}. label var c_9_bankaccount "Do you have a bank account?"
+{txt}
+{com}. label var c_10_lastkharif "Was the last Kharif season a good rainfall or bad rainfall year??"
+{txt}
+{com}. label var c_11_shock "Since 2011 did the household experience a bad shock?"
+{txt}
+{com}. label var c_11_shocktype "What type of shock did your household face?"
+{txt}
+{com}. label var c_11_shockother "Other type of shock your household faced"
+{txt}
+{com}. 
+. *SECTION D
+. label var d_1_migrant "Any household member migrated during the lean season"
+{txt}
+{com}. label var d_1_a_daysaway "Days Migrated during the lean season"
+{txt}
+{com}. label var d_1_b_migincome "Total Migration Income during the lean season"
+{txt}
+{com}. label var d_1_c_migmember "Household member migrated during the lean season"
+{txt}
+{com}. label var d_1_c_other "Other household member migrated during the lean season"
+{txt}
+{com}. label var d_1_d_indiaabroad "Migrated to Domestic/Abroad during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_state "Migrated State during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_district "Migrated District during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_towncity "Migrated town/city during the lean season"
+{txt}
+{com}. label var d_1_e_whymigdest "Reason for Choosing Destination"
+{txt}
+{com}. label var d_1_e_other "Other Reasons for Destination"
+{txt}
+{com}. label var d_1_f_transport "Transportation to migration destination"
+{txt}
+{com}. label var d_1_g_transcost "Trasnportation cost (round-trip)"
+{txt}
+{com}. label var d_1_h_alonegroup "Migrated alone/in a group"
+{txt}
+{com}. label var d_1_i_miggroup "With whom migrated"
+{txt}
+{com}. label var d_1_j_success "Found a job at migration destination"
+{txt}
+{com}. *label var d_1_k_findjob "How did you find your job?"
+. label var d_1_k_other "Other ways of Finding Job"
+{txt}
+{com}. label var d_1_l_occupation "Occupation at migration destination"
+{txt}
+{com}. label var d_1_l_other "Other occupation at migration destination"
+{txt}
+{com}. label var d_1_m_earnings "Total earning from migration"
+{txt}
+{com}. label var d_1_m1_earninglevel "Were the earnings higher or lower than average?"
+{txt}
+{com}. label var d_1_m2_success "Was the migration episode successful?"
+{txt}
+{com}. label var d_1_n_earnmore "Did s/he make more money from migration than at-home wage?"
+{txt}
+{com}. label var d_1_o_sendmoney "How did s/he send migration income to home?"
+{txt}
+{com}. label var d_1_o_other "Other way to send money home"
+{txt}
+{com}. label var d_2_migrabi "Any household member migrated during the Rabi season"
+{txt}
+{com}. label var d_2_a_daysaway "Days Migrated during the Rabi season"
+{txt}
+{com}. label var d_2_b_rabiincome "Total Migration Income during the Rabi season"
+{txt}
+{com}. label var d_3_migkharif "Any household member migrated during the Kharif season"
+{txt}
+{com}. label var d_3_a_daysaway "Days Migrated during the Kharif season"
+{txt}
+{com}. label var d_3_b_kharifincome "Total Migration Income during the Kharif season"
+{txt}
+{com}. label var d_4_nomigrate "Reason for Not Migrating"
+{txt}
+{com}. label var d_4_other "Other Reason for Not Migration"
+{txt}
+{com}. 
+. *SECTION E
+. label var e_1_kilometers "(In kilometers) Distance b/w village and AWS"
+{txt}
+{com}. label var e_2_distanceopinion "(In opinion) Distance b/w village and AWS"
+{txt}
+{com}. label var e_3_insurance "Previously purchased insurance scheme"
+{txt}
+{com}. label var e_4_whybuyins "Reason for buying insurance"
+{txt}
+{com}. label var e_4_other "Other Reason for buying insurance"
+{txt}
+{com}. label var e_5_payout "Have ever received payout before"
+{txt}
+{com}. label var e_6_deservepayout "Have not received payout when you think you deserved it"
+{txt}
+{com}. 
+. 
+. *Section F-Insurance
+. label var f_1insexplain "Proceed with insurance explanation and offer"
+{txt}
+{com}. label var f_2purchasins "(First Visit) Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var f_3unitsins "(First Visit) How many units would you like to purchase?"
+{txt}
+{com}. label var f_4datesecvisit "Date of Second Visit"
+{txt}
+{com}. label var f_5purchasins "(Second Visit) Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var f_6unitsins "(Second Visit) How many units would you like to purchase?"
+{txt}
+{com}. label var f_7nobuyins "Reason for NOT buying insurance"
+{txt}
+{com}. label var f_7_othernobuy "Other Reason for NOT buying insurance"
+{txt}
+{com}. 
+. 
+. *Section F & G-Migration
+. label var f_1mig "Proceed with migration explanation and offer"
+{txt}
+{com}. label var f_2migaccep "(First Visit) Accept Migration Offer or NOT"
+{txt}
+{com}. label var f_3migmember "(Frist Visit) Household member who will migrate"
+{txt}
+{com}. label var f_3migother "(First Visit) Other household member who will migrate"
+{txt}
+{com}. label var f_4choosedest "(First Visit) Migration destination"
+{txt}
+{com}. label var f_migfirstvisitend1 "Record End Time"
+{txt}
+{com}. label var g_datesecvisit "Date of Second Visit"
+{txt}
+{com}. label var g_1migaccep "(Final) Accept Migration Offer or NOT"
+{txt}
+{com}. label var g_a_2migmember "(Final) Household member who will migrate"
+{txt}
+{com}. label var g_a_2migother "(Final) Other household member who will migrate"
+{txt}
+{com}. label var g_a_2cellphone "Does a migrating hosuehold member have a cell phone?"
+{txt}
+{com}. label var g_a_2cellnumber "Migrating household member's cell phone number"
+{txt}
+{com}. label var g_a_b_1migmonthleave "Migration Departure Month"
+{txt}
+{com}. label var g_a_b_1migdateleave "Migration Departure Date"
+{txt}
+{com}. label var g_a_b_2migmonthreturn "Migration Return Month"
+{txt}
+{com}. label var g_a_b_2migdayreturn "Migration Return Date"
+{txt}
+{com}. label var g_a_3destconfirm "Destination Confirmation"
+{txt}
+{com}. *label var g_a_4whymigcity "Reason for choosing migration destination"
+. label var g_a_4otherwhycity "Other reason for choosing migration destination"
+{txt}
+{com}. label var g_a_5migwithout "Would you migrate without incentive?"
+{txt}
+{com}. label var g_a_6chooseincent "Reason for Accepting Incentive"
+{txt}
+{com}. label var g_a_6otherincent "Other reason for accepting incentive"
+{txt}
+{com}. label var g_7cashovertick "Would you have accepted the incentive if it was cash rather than a round-trip ticket?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var g_8anydestoffer "Would you have accepted the incentive if other destinations were offered?"
+{txt}
+{com}. label var g_9noaccept "Reason for not accepting incentive"
+{txt}
+{com}. label var g_9other "Other reason for not accepting offer"
+{txt}
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. 
+. drop hhnotfound
+{txt}
+{com}. order a1_* b_* c_* d_* e_* f_* g_*, after(prevresp)
+{txt}
+{com}. order a_1hhid state, first
+{txt}
+{com}. order metainstancename-attrition, after(simid)
+{txt}
+{com}. 
+. tempfile vars_original
+{txt}
+{com}. save `vars_original'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. 
+. // Generate variables for analysis
+. 
+. * Primary income source
+. loc var primary_incsource_kh13
+{txt}
+{com}. clonevar `var'=c_1_incomesource
+{txt}(839 missing values generated)
+
+{com}. 
+. * Primary income source (other)
+. loc var primary_othincsource_kh13
+{txt}
+{com}. clonevar `var'=c_1_other
+{txt}(5,085 missing values generated)
+
+{com}. 
+. * Weeks worked
+. loc var weeksworked_kh13
+{txt}
+{com}. clonevar `var'=c_2_weeksworked
+{txt}(4,523 missing values generated)
+
+{com}. 
+. * Days worked
+. loc var hrsworked_kh13
+{txt}
+{com}. clonevar `var'=c_3_daysworked
+{txt}(4,523 missing values generated)
+
+{com}. 
+. * Daily income
+. loc var dailyincome_kh13
+{txt}
+{com}. clonevar `var'=c_5_dailywage
+{txt}(4,523 missing values generated)
+
+{com}. 
+. * Land cultivated (in acre)
+. loc var landcultivated_acre_kh13
+{txt}
+{com}. rename c_6_landcultivated_acre `var'
+{res}{txt}
+{com}. order `var', last
+{txt}
+{com}. 
+. * Total earning during the last Kharif season (July-Nov 2013)
+. loc var totearn_kh13
+{txt}
+{com}. clonevar `var'=c_7_kharifearnings
+{txt}(2,610 missing values generated)
+
+{com}. 
+. * Total HH income last year (2013)
+. loc var totHHincome_2013
+{txt}
+{com}. clonevar `var'=c_8_annualincome
+{txt}(405 missing values generated)
+
+{com}. 
+. * Has a bank account
+. loc var bankaccount
+{txt}
+{com}. clonevar `var'=c_9_bankaccount
+{txt}(371 missing values generated)
+
+{com}. 
+. * Rainfall last Kharif (2013)
+. loc var rainfall_kh13
+{txt}
+{com}. clonevar `var'=c_10_lastkharif
+{txt}(1,776 missing values generated)
+
+{com}. 
+. * Shock since 2011
+. loc var hasshock
+{txt}
+{com}. clonevar `var'= c_11_shocktype
+{txt}(2,934 missing values generated)
+
+{com}. forval i=1/5 {c -(}
+{txt}  2{com}.         clonevar `var'_type`i'=c_11_shocktype`i'
+{txt}  3{com}. {c )-}
+{txt}(2,961 missing values generated)
+(4,634 missing values generated)
+(5,282 missing values generated)
+(5,495 missing values generated)
+(5,545 missing values generated)
+
+{com}. *
+. 
+. 
+. ***** Migration *****
+. 
+. * Migrated during the last lean season (March-June 2013)
+. loc var migrated_lean13
+{txt}
+{com}. clonevar `var'=d_1_migrant
+{txt}(371 missing values generated)
+
+{com}. 
+. * Migrated days during the last lean season (March-June 2013)
+. loc var migdays_lean13
+{txt}
+{com}. clonevar `var'=d_1_a_daysaway
+{txt}(5,249 missing values generated)
+
+{com}. 
+. * Migration income during the last lean season (March-June 2013)
+. loc var migincome_lean13
+{txt}
+{com}. clonevar `var'=d_1_b_migincome
+{txt}(5,253 missing values generated)
+
+{com}. 
+. * Migrated member during the last lean season (March-June 2013)
+. loc var1 migmember1_lean13
+{txt}
+{com}. loc var2 migmember2_lean13
+{txt}
+{com}. loc var3 migmember3_lean13
+{txt}
+{com}. clonevar `var1'=d_1_c_migmember1
+{txt}(5,247 missing values generated)
+
+{com}. clonevar `var2'=d_1_c_migmember2
+{txt}(5,532 missing values generated)
+
+{com}. clonevar `var3'=d_1_c_migmember3
+{txt}(5,552 missing values generated)
+
+{com}. 
+. * Migrated abroad
+. loc var migabroad_lean13
+{txt}
+{com}. clonevar `var'=d_1_d_indiaabroad
+{txt}(5,247 missing values generated)
+
+{com}. 
+. * Reason for migration destinty
+. loc var1 whymigdest1_lean13
+{txt}
+{com}. loc var2 whymigdest2_lean13
+{txt}
+{com}. loc var3 whymigdest3_lean13
+{txt}
+{com}. loc var4 whymigdest4_lean13
+{txt}
+{com}. clonevar `var1'=d_1_e_whymigdest1
+{txt}(5,261 missing values generated)
+
+{com}. clonevar `var2'=d_1_e_whymigdest2
+{txt}(5,514 missing values generated)
+
+{com}. clonevar `var3'=d_1_e_whymigdest3
+{txt}(5,549 missing values generated)
+
+{com}. clonevar `var4'=d_1_e_whymigdest4
+{txt}(5,554 missing values generated)
+
+{com}. 
+. * Migration transportation (mean, cost, etc.)
+. loc var1 migtransport_lean13
+{txt}
+{com}. loc var2 migtransportoth_lean13
+{txt}
+{com}. loc var3 migtranscost_lean13
+{txt}
+{com}. loc var4 migalone_lean13
+{txt}
+{com}. loc var5 miggroupmem_lean13
+{txt}
+{com}. clonevar `var1'=d_1_f_transport
+{txt}(5,262 missing values generated)
+
+{com}. clonevar `var2'=d_1_f_other
+{txt}(3,154 missing values generated)
+
+{com}. clonevar `var3'=d_1_g_transcost
+{txt}(5,257 missing values generated)
+
+{com}. clonevar `var4'=d_1_h_alonegroup
+{txt}(5,254 missing values generated)
+
+{com}. clonevar `var5'=d_1_i_miggroup
+{txt}(5,380 missing values generated)
+
+{com}. 
+. * Job at migration destination & earning
+. loc var1 foundjob_lean13
+{txt}
+{com}. loc var2 waytojob1_lean13
+{txt}
+{com}. loc var3 waytojob2_lean13
+{txt}
+{com}. loc var4 waytojob3_lean13
+{txt}
+{com}. loc var5 waytojob4_lean13
+{txt}
+{com}. loc var6 waytojoboth_lean13
+{txt}
+{com}. loc var7 migjob_lean13
+{txt}
+{com}. loc var8 migjoboth_lean13
+{txt}
+{com}. loc var9 migearning_lean13
+{txt}
+{com}. loc var10 migearnlevel_lean13
+{txt}
+{com}. loc var11 migsuccess_lean13
+{txt}
+{com}. loc var12 migearnmore_lean13
+{txt}
+{com}. loc var13 migremitway1_lean13
+{txt}
+{com}. loc var14 migremitway2_lean13
+{txt}
+{com}. loc var15 migremitway3_lean13
+{txt}
+{com}. clonevar `var1'=d_1_j_success
+{txt}(5,254 missing values generated)
+
+{com}. clonevar `var2'=d_1_k_findjob1
+{txt}(5,280 missing values generated)
+
+{com}. clonevar `var3'=d_1_k_findjob2
+{txt}(5,521 missing values generated)
+
+{com}. clonevar `var4'=d_1_k_findjob3
+{txt}(5,551 missing values generated)
+
+{com}. clonevar `var5'=d_1_k_findjob4
+{txt}(5,554 missing values generated)
+
+{com}. clonevar `var6'=d_1_k_other
+{txt}(3,847 missing values generated)
+
+{com}. clonevar `var7'=d_1_l_occupation
+{txt}(5,328 missing values generated)
+
+{com}. clonevar `var8'=d_1_l_other
+{txt}(5,259 missing values generated)
+
+{com}. clonevar `var9'=d_1_m_earnings
+{txt}(5,280 missing values generated)
+
+{com}. clonevar `var10'=d_1_m1_earninglevel
+{txt}(5,287 missing values generated)
+
+{com}. clonevar `var11'=d_1_m2_success
+{txt}(5,275 missing values generated)
+
+{com}. clonevar `var12'=d_1_n_earnmore
+{txt}(5,282 missing values generated)
+
+{com}. clonevar `var13'=d_1_o_sendmoney1
+{txt}(5,277 missing values generated)
+
+{com}. clonevar `var14'=d_1_o_sendmoney2
+{txt}(5,527 missing values generated)
+
+{com}. clonevar `var15'=d_1_o_sendmoney3
+{txt}(5,551 missing values generated)
+
+{com}. 
+. * Migration during Rabi/Kharif season (Nov-March 2013)/(June-Nov 2013)
+. loc var1 migrated_rabi13
+{txt}
+{com}. loc var2 migdays_rabi13
+{txt}
+{com}. loc var3 migincome_rabi13
+{txt}
+{com}. loc var4 migrated_kh13
+{txt}
+{com}. loc var5 migdays_kh13
+{txt}
+{com}. loc var6 migincome_kh13
+{txt}
+{com}. clonevar `var1'=d_2_migrabi
+{txt}(371 missing values generated)
+
+{com}. clonevar `var2'=d_2_a_daysaway
+{txt}(5,369 missing values generated)
+
+{com}. clonevar `var3'=d_2_b_rabiincome
+{txt}(5,375 missing values generated)
+
+{com}. clonevar `var4'=d_3_migkharif
+{txt}(371 missing values generated)
+
+{com}. clonevar `var5'=d_3_a_daysaway
+{txt}(5,307 missing values generated)
+
+{com}. clonevar `var6'=d_3_b_kharifincome
+{txt}(5,314 missing values generated)
+
+{com}. 
+. 
+. * Aggregate Past migration variables (migration variables across 3 different migration experience - lean, rabi, kharif)
+.         
+. loc var migrated_any
+{txt}
+{com}. egen `var'=rowmax(migrated_lean13 migrated_rabi13 migrated_kh13)
+{txt}(371 missing values generated)
+
+{com}. lab var `var' "Migrated at least once during the last 3 seasons - lean, Rabi, Kharif"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. loc var migfrequency
+{txt}
+{com}. egen `var'=rowtotal(migrated_lean13 migrated_rabi13 migrated_kh13), missing
+{txt}(371 missing values generated)
+
+{com}. label var `var' "How many seasons did you or your household member migrate during the last 3 seasons?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. loc var migdays_tot
+{txt}
+{com}. egen `var' = rowtotal(migdays_lean13 migdays_rabi13 migdays_kh13), missing
+{txt}(4996 missing values generated)
+
+{com}. label var `var' "How many days did you or your household member migrate during the last 3 seasons?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. loc var migincome_tot
+{txt}
+{com}. egen `var' = rowtotal (migincome_lean13 migincome_rabi13 migincome_kh13), missing
+{txt}(5006 missing values generated)
+
+{com}. label var `var' "How much did your household make from migration during the last 3 seasons?"
+{txt}
+{com}.         
+. 
+. * Reason for NOT migrating
+. forval i=1/7 {c -(}
+{txt}  2{com}.         loc var`i' whynotmig`i'
+{txt}  3{com}.         clonevar `var`i''=d_4_nomigrate`i'
+{txt}  4{com}. {c )-}
+{txt}(930 missing values generated)
+(3,287 missing values generated)
+(4,915 missing values generated)
+(5,370 missing values generated)
+(5,481 missing values generated)
+(5,525 missing values generated)
+(5,550 missing values generated)
+
+{com}. *
+. loc var7 whynotmig_oth
+{txt}
+{com}. clonevar `var7'=d_4_other
+{txt}(5,129 missing values generated)
+
+{com}. 
+. 
+. ***** Past insurance *****
+. 
+. * Distance b/w AWS to vilalge
+. loc var1 distanceAWS
+{txt}
+{com}. loc var2 distancdAWS_opinion
+{txt}
+{com}. clonevar `var1'=e_1_kilometers
+{txt}(5,133 missing values generated)
+
+{com}. clonevar `var2'=e_2_distanceopinion
+{txt}(5,133 missing values generated)
+
+{com}. 
+. * Past insurance history
+. loc var pastinsur_any
+{txt}
+{com}. gen byte `var'=.
+{txt}(5,555 missing values generated)
+
+{com}. replace `var'=1 if inlist(e_3_insurance1,1,2,3,4,5)
+{txt}(799 real changes made)
+
+{com}. replace `var'=0 if (e_3_insurance1==6)
+{txt}(2,895 real changes made)
+
+{com}. replace `var'=.d if inlist(e_3_insurance1,-999,.d)
+{txt}(1,490 real changes made, 1,490 to missing)
+
+{com}. label var `var' "Have you or any member of you household purchased any insurance last year?"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. loc var pastinsur_DMOS
+{txt}
+{com}. gen byte `var'=.
+{txt}(5,555 missing values generated)
+
+{com}. replace `var'=1 if inlist(e_3_insurance1,5)
+{txt}(732 real changes made)
+
+{com}. replace `var'=1 if inlist(e_3_insurance2,5)
+{txt}(4 real changes made)
+
+{com}. replace `var'=0 if (e_3_insurance1==6)
+{txt}(2,895 real changes made)
+
+{com}. replace `var'=.d if inlist(e_3_insurance1,-999,.d)
+{txt}(1,490 real changes made, 1,490 to missing)
+
+{com}. label var `var' "Have you or any member of you household purchased DMOS last year?"
+{txt}
+{com}. label value `var' yesno
+{txt}
+{com}. 
+. loc var1 pastinsur_scheme1
+{txt}
+{com}. loc var2 pastinsur_scheme2
+{txt}
+{com}. clonevar `var1'=e_3_insurance1
+{txt}(902 missing values generated)
+
+{com}. clonevar `var2'=e_3_insurance2
+{txt}(5,551 missing values generated)
+
+{com}. 
+. * Reason for insurance investment
+. loc var1 pastinsur_whybuy1
+{txt}
+{com}. loc var2 pastinsur_whybuy2
+{txt}
+{com}. loc var3 pastinsur_whybuy3
+{txt}
+{com}. loc var4 pastinsur_whybuyoth
+{txt}
+{com}. clonevar `var1'=e_4_whybuyins1
+{txt}(4,773 missing values generated)
+
+{com}. clonevar `var2'=e_4_whybuyins2
+{txt}(5,530 missing values generated)
+
+{com}. clonevar `var3'=e_4_whybuyins3
+{txt}(5,553 missing values generated)
+
+{com}. clonevar `var4'=e_4_other
+{txt}(1,103 missing values generated)
+
+{com}. 
+. * Payout history
+. loc var1 pastinsur_payout
+{txt}
+{com}. loc var2 pastinsur_payoutdeserve
+{txt}
+{com}. clonevar `var1'=e_5_payout
+{txt}(4,755 missing values generated)
+
+{com}. clonevar `var2'=e_6_deservepayout
+{txt}(4,755 missing values generated)
+
+{com}. 
+. 
+. 
+. ***** Insurance Offer *****
+. 
+. * Insurance purchased
+. loc var insur_offered
+{txt}
+{com}. clonevar `var'=f_1insexplain
+{txt}(4,056 missing values generated)
+
+{com}. 
+. loc var1 insur_purch1st
+{txt}
+{com}. loc var2 insur_unitpurch1st
+{txt}
+{com}. loc var3 insur_purch2nd
+{txt}
+{com}. loc var4 insur_unitpurch2nd
+{txt}
+{com}. clonevar `var1'=f_2purchasins
+{txt}(4,077 missing values generated)
+
+{com}. clonevar `var2'=f_3unitsins
+{txt}(4,056 missing values generated)
+
+{com}. clonevar `var3'=f_5purchasins
+{txt}(4,302 missing values generated)
+
+{com}. clonevar `var4'=f_6unitsins
+{txt}(4,056 missing values generated)
+
+{com}. 
+. * Reason for NOT buying insurance
+. loc var1 insur_whynotbuy1
+{txt}
+{com}. loc var2 insur_whynotbuy2
+{txt}
+{com}. loc var3 insur_whynotbuy3
+{txt}
+{com}. loc var4 insur_whynotbuyoth
+{txt}
+{com}. clonevar `var1'=f_7nobuyins1
+{txt}(4,410 missing values generated)
+
+{com}. clonevar `var2'=f_7nobuyins2
+{txt}(5,374 missing values generated)
+
+{com}. clonevar `var3'=f_7nobuyins3
+{txt}(5,540 missing values generated)
+
+{com}. clonevar `var4'=f_7_othernobuy
+{txt}(4,776 missing values generated)
+
+{com}. 
+. 
+. * Aggregate insurance offer variables
+. 
+. ** Insurance purchased
+. loc var1 insur_agreed
+{txt}
+{com}. gen `var1' = (f_2purchasins==1 |f_5purchasins==1)
+{txt}
+{com}. replace `var1'=. if (f_1insexplain!=1) // Correctedly skipped
+{txt}(4,077 real changes made, 4,077 to missing)
+
+{com}. label var `var1' "Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance? " // Added by SLee-2016-1-22
+{txt}
+{com}. label value `var1' yesno
+{txt}
+{com}.                 
+. ** Total insurance units sold
+. loc var2 insur_unitpurchased
+{txt}
+{com}. egen `var2'=rowtotal(f_3unitsins f_6unitsins) if (attrition==0), missing
+{txt}(4056 missing values generated)
+
+{com}. replace `var2'=. if (`var1'!=1) // Correctedly skipped
+{txt}(1,169 real changes made, 1,169 to missing)
+
+{com}. label var `var2' "total insurance unit purchased from 2 visits"
+{txt}
+{com}. 
+. replace `var1'=0 if (`var2'==0) // If no units were purchased, then it means it did not purchase
+{txt}(6 real changes made)
+
+{com}. replace `var2'=. if (`var1'!=1)
+{txt}(6 real changes made, 6 to missing)
+
+{com}.         
+. 
+. 
+. ***** Migration Offer *****
+. 
+. * Migration offer & acceptance
+. loc var mig_offered
+{txt}
+{com}. clonevar `var'= f_1mig
+{txt}(4,429 missing values generated)
+
+{com}. 
+. loc var1 mig_acpt1st
+{txt}
+{com}. loc var2 mig_mem1st
+{txt}
+{com}. loc var3 mig_othmem1st
+{txt}
+{com}. loc var4 mig_dest1st
+{txt}
+{com}. loc var5 mig_accepted
+{txt}
+{com}. loc var6 mig_member
+{txt}
+{com}. loc var7 mig_othmemer
+{txt}
+{com}. clonevar `var1'=f_2migaccep
+{txt}(4,431 missing values generated)
+
+{com}. clonevar `var2'=f_3migmember
+{txt}(5,506 missing values generated)
+
+{com}. clonevar `var3'=f_3migother
+{txt}(5,555 missing values generated)
+
+{com}. clonevar `var4'=f_4choosedest
+{txt}(5,506 missing values generated)
+
+{com}. clonevar `var5'=g_1migaccep
+{txt}(4,431 missing values generated)
+
+{com}. clonevar `var6'=g_a_2migmember
+{txt}(5,487 missing values generated)
+
+{com}. clonevar `var7'=g_a_2migother
+{txt}(5,555 missing values generated)
+
+{com}. 
+. * Migration detail
+. loc var1 mig_cellphone
+{txt}
+{com}. loc var2 mig_mthleave
+{txt}
+{com}. loc var3 mig_dayleave
+{txt}
+{com}. loc var4 mig_mthreturn
+{txt}
+{com}. loc var5 mig_dayreturn
+{txt}
+{com}. clonevar `var1'=g_a_2cellphone
+{txt}(5,487 missing values generated)
+
+{com}. clonevar `var2'=g_a_b_1migmonthleave
+{txt}(5,487 missing values generated)
+
+{com}. clonevar `var3'=g_a_b_1migdateleave
+{txt}(5,487 missing values generated)
+
+{com}. clonevar `var4'=g_a_b_2migmonthreturn
+{txt}(5,487 missing values generated)
+
+{com}. clonevar `var5'=g_a_b_2migdayreturn
+{txt}(5,487 missing values generated)
+
+{com}. 
+. loc var mig_daysexpected
+{txt}
+{com}. gen `var'=((mig_mthreturn-mig_mthleave)*30)+(g_a_b_2migdayreturn-g_a_b_1migdateleave)
+{txt}(5,487 missing values generated)
+
+{com}. replace `var'=.m if (`var'<0)
+{txt}(4 real changes made, 4 to missing)
+
+{com}. lab var `var' "Expected duration of migration (days)"
+{txt}
+{com}. 
+. * Reason for Migration/No-migration & etc.
+. loc var1 whyacceptmig1
+{txt}
+{com}. loc var2 whyacceptmig2
+{txt}
+{com}. loc var3 whyacceptmig3
+{txt}
+{com}. clonevar `var1'=g_a_6chooseincent1
+{txt}(5,495 missing values generated)
+
+{com}. clonevar `var2'=g_a_6chooseincent2
+{txt}(5,535 missing values generated)
+
+{com}. clonevar `var3'=g_a_6chooseincent3
+{txt}(5,550 missing values generated)
+
+{com}. 
+. loc var1 whymigcity1
+{txt}
+{com}. loc var2 whymigcity2
+{txt}
+{com}. loc var3 whymigcity3
+{txt}
+{com}. loc var4 whymigcity4
+{txt}
+{com}. clonevar `var1'=g_a_4whymigcity1
+{txt}(5,488 missing values generated)
+
+{com}. clonevar `var2'=g_a_4whymigcity2
+{txt}(5,522 missing values generated)
+
+{com}. clonevar `var3'=g_a_4whymigcity3
+{txt}(5,542 missing values generated)
+
+{com}. clonevar `var4'=g_a_4whymigcity4
+{txt}(5,553 missing values generated)
+
+{com}. 
+. loc var1 whynotacceptmig1
+{txt}
+{com}. loc var2 whynotacceptmig2
+{txt}
+{com}. loc var3 whynotacceptmig3
+{txt}
+{com}. loc var4 whynotacceptmig4
+{txt}
+{com}. loc var5 whynotacceptmig5
+{txt}
+{com}. loc var6 whynotacceptmig6
+{txt}
+{com}. clonevar `var1'=g_9noaccept1
+{txt}(4,499 missing values generated)
+
+{com}. clonevar `var2'=g_9noaccept2
+{txt}(5,100 missing values generated)
+
+{com}. clonevar `var3'=g_9noaccept3
+{txt}(5,454 missing values generated)
+
+{com}. clonevar `var4'=g_9noaccept4
+{txt}(5,537 missing values generated)
+
+{com}. clonevar `var5'=g_9noaccept5
+{txt}(5,551 missing values generated)
+
+{com}. clonevar `var6'=g_9noaccept6
+{txt}(5,554 missing values generated)
+
+{com}. 
+. loc var mignoincentive
+{txt}
+{com}. clonevar `var'=g_a_5migwithout
+{txt}(5,529 missing values generated)
+
+{com}. 
+. * Save newly created variables
+. tempfile vars_prep
+{txt}
+{com}. save `vars_prep'        
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. // Save original variables only
+. use `vars_original'
+{txt}
+{com}. 
+. qui compress
+{txt}
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. save "${c -(}builddta{c )-}/round2/IN_rainfall_r2_compiled.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/round2/IN_rainfall_r2_compiled.dta saved
+
+{com}. 
+. // Save variables prepared for analysis only
+. use `vars_prep'
+{txt}
+{com}. keep a_1hhid state attrition-villname primary_incsource_kh13-mignoincentive
+{txt}
+{com}. 
+. foreach x of varlist _all {c -(}
+{txt}  2{com}.         rename `x' r2_`x'
+{txt}  3{com}. {c )-}
+{res}{txt}
+{com}. *
+. rename (r2_a_1hhid r2_state) (a_1hhid state)
+{res}{txt}
+{com}. 
+. compress
+  {txt}variable {bf}r2_migrated_any{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}r2_migfrequency{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}r2_migdays_tot{sf} was {bf}{res}float{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}r2_insur_agreed{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}r2_insur_unitpurchased{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}r2_mig_daysexpected{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+{txt}  (94,435 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/round2/IN_rainfall_r2_compiled_prep.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/round2/IN_rainfall_r2_compiled_prep.dta saved
+
+{com}. note: IN_rainfall_r2_compiled_prep / created by `name_do'.do file
+{res}{txt}
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

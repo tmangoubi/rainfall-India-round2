@@ -1,0 +1,174 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/Insur_payout_Kharif2014.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}25 Jun 2016, 18:32:17
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data (Long format)                                                                                                    
+> ****************************************************************/
+. 
+. // Raw data
+. import excel using "${c -(}followup_data{c )-}/Payout_Information/AP Payout Beneficiaries tracker (incl address).xlsx", sheet("ONLY CLAIM") cellrange(A2) firstrow clear
+{res}{txt}
+{com}. 
+. // Clean variables
+. drop Sno
+{txt}
+{com}. rename (ID Amt_Recieved Located) (a_1hhid Amt_Received Ins_payout_located)
+{res}{txt}
+{com}. 
+. // Label variables
+. label var a_1hhid "Household ID"
+{txt}
+{com}. label var villname "Village"
+{txt}
+{com}. label var farmers "Number of farmers" // Need to confirm
+{txt}
+{com}. label var total_insurance_unit "Total unit of insurance farmers purchased"
+{txt}
+{com}. label var Unitcost "Unit cost of insurance"
+{txt}
+{com}. label var Amt_Received "Total amount farmers actually paid (50% of full-price)"
+{txt}
+{com}. label var Total_Amount "Total price of insurance purchased"
+{txt}
+{com}. label var payouts "Payout of unit insurance"
+{txt}
+{com}. label var claims "Total amount of payout farmers received"
+{txt}
+{com}. label var Ins_payout_located "Whether household was located at the time of insurance payout"
+{txt}
+{com}. 
+. label define yesno 0 "No" 1 "Yes"
+{txt}
+{com}. label value Ins_payout_located yesno
+{txt}
+{com}. /*
+> compress
+> save "${c -(}builddta{c )-}/admin/Insur_payout_Kharif2014_cleaned.dta", replace
+> 
+> 
+> /****************************************************************
+>         SECTION 2: Clean Data (Wide format)                                                                                                     
+> ****************************************************************/
+> // Now we will convert data into wide format, in order to be merged with round 2/3/follow-up data (leaving unique obs for each HH)
+> 
+> // Tag duplicate observations (some households purchased insurnace both in round 2 and round 3)
+> quietly bysort a_1hhid:  gen num_purchased = cond(_N==1,0,_n)
+> replace num_purchased=1 if (num_purchased==0) // 0 indicates household purchased insurance only once, while 1 & 2 indicates purchaed in both rounds.
+> ** 
+> 
+> 
+> // Tag households with duplicats observations (i.e. purchased insurance in both rounds)
+> duplicates tag a_1hhid, gen(both_rounds)
+> 
+> quietly bysort a_1hhid:  gen purchased_round = cond(_N==1,0,_n)
+> recode purchased_round (0=2) (1=2) (2=3)
+> 
+> // Tag round 
+> 
+> 
+> 
+> 
+> use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+> keep Id q300_AgrCoop q301_lastyeahhcropownrent-q302_2_AreaUnit_oth_4
+> 
+> /// Destring & recode variables
+> destring *, replace
+> ds, has(type numeric)
+> local num_var `r(varlist)'
+> foreach var of local num_var {c -(}
+>         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+>         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+> {c )-}
+> *
+> label define yesno 1 "Yes" 2 "No", replace
+> 
+> tempfile q30X
+> save `q30X'
+> 
+> // Section D1 (Part 1)
+> use "${c -(}followup_data{c )-}/AP Raw/SectionDP2_1.dta", clear
+> append using "${c -(}followup_data{c )-}/TN Raw/SectionDP2_1.dta" 
+> append using "${c -(}followup_data{c )-}/UP Raw/SectionDP2_1.dta" 
+> isid Id subid
+> 
+> /// Variable cleaning
+> //// q300_4_MemFee
+> replace q300_4_MemFee="200" if (q300_4_MemFee=="200-")
+> 
+> /// Destring & recode variables
+> destring *, replace
+> ds, has(type numeric)
+> local num_var `r(varlist)'
+> foreach var of local num_var {c -(}
+>         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+>         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+> {c )-}
+> *
+> 
+> // Reshape 
+> /// Since q300.X is a long dataset and the rest of dataset is wide, we can reshape q300.X from wide into long (there are only 3 different subids, which makes easier to reshape)
+> reshape wide q300*, i(Id) j(subid)
+> 
+> // Label variables
+> label var Id "Household ID"
+> 
+> forval subid=1/3 {c -(}
+>         label var  q300_1_listname`subid' "Name of Cooperative, HH member `subid'"
+>         label var  q300_2_MM`subid' "Month of Joining, HH member `subid'"
+>         label var  q300_3_YYYY`subid' "Year of Joining, HH member `subid'"
+>         label var  q300_4_MemFee`subid' "Membership Fee of 2014, HH member `subid'"
+>         label var  q300_5_EstBen`subid' "Estimated Benefit in Kharif 2015 (July - Dec 2014), HH member `subid'"
+> {c )-}
+> *
+> 
+> tempfile q300_X
+> save `q300_X'
+> 
+> use `q30X', clear
+> merge 1:1 Id using `q300_X', keep(1 3) gen(q300_X_answered) // Drop households exist in B1 but NOT in master data
+> recode q300_X_answered (1=2) (3=1)
+> label value q300_X_answered yesno
+> label var q300_X_answered "Did this household answer questions q300_X? (Editor generated)"
+> 
+> // Check & correct data entry error
+> tab q300_AgrCoop q300_X_answered, m
+> 
+> list q300* if (q300_AgrCoop==2 & q300_X_answered==1) // List households who answered "NO" in q300 but answered the rest of D1 questions.
+> list q300* if (q300_AgrCoop==.b & q300_X_answered==1) // List households who did not answer q300 but answered the rest of D1 questions.
+> // It seems they are all valid observation, indicating they answered q300 "No" by mistake. Need to correct them.
+> replace q300_AgrCoop=1 if (q300_AgrCoop==2 & q300_X_answered==1)
+> replace q300_AgrCoop=1 if (q300_AgrCoop==.b & q300_X_answered==1)
+> 
+> 
+> // Rename & relabel some variables for clarification
+> label var q301_lastyeahhcropownrent "Cultivate crop on own land/rented land - Kharif 2014"
+> rename q301_lastyeahhIrrcropownrent q302_lastyeahhIrrcropownrent
+> labe var q302_lastyeahhIrrcropownrent "Cultivate irregular crops on either owned or rented land - Last year (Jan - Dec 2014)"
+> 
+> // Order variables
+> order q300_1_listname1-q300_5_EstBen3, after(q300_AgrCoop)
+> order q300_X_answered, after(q300_AgrCoop)
+> 
+> */
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+{txt}  (0 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/admin/Insur_payout_Kharif2014_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/admin/Insur_payout_Kharif2014_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

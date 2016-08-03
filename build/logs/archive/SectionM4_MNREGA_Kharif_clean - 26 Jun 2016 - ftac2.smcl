@@ -1,0 +1,131 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM4_MNREGA_Kharif_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:12:16
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. keep Id q218_22_mnrega
+{txt}
+{com}. destring q218_22_mnrega, replace
+{txt}q218_22_mnrega already numeric; no {res}replace
+{txt}
+{com}. qui replace q218_22_mnrega=.b if mi(q218_22_mnrega) // Blank response (but not a valid response)
+{txt}
+{com}. qui recode q218_22_mnrega (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}
+{com}. 
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. label value q218_22_mnrega yesno
+{txt}
+{com}. 
+. tempfile q218_22
+{txt}
+{com}. save `q218_22'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. 
+. // M4 - MNREGA data
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM4MNREGARoster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM4MNREGARoster_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM4MNREGARoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+qM4_NREGA_BHID was 
+str4, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q218_23_daysempl was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring & recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}qM4_NREGA_BHID contains nonnumeric bytes; no {res}replace
+{txt}qM4_NREGA_CHID contains nonnumeric bytes; no {res}replace
+{txt}q218_23_daysempl has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_24_totearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q218_23_da~l{col 29}q218_24_to~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var qM4_NREGA_BHID "Baseline HH Roster ID"
+{txt}
+{com}. label var qM4_NREGA_CHID "Current HH Roster ID"
+{txt}
+{com}. label var q218_23_daysempl "Days employed under MNREGA"
+{txt}
+{com}. label var q218_24_totearning "Total Earnings - MNREGA"
+{txt}
+{com}. 
+. tempfile SecM4
+{txt}
+{com}. save `SecM4'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. // Merge
+. use `q218_22', clear
+{txt}
+{com}. merge 1:m Id using `SecM4', nogen keep(3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}             455{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}variable {bf}q218_22_mnrega{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q218_23_daysempl{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+{txt}  (910 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionM4_MRNREGA_Kharif_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionM4_MRNREGA_Kharif_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

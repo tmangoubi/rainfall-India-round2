@@ -1,0 +1,973 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionA_HHRoster_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:11:23
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // A1: q101 ~ q110 //
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionAHouseholdRoster_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionAHouseholdRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q102_relHH_oth was 
+str20, now str22 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q104_1_subcaste was 
+str23, now str24 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q110_hlthexpkha was 
+str6, now str7 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionAHouseholdRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q102_relHH_oth was 
+str22, now str32 to accommodate using data's values)
+{p_end}
+
+{com}. 
+. // Drop duplicates subid within a household
+. 
+. /// There are couple of observations with duplicate subid within a household.
+> /// We can distinguish proper member from improper member by observing ages, name, etc.
+> duplicates tag Id subid, gen(dup)
+
+{p 0 4}{txt}Duplicates in terms of {res} Id subid{p_end}
+{txt}
+{com}. browse if dup==1
+{txt}
+{com}. 
+. drop if (Id=="F1285" & q101_Hhmemnam=="GJHGHG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & q101_Hhmemnam=="HGJGJH") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="EYTWGW") // Improper name
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q101_Hhmemnam=="YFG") // Improper name
+{txt}(1 observation deleted)
+
+{com}. 
+. /// Household "P4537" has duplicates obs which cannot be distinguished easily.
+> /// However, since "P4537" is dropped from initial cleaning, it can be dropped.
+> drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. 
+. isid Id subid
+{txt}
+{com}. drop dup
+{txt}
+{com}. 
+. // Relation to HH Head
+. // We can observe that there are 7 obs with "N/A" value, and all of them are invalid responses after manually checking. We can drop them.
+. loc var q102_relHH
+{txt}
+{com}. drop if (`var'=="-666")
+{txt}(7 observations deleted)
+
+{com}. 
+. // Gender
+. /// Both had missing values, I've assumed genders based on the names of the individuals
+> replace q103_gender = "2" if Id == "P1773" & subid == "4"
+{txt}(1 real change made)
+
+{com}. replace q103_gender = "2" if Id == "P2613" & subid == "2"
+{txt}(0 real changes made)
+
+{com}. 
+. // Age & Year of birth
+. replace q105_1_ageYYYY="" if (q105_1_ageYYYY=="-")
+{txt}(1 real change made)
+
+{com}. 
+. /// Kharif Health Expenditure
+> replace q110_hlthexpkha="0" if (q110_hlthexpkha=="-0")
+{txt}(3 real changes made)
+
+{com}. replace q110_hlthexpkha="" if (q110_hlthexpkha=="-")
+{txt}(2 real changes made)
+
+{com}. 
+. // Destring & recode variables
+. destring subid q102_relHH q103_gender q105_ageYY q105_1_ageYYYY q106_engdlywageemp q107_prioccup q108_indinvwork q109_curresHH q110_hlthexpkha, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q102_relHH has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q103_gender has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q105_ageYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q105_1_ageYYYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(21013 missing values generated)
+{res}{txt}q106_engdlywageemp has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q107_prioccup has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q108_indinvwork has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q109_curresHH has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q110_hlthexpkha has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(2 missing values generated)
+{res}{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q103_gender{col 29}q105_1_age~Y{col 43}q107_prioc~p{col 57}q109_curre~H
+{col 1}q102_relHH{col 15}q105_ageYY{col 29}q106_engdl~p{col 43}q108_indin~k{col 57}q110_hlthe~a
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. 
+. 
+. // Caste & subcaste (q104) 
+. 
+. // Many observations have same castes with slightly different spellings. Need to fix them.
+. ** I included all "YADAV", "JATAV" in its original group. For example, I renamed "AHIR YADAV" caste as "AHIR" caste
+. gen q104_caste_dex = soundex(q104_caste)
+{txt}
+{com}. clonevar q104_caste_cleaned=q104_caste
+{txt}
+{com}. 
+. loc var q104_caste
+{txt}
+{com}. replace `var'_cleaned="AHIR" if inlist(`var'_dex,"A600", "A360", "A631")
+{txt}(51 real changes made)
+
+{com}. replace `var'_cleaned="AHIR YADAV" if (`var'_dex=="A631")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="AGAMUDAYAR" if inlist(`var'_dex,"A253","A256")
+{txt}(29 real changes made)
+
+{com}. replace `var'_cleaned="AMBALAKARAR" if inlist(`var'_dex,"A514","A512","M146")
+{txt}(360 real changes made)
+
+{com}. replace `var'_cleaned="ANDRA ADHI MADIGA" if inlist(`var'_dex,"A536","A353")
+{txt}(1 real change made)
+
+{com}. *replace `var'_cleaned="ARIJAN" if inlist(`var'_dex,"A625")
+. replace `var'_cleaned="ARYA VYASYA" if inlist(`var'_dex,"A612")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="ASARI" if inlist(`var'_dex,"A260")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="ATHITHIRAVIDAR" if inlist(`var'_dex,"A336")
+{txt}(2 real changes made)
+
+{com}. 
+. ** I do not want to focus too much on exact spelling, as long as people with same caste are properly grouped.
+.         ** ex. NADAR or NATAR? BRAHMAN or BRAHAMAN?
+. ** JAT/JAAT/JATAV/YADAV - are they the same caste?
+. ** Many people gave same response for both caste and subcaste. How should I know whether they are caste or subcaste?
+. ** Are "BALLAR" and "PALLAR" the same caste?
+. ** What's the different b/w "KUSHWAHA" and "KACHI"? They appear both in caste and subcaste at the same time.
+. ** "SC MALA" : Is "Mala" a caste or subcaste?
+. *** ID==P3001 : One person is MALA, while other ppl are "S.C"
+. ** SC MADIGA : Are "Madiga" and "Mala" same caste
+. *** ID==P3026 : One person is MADIGA, while other ppl are S.C.
+. ** SC CHOUDRY
+. ** OC KAPU
+. ** THELAGA KAPU
+. ** KOPPU VELUMA
+. ** ANDRA ADHI MADIGA vs MADIGA
+. ** Are "HAJAM" and "HARIJAN" same caste?
+. ** "THURPU KAPU": Is "KAPU" a caste or subcaste?
+. ** Are "KOHAR", "KUMHAR", "KHUMARAR" and "KUBHAR" the same caste?
+. ** Are "LONIA" and "NONIYA" the same caste?
+. ** Are "PASI", "PASWAN" and "PASIWAN" the same caste?
+. ** Are castes with "dex==M600" the same caste or different castes?
+. ** RAJ BHAR vs BHAR
+. ** AHIR YADAV vs YADAV
+. ** JURGAR vs GUJAR
+. ** PAYAL vs PALLAR, PAYAL vs PAYAL JAAT
+. ** CHAMAR JATAV vs CHAMAR, AHIR YADAV vs AHIR
+. ** MUSLIM vs MUSLIM RAJPOOT
+. ** DHEEMAR vs DHEEMAR KAHAR
+. ** BARAIYAN vs PARAIYAN.
+. ** Are "BRAHAMAN" and "BARAIYAN" the same caste?
+. 
+. ** KACHI vs KUSHAWA : Some ppl answered KACHI as caste and KUSHAWA as subcaste, while other ppl answered the opposite.
+. 
+. ** HH-level caste: How should I assign HH-level caste?
+.         ** HH head's caste
+.         ** Cate of most ppl in HH
+.         
+. ** P3496, P4228: One person have "CHAMAR" caste and "HARIJAN" subcaste, while other pp have the opposite.
+. ** P4201, P4221: One person have "HARIJAN" caste and "CHAMAR" subcaste, while other pp have the opposite.
+. ** P4267, P4221: One person have "HARIJAN" caste and "PASWAN" subcaste, while other pp have "CHAMAR" caste and "PASWAN" subcaste.
+. ** P4338: One person have "BIND" caste and "BIND" subcaste, while other pp have "CHAMAR" caste and "BIND" subcaste.
+. *** Are "BIND" and "CHAMAR" caste or subcaste?
+. 
+. ** subcaste=="VANNIYAR" if Id=="P514"
+. ** subcaste=="MEENAVAR" if Id=="P775"
+. ** subcaste=="AGAMUDAIYAR" if Id=="P794"
+. ** P974
+. 
+. 
+. replace `var'_cleaned="BADHAI" if inlist(`var'_dex,"B300")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="BALIJA" if inlist(`var'_dex,"B420")
+{txt}(19 real changes made)
+
+{com}. replace `var'_cleaned="BALLAR" if inlist(`var'_dex,"B460")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="BANIYA" if inlist(`var'_dex,"B500")
+{txt}(9 real changes made)
+
+{com}. replace `var'_cleaned="BARBAR" if inlist(`var'_dex,"B616")
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="BC" if inlist(`var'_dex,"B200","B210")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="BHAR" if inlist(`var'_dex,"B600","B260")
+{txt}(9 real changes made)
+
+{com}. *replace `var'_cleaned="BAHMIN" if inlist(`var'_dex,"B550")
+. *replace `var'_cleaned="BARHMIN" if inlist(`var'_dex,"B655","B550")
+. replace `var'_cleaned="BRAHAMAN" if inlist(`var'_dex,"B655","B650","B625","B653","H531","B550")
+{txt}(488 real changes made)
+
+{com}. replace `var'_cleaned="BILLAMAR" if inlist(`var'_dex,"B456")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="BIND" if inlist(`var'_dex,"B530")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="BOYA" if inlist(`var'_dex,"B000")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="BUDA BUKKALA" if inlist(`var'_dex,"B312")
+{txt}(16 real changes made)
+
+{com}. 
+. replace `var'_cleaned="CHAKALI" if inlist(`var'_dex,"C240","C245","C246")
+{txt}(7 real changes made)
+
+{com}. replace `var'_cleaned="CHAMAR" if inlist(`var'_dex,"C560","C556","C562")
+{txt}(53 real changes made)
+
+{com}. replace `var'_cleaned="CHOWDHURY" if inlist(`var'_dex,"C360","C362")
+{txt}(388 real changes made)
+
+{com}. replace `var'_cleaned="CHETI BALIJA" if inlist(`var'_dex,"C314")
+{txt}(12 real changes made)
+
+{com}. replace `var'_cleaned="CHRISTIAN NADAR" if inlist(`var'_dex,"C623")
+{txt}(0 real changes made)
+
+{com}. 
+. replace `var'_cleaned="DEVAR" if inlist(`var'_dex,"D000","D160","D126")
+{txt}(11 real changes made)
+
+{com}. replace `var'_cleaned="DHEEMAR" if inlist(`var'_dex,"D500","D560","D562","D600")
+{txt}(16 real changes made)
+
+{com}. replace `var'_cleaned="DHOBI" if inlist(`var'_dex,"D100")
+{txt}(35 real changes made)
+
+{com}. replace `var'_cleaned="DHULVA VELLALER" if inlist(`var'_dex,"D411","I533")
+{txt}(9 real changes made)
+
+{com}. replace `var'_cleaned="DUSADH" if inlist(`var'_dex,"D230","D250")
+{txt}(18 real changes made)
+
+{com}. 
+. replace `var'_cleaned="EKARI" if inlist(`var'_dex,"E260")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="ELAMA" if inlist(`var'_dex,"E450","E452")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="ERAKALA" if inlist(`var'_dex,"E624")
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="ESAI VELLAR" if inlist(`var'_dex,"E214")
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="ESHLAM" if inlist(`var'_dex,"E245")
+{txt}(1 real change made)
+
+{com}. 
+. replace `var'_cleaned="GADARIYA" if inlist(`var'_dex,"G360","G366")
+{txt}(60 real changes made)
+
+{com}. replace `var'_cleaned="GAJULA BALIJA" if inlist(`var'_dex,"G241","G441")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="GOUDS" if inlist(`var'_dex,"G300","G320","G530","G323")
+{txt}(207 real changes made)
+
+{com}. replace `var'_cleaned="GADARIYA" if (Id=="P4895")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="GUJAR" if (inlist(`var'_dex,"G260","U260","G200","G626") | (`var'_dex=="J260" & `var'=="JUJAR"))
+{txt}(254 real changes made)
+
+{com}. replace `var'_cleaned="GUJAR" if (Id=="P3697")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="GOUNTER" if inlist(`var'_dex,"G536","G153")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="GOLLA" if inlist(`var'_dex,"G400","G440")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="GUPTA" if inlist(`var'_dex,"G130")
+{txt}(5 real changes made)
+
+{com}. replace `var'_cleaned="GURUMMBA" if inlist(`var'_dex,"G651")
+{txt}(0 real changes made)
+
+{com}. 
+. replace `var'_cleaned="HAJAM" if inlist(`var'_dex,"H250")
+{txt}(12 real changes made)
+
+{com}. replace `var'_cleaned="HARIJAN" if (inlist(`var'_dex,"H625","H650","H620","H655","H652","A625") | inlist(`var',"H","HAIJAN"))
+{txt}(46 real changes made)
+
+{com}. 
+. 
+. // Q. Need to clarify whether they are actually the same caste
+. replace `var'_cleaned="JAT/JATAV/YADAV" if inlist(`var'_dex,"J300","J310","A310","Y310","Y312","Y316")
+{txt}(566 real changes made)
+
+{com}. 
+. replace `var'_cleaned="JUGGAR" if (inlist(`var'_dex,"J626") | (`var'=="J260" & `var'!="JUJAR"))
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="JAISH" if inlist(`var'_dex,"J200")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="JALARI" if inlist(`var'_dex,"J460")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="JULAHA" if inlist(`var'_dex,"J400")
+{txt}(19 real changes made)
+
+{com}. 
+. replace `var'_cleaned="KAPU" if inlist(`var'_dex,"K240","K524")
+{txt}(11 real changes made)
+
+{com}. replace `var'_cleaned="KAPU" if inlist(`var'_dex,"K000","K100","K410","K121","K113")
+{txt}(228 real changes made)
+
+{com}. replace `var'_cleaned="KACHI" if inlist(`var',"KACHI","KASHI")
+{txt}(7 real changes made)
+
+{com}. replace `var'_cleaned="KOHAR" if inlist(`var'_dex,"K600")
+{txt}(137 real changes made)
+
+{com}. replace `var'_cleaned="KANJAUIA" if inlist(`var'_dex,"K520")
+{txt}(7 real changes made)
+
+{com}. 
+. // Need to check whether these three castes are all the same.
+. replace `var'_cleaned="KAMMALAR" if inlist(`var'_dex,"K546")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="KAMMA" if inlist(`var'_dex,"K500")
+{txt}(23 real changes made)
+
+{com}. replace `var'_cleaned="KUMHAR" if inlist(`var'_dex,"K550","K560","K540","K566")
+{txt}(99 real changes made)
+
+{com}. replace `var'_cleaned="KUMHAR" if (Id=="F1514")
+{txt}(1 real change made)
+
+{com}. 
+. replace `var'_cleaned="KAPULU" if inlist(`var'_dex,"K140","W000")
+{txt}(5 real changes made)
+
+{com}. replace `var'_cleaned="KASHYAP" if inlist(`var'_dex,"K210")
+{txt}(21 real changes made)
+
+{com}. replace `var'_cleaned="KAVUNDAR" if inlist(`var'_dex,"K153")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="KAYASTH" if inlist(`var'_dex,"K230")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="KEWAT" if (inlist(`var'_dex,"K300","K130") | `var'=="KEWAR")
+{txt}(101 real changes made)
+
+{com}. replace `var'_cleaned="KERALA MUTHALI" if inlist(`var'_dex,"K645")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="KHARHAR" if inlist(`var'_dex,"K660")
+{txt}(6 real changes made)
+
+{com}. replace `var'_cleaned="KHATIK" if inlist(`var'_dex,"K320")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="KURMI" if inlist(`var'_dex,"K650","K635")
+{txt}(131 real changes made)
+
+{com}. replace `var'_cleaned="KUSHWAHA" if (inlist(`var'_dex,"K200","K220")&(`var'_cleaned!="KACHI"))
+{txt}(118 real changes made)
+
+{com}. replace `var'_cleaned="KOMATI" if inlist(`var'_dex,"K530")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="KOMATLU" if inlist(`var'_dex,"K534")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="KOPPALA VELAMA" if inlist(`var'_dex,"K114","K115","K140","K141","K144")
+{txt}(242 real changes made)
+
+{com}. replace `var'_cleaned="KORI" if (`var'=="KORI")
+{txt}(21 real changes made)
+
+{com}. replace `var'_cleaned="KOPPALA VELAMA" if inlist(`var'_dex,"K114","K115","K140","K141")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="KOUSALI" if inlist(`var'_dex,"K240")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="KRISHNA VAGAI" if inlist(`var'_dex,"K625","K251")
+{txt}(7 real changes made)
+
+{com}. replace `var'_cleaned="KRISTEN" if inlist(`var'_dex,"K623")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="KRISTHAVAR" if regexm( q104_caste,"KRISTHAVAR")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="KUBHAR" if inlist(`var'_dex,"K160")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="KUDUMBAMAR" if inlist(`var'_dex,"K351")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="KUBHAR" if inlist(`var'_dex,"K160","K516")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="KURUMPOOR" if inlist(`var'_dex,"K651")
+{txt}(1 real change made)
+
+{com}. 
+. replace `var'_cleaned="LAMBADI" if inlist(`var'_dex,"L513","L153")
+{txt}(50 real changes made)
+
+{com}. replace `var'_cleaned="LOHAR" if inlist(`var'_dex,"L000","L600")
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="LONIYA" if inlist(`var'_dex,"L500")
+{txt}(0 real changes made)
+
+{com}. 
+. replace `var'_cleaned="MEENAVAR" if inlist(`var'_dex,"M516")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="MEENAVAR" if (Id=="P775")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="MALA" if inlist(`var'_dex,"M400","M432")
+{txt}(383 real changes made)
+
+{com}. replace `var'_cleaned="MADIGA" if inlist(`var'_dex,"M320","M322","M200")
+{txt}(50 real changes made)
+
+{com}. replace `var'_cleaned="MAHAMMADS" if inlist(`var'_dex,"M532")
+{txt}(0 real changes made)
+
+{com}. 
+. //** Check "M600" castes carefully
+. replace `var'_cleaned="MARUYA" if inlist(`var'_dex,"M600","M000","M300")
+{txt}(89 real changes made)
+
+{com}. 
+. replace `var'_cleaned="MANDHULA" if inlist(`var'_dex,"M534")
+{txt}(6 real changes made)
+
+{com}. replace `var'_cleaned="MANGALI" if inlist(`var'_dex,"M524")
+{txt}(5 real changes made)
+
+{com}. replace `var'_cleaned="MANSOORI" if inlist(`var'_dex,"526")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="MUDIRAJ" if inlist(`var'_dex,"M362")
+{txt}(139 real changes made)
+
+{com}. replace `var'_cleaned="MBC" if inlist(`var'_dex,"M120")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="MUSLIM" if inlist(`var'_dex,"M235","M245")
+{txt}(54 real changes made)
+
+{com}. replace `var'_cleaned="MUTHALIYAR" if inlist(`var'_dex,"M346","M366")
+{txt}(13 real changes made)
+
+{com}. replace `var'_cleaned="MOOPANAR" if inlist(`var'_dex,"M156")
+{txt}(15 real changes made)
+
+{com}. 
+. replace `var'_cleaned="NATAR" if inlist(`var'_dex,"N300","N360","N362")
+{txt}(80 real changes made)
+
+{com}. replace `var'_cleaned="NAGIYAR" if inlist(`var'_dex,"N260")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="NAI" if inlist(`var'_dex,"N000")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="NAYANI BRAHMANA" if inlist(`var'_dex,"N165","N516") 
+{txt}(15 real changes made)
+
+{com}. replace `var'_cleaned="NAIDU" if inlist(`var'_dex,"G530","N300")
+{txt}(83 real changes made)
+
+{com}. replace `var'_cleaned="NONIYA" if inlist(`var'_dex,"N500")
+{txt}(0 real changes made)
+
+{com}. 
+. replace `var'_cleaned="OC" if inlist(`var'_dex,"O200","O236","O210")
+{txt}(3 real changes made)
+
+{com}. 
+. replace `var'_cleaned="PADAIYACHI" if inlist(`var'_dex,"P000","P320","P332")
+{txt}(51 real changes made)
+
+{com}. replace `var'_cleaned="P.C" if ((inlist(`var'_dex,"P200")) & (Id!="P541"))
+{txt}(133 real changes made)
+
+{com}. replace `var'_cleaned="PADMASHALI" if inlist(`var'_dex,"P352","P524")
+{txt}(14 real changes made)
+
+{com}. replace `var'_cleaned="PADAIYACHI" if (Id=="P541")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="PARAYAR" if inlist(`var'_dex,"P650","P660")
+{txt}(24 real changes made)
+
+{com}. replace `var'_cleaned="PALLAR" if inlist(`var'_dex,"P360","P460","P456","P600","P400","P456","P465")
+{txt}(126 real changes made)
+
+{com}. replace `var'_cleaned="PALLAN" if inlist(`var'_dex,"P450")
+{txt}(3 real changes made)
+
+{com}. replace `var'_cleaned="PANDARAM" if inlist(`var'_dex,"P536")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="PANDEY" if inlist(`var'_dex,"P530")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="PANDIT" if inlist(`var'_dex,"P533")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="PARJA PATI" if inlist(`var'_dex,"P621")
+{txt}(49 real changes made)
+
+{com}. replace `var'_cleaned="PASI" if inlist(`var',"PASI","PASHI")
+{txt}(131 real changes made)
+
+{com}. replace `var'_cleaned="PASWAN" if inlist(`var'_dex,"P250")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="PATHAN" if inlist(`var'_dex,"P350")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="PAYAL" if inlist(`var'_dex,"P423")
+{txt}(1 real change made)
+
+{com}. *replace `var'_cleaned="PILLAI" if inlist(`var'_dex,"P400")
+. *replace `var'_cleaned="PILLAIMAR" if inlist(`var'_dex,"P456")
+. 
+. replace `var'_cleaned="RAJ BHAR" if inlist(`var'_dex,"R216")
+{txt}(9 real changes made)
+
+{com}. replace `var'_cleaned="RAJ POOT" if inlist(`var'_dex,"R213")
+{txt}(570 real changes made)
+
+{com}. replace `var'_cleaned="RAJAKA" if inlist(`var'_dex,"R220","R224")
+{txt}(14 real changes made)
+
+{com}. replace `var'_cleaned="RAJAMUTHIRAYER" if inlist(`var'_dex,"R253")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="RANGADH" if inlist(`var'_dex,"R523")
+{txt}(35 real changes made)
+
+{com}. replace `var'_cleaned="REDDY" if ((inlist(`var'_dex,"R300","R320")) & (`var'!="RAWAT")) 
+{txt}(67 real changes made)
+
+{com}. 
+. replace `var'_cleaned="S.C" if ((inlist(`var'_dex,"S000")) & (`var'!="SAAH"))
+{txt}(229 real changes made)
+
+{com}. replace `var'_cleaned="SAKILIYAR" if inlist(`var'_dex,"S245","S240","S246")
+{txt}(30 real changes made)
+
+{com}. replace `var'_cleaned="SAILA" if inlist(`var'_dex,"S400")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SANAN" if inlist(`var'_dex,"S550")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SHETTI BALIJA" if inlist(`var'_dex,"S314","S312","S342")
+{txt}(796 real changes made)
+
+{com}. replace `var'_cleaned="SHETTI BALIJA" if (Id=="F2106")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="S.C" if inlist(`var'_dex,"S532","S540")
+{txt}(110 real changes made)
+
+{com}. replace `var'_cleaned="SEKH" if inlist(`var'_dex,"S200")
+{txt}(11 real changes made)
+
+{com}. replace `var'_cleaned="SENA THALAIVAR" if inlist(`var'_dex,"S534")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="SENGKUNDHAR" if inlist(`var'_dex,"S525")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SETIYAR" if inlist(`var'_dex,"S360")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SHARMA" if inlist(`var'_dex,"S650")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SIROHI" if inlist(`var'_dex,"S600")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SISAUDIYA" if inlist(`var'_dex,"S230")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SONKAR" if inlist(`var'_dex,"S526")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="SURYA BALIJA" if inlist(`var'_dex,"S614")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="TELAGA" if inlist(`var'_dex,"T420","T421","T422","T424")
+{txt}(44 real changes made)
+
+{com}. replace `var'_cleaned="TELI" if inlist(`var'_dex,"T400")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="THAKUR" if inlist(`var'_dex,"T260","T236","T226")
+{txt}(5 real changes made)
+
+{com}. replace `var'_cleaned="THEVAR" if inlist(`var'_dex,"T160")
+{txt}(4 real changes made)
+
+{com}. replace `var'_cleaned="THURPU KAPU" if inlist(`var'_dex,"T612")
+{txt}(105 real changes made)
+
+{com}. replace `var'_cleaned="THURPU THENUKULA" if inlist(`var'_dex,"T613")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="TIWARI" if inlist(`var'_dex,"T600")
+{txt}(0 real changes made)
+
+{com}. 
+. replace `var'_cleaned="VACHISU" if inlist(`var'_dex,"V220")
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="VAISHYA" if inlist(`var'_dex,"V200")
+{txt}(7 real changes made)
+
+{com}. replace `var'_cleaned="VALAI" if inlist(`var'_dex,"V400")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="VALAIYAR" if inlist(`var'_dex,"V460")
+{txt}(0 real changes made)
+
+{com}. replace `var'_cleaned="VALAMA" if inlist(`var'_dex,"V450")
+{txt}(279 real changes made)
+
+{com}. 
+. replace `var'_cleaned="VANIYAR" if inlist(`var'_dex,"V556","V560","V561","V563","V526","V530")
+{txt}(399 real changes made)
+
+{com}. replace `var'_cleaned="VANIYAR" if ((Id=="P1041") | (`var'=="VANNIYAY"))
+{txt}(2 real changes made)
+
+{com}. replace `var'_cleaned="VARMA" if inlist(`var'_dex,"V650")
+{txt}(11 real changes made)
+
+{com}. replace `var'_cleaned="VARMA" if (Id=="P4877")
+{txt}(1 real change made)
+
+{com}. replace `var'_cleaned="VELALAR" if inlist(`var'_dex,"V446","V440")
+{txt}(46 real changes made)
+
+{com}. replace `var'_cleaned="VELAMA" if inlist(`var'_dex,"V450","V452","Y450")
+{txt}(335 real changes made)
+
+{com}. replace `var'_cleaned="VISHWA BRAHAMANA" if inlist(`var'_dex,"V216","V210","V200","V220")
+{txt}(53 real changes made)
+
+{com}. 
+. 
+. // Age & year of birth
+. // Fill-out missing age &  by calculating "2014(survey year) - year of birth"
+. loc var1 q105_ageYY
+{txt}
+{com}. loc var2 q105_1_ageYYYY
+{txt}
+{com}. replace `var1' = (2014 - `var2') if mi(`var1')
+{txt}(9 real changes made)
+
+{com}. replace `var2' = (2014 - `var1') if mi(`var2')
+{txt}(21,014 real changes made)
+
+{com}. 
+. 
+. 
+. 
+. //Label Variables
+. label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id    "Household ID"
+{txt}
+{com}. label var subid "Household Roster ID"
+{txt}
+{com}. label var  q101_Hhmemnam "Name of HH Member"
+{txt}
+{com}. label var  q102_relHH "Relationship to HH Head"
+{txt}
+{com}. label define relationship 1 "HH Head" 2 "Spouse" 3 "Son/Daughter" 4 "Daughter-in-law / Son-in-law" 5 "Grandson/daughter" 6 "Parents" 7 "Father/Mother-in-law" 8 "Brother/Sister" 9 "Brother/Sister-in-law" 10 "Uncle/Aunt" 11 "Nephew/Neice" 12 "Foster/step child" 13 "Other" 14 "Grandparent" -666 "NA" -777 "Refuse" -888 "Others" -999 "Don't Know"
+{txt}
+{com}. label value q102_relHH relationship
+{txt}
+{com}. label var  q102_relHH_oth "Other Relationship to HH Head"
+{txt}
+{com}. label var  q103_gender "Gender"
+{txt}
+{com}. label define gender 1 "Male" 2 "Female"
+{txt}
+{com}. label value q103_gender gender
+{txt}
+{com}. label var  q104_caste "Caste"
+{txt}
+{com}. label var  q104_1_subcaste "Sub-Caste"
+{txt}
+{com}. label var q105_ageYY "Age"
+{txt}
+{com}. label var q105_1_ageYYYY "Year of Birth"
+{txt}
+{com}. 
+. label var q106_engdlywageemp "Daily Wage Employment?"
+{txt}
+{com}. label value q106_engdlywageemp yesno
+{txt}
+{com}. *label define dailywage 1 "Yes" 2 "No" -999 "Do not Know" -666 "Not Applicable"
+. *label value q106_engdlywageemp dailywag
+. 
+. label var  q107_prioccup "Primary Occupation"
+{txt}
+{com}. #delimit ;
+{txt}delimiter now ;
+{com}. label define occupation 1 "Agricultural work on own farm" 2 "Supervisory work on agricultural activity on own farm" 3 "Share cropper / cultivate plot owned by others" 4 "Agricultural wage labor" 11 "Fisherman (Fishing)" 12 "Fish culture"
+> 13 "Look after live stocks" 14 "Look after Poultry (Duck, Chicken,Pigeons)" 15 "Cultivation and other works on fruits" 16 "Agricultural wage labor (Off Farm)" 17 "Nursery/forestry" 18 "Other agricultural activities (excluding 11-17)"
+> 21 "Processing of crops" 22 "Family labor in Enterprise" 23 "Family labor in Tailoring" 24 "Family labor in Sewing" 25 "Family labor in Pottery" 26 "Family labor in Blacksmith" 27 "Family labor in Goldsmith" 28 "Repairing of manufactured products/mechanics" 29 "Carpenter" 30 "Non-agri. wage labor" 
+> 41 "Petty Trade (Small retail shop)" 42 "Medium Trader (Retail and insignificant wholesale)" 43 "Wholesale Trader" 44 "Contractor" 45 "Labor supplier" 51 "Rickshaw/ Van Pulling"
+> 52 "Boat man" 53 "Wage labor in transport" 54 "Other transport workers" 55 "Driver (motorized vehicle)" 56 "Helper" 61 "Mason" 62 "Helper" 63 "Other construction worker"
+> 64 "Earthen work" 65 "House Repairing (fixing)" 71 "Doctor" 73 "Advocate" 74 "Barber" 75 "Washerman" 76 "Full time house tutor" 77 "Imam/ Purohit" 79 "Kutir Shilpi (Handicrafts)"
+> 81 "Others self employment" 82 "Service ( govt/employee)" 83 "Pension" 84 "Service worker in NGO" 85 "Servant in house (Maid/ Male)" 89 "Beggar";
+{txt}
+{com}. #delimit cr
+{txt}delimiter now cr
+{com}. *****************ADD REMAINING OCCUPATION CODES
+. label value q107_prioccup occupation
+{txt}
+{com}. label var  q107_prioccup_oth "Other Primary Occupation"
+{txt}
+{com}. 
+. label var  q108_indinvwork "Industry"
+{txt}
+{com}. label define industry 1 "Food Processing" 2 "Manufacturing of Textile Products" 3 "Manufacturing of Wooden Products, Furniture" 4 "Manufacturing of Paper Products, Printing, Publishing" 5 "Other Manufacturing of Industry" 6 "Agriculture" 7 "Livestock" 8 "Fisheries" 9 "Forestry" 10 "Wholesale Trade" 11 "Retail Trade" 12 "Other Business" 13 "Hotel/ Restaurants" 14 "Electricity/gas/water" 15 "Transportation" 16 "Communication" 17 "Army/Police" 18 "Science/ Education" 19 "Arts and Culture" 20 "Health care" 21 "Sport/ tourism/ retirement" 22 "Banking, finance and credit" 23 "Management and administration" 24 "Religious activities" 25 "Non-agricultural workers" 26 "Others" -888 "Others"
+{txt}
+{com}. label value q108_indinvwork industry
+{txt}
+{com}. label var  q108_indinvwork_oth "Other Industry"
+{txt}
+{com}. 
+. label var  q109_curresHH "Currently Residing in HH?"
+{txt}
+{com}. label define residing 1 "Yes" 2 "No, temporary migrant worker" 3 "No, permanent migrant worker" 4 "No, attending school" 5 "No, away for marriage, ceremony,festival" 6 "No, away because of illness" 7 "No, away for family reasons" 8 "Passed Away" -888 "Other(SPECIFY)"
+{txt}
+{com}. label value q109_curresHH residing 
+{txt}
+{com}. 
+. label var q109_curresHH_oth "Other Currently Residing"
+{txt}
+{com}. label var q110_hlthexpkha "Health Expenditure since the start of Kharif Season"
+{txt}
+{com}. 
+. // Save (Section A1)
+. tempfile SectionA1
+{txt}
+{com}. save `SectionA1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. 
+. 
+. 
+. // A2: q111 ~ q115 //
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionAHouseholdRoster2_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionAHouseholdRoster2_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionAHouseholdRoster2_1.dta" 
+{txt}
+{com}. 
+. // Like SectionA1, there are duplicates subid within a household.
+. // Duplicates in this dataset are more difficult (and sometimes impossible) to be distinguished, unfortunately.
+. duplicates drop // This drops one of the duplicates
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1 observation deleted)
+
+{com}. drop if (Id=="F1285" & subid=="2" & q112_2esttotschfeeyear=="454") // Improper school fee (last year's fee is lower than Kharif school fee)
+{txt}(1 observation deleted)
+
+{com}. drop if (Id=="P244" & q111_highedulev=="1") // For duplicates impossible to be distingushed, drop "Not eeducated" observation (This is a random criteria, so can be modified later)
+{txt}(2 observations deleted)
+
+{com}. drop if (Id=="P4537")
+{txt}(7 observations deleted)
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Destring & recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q111_highedulev has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q111_highedulev_oth contains nonnumeric bytes; no {res}replace
+{txt}q112_schlastyr has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q112_2esttotschfeeyear has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q113_esttotschfeekhar has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q114_absschoillkhar has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q115_absschoworkkhar has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q112_schla~r{col 29}q113_estto~r{col 43}q115_abssc~r
+{col 1}q111_highe~v{col 15}q112_2estt~r{col 29}q114_abssc~r
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Apply skip pattern
+. foreach var in q112_2esttotschfeeyear q113_esttotschfeekhar q114_absschoillkhar q115_absschoworkkhar {c -(}
+{txt}  2{com}.         qui replace `var'=.m if (q112_schlastyr!=1) & !mi(`var')
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. 
+. //Label Variables
+. label var  q111_highedulev "Highest Educ Level"
+{txt}
+{com}. label define education 1 "Not Educated" 2 "Primary Education (Incomplete)" 3 "Primary Education (Complete)" 4 "Secondary Education (Incomplete)" 5 "Secondary Education (Complete)" 6 "Higher Secondary (Incomplete)" 7 "Higher Secondary (Complete)" 8 "Technical Diploma" 9 "Bachelors Degree (Incomplete)" 10 "Bachelors Degree (Complete)" 11 "Child under 7 years" -888 "Other" -999 "Don’t Know" 12 "Madarsa  education" 13 "Senior secondary (incomplete)" 14 "Senior secondary (complete)" 15 "Post graduate degree (complete)" 16 "Post graduate degree (incomplete)"
+{txt}
+{com}. label value q111_highedulev education
+{txt}
+{com}. 
+. label var  q111_highedulev_oth "Other Highest Educ Level"
+{txt}
+{com}. label var  q112_schlastyr "In school last year?"
+{txt}
+{com}. label var  q112_2esttotschfeeyear "School Fees Last Year"
+{txt}
+{com}. label var  q113_esttotschfeekhar "School Fees Kharif"
+{txt}
+{com}. label var  q114_absschoillkhar "School Days Missed - Illness"
+{txt}
+{com}. label var  q115_absschoworkkhar "School Days Missed - Work"
+{txt}
+{com}. 
+. 
+. // Merge A1 and A2 //
+. tempfile SectionA2
+{txt}
+{com}. save `SectionA2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. use `SectionA1', clear
+{txt}
+{com}. merge 1:1 Id subid using `SectionA2', keep(1 3) gen(SecA1_A2) // Drop observations with missing q101 ~ q110.
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               1
+{txt}{col 9}from master{col 30}{res}               1{txt}  (SecA1_A2==1)
+{col 9}from using{col 30}{res}               0{txt}  (SecA1_A2==2)
+
+{col 5}matched{col 30}{res}          24,146{txt}  (SecA1_A2==3)
+{col 5}{hline 41}
+
+{com}. 
+. // Replace missing A2 values as "blank" for those who answerd q101~q110 only.
+. ds q111_highedulev-q115_absschoworkkhar
+{txt}{col 1}q111_highe~v{col 15}q112_schla~r{col 29}q113_estto~r{col 43}q115_abssc~r
+{col 1}q111_highe~h{col 15}q112_2estt~r{col 29}q114_abssc~r
+
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q105_ageYY{col 29}q107_prioc~p{col 43}q110_hlthe~a{col 57}q112_2estt~r{col 71}q115_abssc~r
+{col 1}q102_relHH{col 15}q105_1_age~Y{col 29}q108_indin~k{col 43}q111_highe~v{col 57}q113_estto~r{col 71}SecA1_A2
+{col 1}q103_gender{col 15}q106_engdl~p{col 29}q109_curre~H{col 43}q112_schla~r{col 57}q114_abssc~r
+
+{com}. local A2_var `r(varlist)'
+{txt}
+{com}. foreach var of local A2_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if (SecA1_A2==1)
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *
+. drop SecA1_A2
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}variable {bf}q102_relHH{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q106_engdlywageemp{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q112_schlastyr{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q104_caste{sf} was {bf}{res}str21{sf}{txt} now {bf}{res}str20{sf}
+  {txt}variable {bf}q104_caste_cleaned{sf} was {bf}{res}str21{sf}{txt} now {bf}{res}str17{sf}
+{txt}  (193,176 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionA1_HHroster_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionA1_HHroster_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

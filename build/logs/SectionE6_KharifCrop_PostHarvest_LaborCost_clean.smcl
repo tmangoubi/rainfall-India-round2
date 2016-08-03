@@ -1,0 +1,136 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionE6_KharifCrop_PostHarvest_LaborCost_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:30
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Section E6
+. use "${c -(}followup_data{c )-}/AP Raw/SectionELabor4_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionELabor4_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q549_procfamlabdayM was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q553_markcaslabdayF was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q558_markfamlabdayM was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionELabor4_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q540_postfamlabdayM was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q537_postp~M{col 29}q541_postf~F{col 43}q545_procc~c{col 57}q549_procf~M{col 71}q553_markc~F{col 85}q557_markp~C
+{col 1}q534_postc~M{col 15}q538_postp~F{col 29}q542_postf~C{col 43}q546_procp~m{col 57}q550_procf~f{col 71}q554_markc~C{col 85}q558_markf~M
+{col 1}q535_postc~F{col 15}q539_postp~c{col 29}q543_procc~M{col 43}q547_procp~F{col 57}q551_procf~c{col 71}q555_markp~m{col 85}q559_markf~F
+{col 1}q536_postc~C{col 15}q540_postf~M{col 29}q544_procc~F{col 43}q548_procp~c{col 57}q552_markc~M{col 71}q556_markp~F{col 85}q560_markf~C
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label   var     q534_postcaslabdayM     "PostHarvest - Casual Labour Male"
+{txt}
+{com}. label   var     q535_postcaslabdayF     "PostHarvest - Casual Labour Female"
+{txt}
+{com}. label   var     q536_postcaslabdayC     "PostHarvest - Casual Labour Child"
+{txt}
+{com}. label   var     q537_postpermlabdayM    "PostHarvest - Permanent Labour Male"
+{txt}
+{com}. label   var     q538_postpermlabdayF    "PostHarvest - Permanent Labour Female"
+{txt}
+{com}. label   var     q539_postpermlabdayc    "PostHarvest - Permanent Labour Child"
+{txt}
+{com}. label   var     q540_postfamlabdayM     "PostHarvest - Family Labour Male"
+{txt}
+{com}. label   var     q541_postfamlabdayF     "PostHarvest - Family Labour Female"
+{txt}
+{com}. label   var     q542_postfamlabdayC     "PostHarvest - Family Labour Child"
+{txt}
+{com}. label   var     q543_proccaslabdayM     "AddProcess - Casual Labour Male"
+{txt}
+{com}. label   var     q544_proccaslabdayF     "AddProcess - Casual Labour Female"
+{txt}
+{com}. label   var     q545_proccaslabdayc     "AddProcess - Casual Labour Child"
+{txt}
+{com}. label   var     q546_procpermlabdaym    "AddProcess - Permanent Labour Male"
+{txt}
+{com}. label   var     q547_procpermlabdayF    "AddProcess - Permanent Labour Female"
+{txt}
+{com}. label   var     q548_procpermlabdayc    "AddProcess - Permanent Labour Child"
+{txt}
+{com}. label   var     q549_procfamlabdayM     "AddProcess - Family Labour Male"
+{txt}
+{com}. label   var     q550_procfamlabdayf     "AddProcess - Family Labour Female"
+{txt}
+{com}. label   var     q551_procfamlabdayc     "AddProcess - Family Labour Child"
+{txt}
+{com}. label   var     q552_markcaslabdayM     "Marketing - Casual Labour Male"
+{txt}
+{com}. label   var     q553_markcaslabdayF     "Marketing - Casual Labour Female"
+{txt}
+{com}. label   var     q554_markcaslabdayC     "Marketing - Casual Labour Child"
+{txt}
+{com}. label   var     q555_markpermlabdaym    "Marketing - Permanent Labour Male"
+{txt}
+{com}. label   var     q556_markpermlabdayF    "Marketing - Permanent Labour Female"
+{txt}
+{com}. label   var     q557_markpermlabdayC    "Marketing - Permanent Labour Child"
+{txt}
+{com}. label   var     q558_markfamlabdayM     "Marketing - Family Labour Male"
+{txt}
+{com}. label   var     q559_markfamlabdayF     "Marketing - Family Labour Female"
+{txt}
+{com}. label   var     q560_markfamlabdayC     "Marketing - Family Labour Child"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionE6_KharifCrop_PostHarvest_LaborCost_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE6_KharifCrop_PostHarvest_LaborCost_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

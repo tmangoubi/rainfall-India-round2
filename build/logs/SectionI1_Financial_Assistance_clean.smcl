@@ -1,0 +1,296 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionI1_Financial_Assistance_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:40
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section I1
+> keep Id q1111_givgiftkha10_1-q1116_totvalcolforloan_14
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. order q1111_givgiftkha10_10-q1111_givgiftkha10_14, after(q1111_givgiftkha10_9)
+{txt}
+{com}. order q1112_totvalallgift_10-q1112_totvalallgift_14, after(q1112_totvalallgift_9)
+{txt}
+{com}. order q1113_totvalallmarrgift_10-q1113_totvalallmarrgift_14, after(q1113_totvalallmarrgift_9)
+{txt}
+{com}. order q1114_giveloankha11_10-q1114_giveloankha11_14, after(q1114_giveloankha11_9)
+{txt}
+{com}. order q1115_1_intcharloan_10-q1115_1_intcharloan_14, after(q1115_1_intcharloan_9)
+{txt}
+{com}. order q1115_totamtloangiv_10-q1115_totamtloangiv_14, after(q1115_totamtloangiv_9)
+{txt}
+{com}. order q1116_totvalcolforloan_10-q1116_totvalcolforloan_14, after(q1116_totvalcolforloan_9)
+{txt}
+{com}. 
+. // Correct errors
+. ds q1113_*, has(type string)
+{txt}{col 1}q1113_tot~_2{col 15}q1113_totv~6{col 29}q1113_totv~8{col 43}q1113_tot~11{col 57}q1113_tot~14
+{col 1}q1113_tot~_4{col 15}q1113_totv~7{col 29}q1113_tot~10{col 43}q1113_tot~12
+
+{com}. local q1113var_str `r(varlist)'
+{txt}
+{com}. foreach var of local q1113var_str {c -(}
+{txt}  2{com}.         replace `var'="" if (`var'=="-")
+{txt}  3{com}. {c )-}
+{txt}(2 real changes made)
+(2 real changes made)
+(1 real change made)
+(2 real changes made)
+(2 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+
+{com}. *
+. replace q1113_totvalallmarrgift_12="" if (q1113_totvalallmarrgift_12=="-")
+{txt}(0 real changes made)
+
+{com}. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1111_givgiftkha10_1 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_2 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_3 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_4 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_5 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_6 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_7 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_8 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_9 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_10 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_11 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_12 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_13 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_14 already numeric; no {res}replace
+{txt}q1111_givgiftkha10_oth_14 contains nonnumeric characters; no {res}replace
+{txt}q1112_totvalallgift_1 already numeric; no {res}replace
+{txt}q1112_totvalallgift_2 already numeric; no {res}replace
+{txt}q1112_totvalallgift_3 already numeric; no {res}replace
+{txt}q1112_totvalallgift_4 already numeric; no {res}replace
+{txt}q1112_totvalallgift_5 already numeric; no {res}replace
+{txt}q1112_totvalallgift_6 already numeric; no {res}replace
+{txt}q1112_totvalallgift_7 already numeric; no {res}replace
+{txt}q1112_totvalallgift_8 already numeric; no {res}replace
+{txt}q1112_totvalallgift_9 already numeric; no {res}replace
+{txt}q1112_totvalallgift_10 already numeric; no {res}replace
+{txt}q1112_totvalallgift_11 already numeric; no {res}replace
+{txt}q1112_totvalallgift_12 already numeric; no {res}replace
+{txt}q1112_totvalallgift_13 already numeric; no {res}replace
+{txt}q1112_totvalallgift_14 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_1 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(59 missing values generated)
+q1113_totvalallmarrgift_3 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_4 has all characters numeric; {res}replaced {txt}as {res}long
+{txt}(59 missing values generated)
+q1113_totvalallmarrgift_5 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_6 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(58 missing values generated)
+q1113_totvalallmarrgift_7 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(58 missing values generated)
+q1113_totvalallmarrgift_8 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(58 missing values generated)
+q1113_totvalallmarrgift_9 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_10 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(57 missing values generated)
+q1113_totvalallmarrgift_11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(57 missing values generated)
+q1113_totvalallmarrgift_12 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(57 missing values generated)
+q1113_totvalallmarrgift_13 already numeric; no {res}replace
+{txt}q1113_totvalallmarrgift_14 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(57 missing values generated)
+q1114_giveloankha11_1 already numeric; no {res}replace
+{txt}q1114_giveloankha11_2 already numeric; no {res}replace
+{txt}q1114_giveloankha11_3 already numeric; no {res}replace
+{txt}q1114_giveloankha11_4 already numeric; no {res}replace
+{txt}q1114_giveloankha11_5 already numeric; no {res}replace
+{txt}q1114_giveloankha11_6 already numeric; no {res}replace
+{txt}q1114_giveloankha11_7 already numeric; no {res}replace
+{txt}q1114_giveloankha11_8 already numeric; no {res}replace
+{txt}q1114_giveloankha11_9 already numeric; no {res}replace
+{txt}q1114_giveloankha11_10 already numeric; no {res}replace
+{txt}q1114_giveloankha11_11 already numeric; no {res}replace
+{txt}q1114_giveloankha11_12 already numeric; no {res}replace
+{txt}q1114_giveloankha11_13 already numeric; no {res}replace
+{txt}q1114_giveloankha11_14 already numeric; no {res}replace
+{txt}q1114_giveloankha11_oth_14 contains nonnumeric characters; no {res}replace
+{txt}q1115_1_intcharloan_1 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_2 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_3 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_4 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_5 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_6 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_7 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_8 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_9 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_10 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_11 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_12 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_13 already numeric; no {res}replace
+{txt}q1115_1_intcharloan_14 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_1 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_2 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_3 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_4 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_5 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_6 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_7 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_8 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_9 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_10 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_11 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_12 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_13 already numeric; no {res}replace
+{txt}q1115_totamtloangiv_14 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_1 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_2 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_3 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_4 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_5 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_6 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_7 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_8 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_9 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_10 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_11 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_12 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_13 already numeric; no {res}replace
+{txt}q1116_totvalcolforloan_14 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1111_giv~_1{col 15}q1111_g~0_14{col 29}q1112_tot~13{col 43}q1113_tot~12{col 57}q1114_giv~11{col 71}q1115_1_i~10{col 85}q1115_tota~9{col 99}q1116_totv~8
+{col 1}q1111_giv~_2{col 15}q1112_tot~_1{col 29}q1112_tot~14{col 43}q1113_tot~13{col 57}q1114_giv~12{col 71}q1115_1_i~11{col 85}q1115_tot~10{col 99}q1116_totv~9
+{col 1}q1111_giv~_3{col 15}q1112_tot~_2{col 29}q1113_tot~_1{col 43}q1113_tot~14{col 57}q1114_giv~13{col 71}q1115_1_i~12{col 85}q1115_tot~11{col 99}q1116_tot~10
+{col 1}q1111_giv~_4{col 15}q1112_tot~_3{col 29}q1113_tot~_2{col 43}q1114_giv~_1{col 57}q1114_g~1_14{col 71}q1115_1_i~13{col 85}q1115_tot~12{col 99}q1116_tot~11
+{col 1}q1111_givg~5{col 15}q1112_tot~_4{col 29}q1113_tot~_3{col 43}q1114_giv~_2{col 57}q1115_1_i~_1{col 71}q1115_1_i~14{col 85}q1115_tot~13{col 99}q1116_tot~12
+{col 1}q1111_givg~6{col 15}q1112_totv~5{col 29}q1113_tot~_4{col 43}q1114_giv~_3{col 57}q1115_1_i~_2{col 71}q1115_tot~_1{col 85}q1115_tot~14{col 99}q1116_tot~13
+{col 1}q1111_givg~7{col 15}q1112_totv~6{col 29}q1113_totv~5{col 43}q1114_giv~_4{col 57}q1115_1_i~_3{col 71}q1115_tot~_2{col 85}q1116_tot~_1{col 99}q1116_tot~14
+{col 1}q1111_givg~8{col 15}q1112_totv~7{col 29}q1113_totv~6{col 43}q1114_give~5{col 57}q1115_1_i~_4{col 71}q1115_tot~_3{col 85}q1116_tot~_2
+{col 1}q1111_givg~9{col 15}q1112_totv~8{col 29}q1113_totv~7{col 43}q1114_give~6{col 57}q1115_1_in~5{col 71}q1115_tot~_4{col 85}q1116_tot~_3
+{col 1}q1111_giv~10{col 15}q1112_totv~9{col 29}q1113_totv~8{col 43}q1114_give~7{col 57}q1115_1_in~6{col 71}q1115_tota~5{col 85}q1116_tot~_4
+{col 1}q1111_giv~11{col 15}q1112_tot~10{col 29}q1113_totv~9{col 43}q1114_give~8{col 57}q1115_1_in~7{col 71}q1115_tota~6{col 85}q1116_totv~5
+{col 1}q1111_giv~12{col 15}q1112_tot~11{col 29}q1113_tot~10{col 43}q1114_give~9{col 57}q1115_1_in~8{col 71}q1115_tota~7{col 85}q1116_totv~6
+{col 1}q1111_giv~13{col 15}q1112_tot~12{col 29}q1113_tot~11{col 43}q1114_giv~10{col 57}q1115_1_in~9{col 71}q1115_tota~8{col 85}q1116_totv~7
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Logic check
+. forval i=1/14{c -(}
+{txt}  2{com}.         replace q1112_totvalallgift_`i'=.m if (inlist(q1111_givgiftkha10_`i',2,.r,.n) & !mi(q1112_totvalallgift_`i'))
+{txt}  3{com}.         replace q1113_totvalallmarrgift_`i'=.m if (inlist(q1111_givgiftkha10_`i',2,.r,.n) & !mi(q1113_totvalallmarrgift_`i'))
+{txt}  4{com}.         
+.         replace q1115_totamtloangiv_`i'=.m if (inlist(q1114_giveloankha11_`i',2,.r,.n) & !mi(q1115_totamtloangiv_`i'))
+{txt}  5{com}.         replace q1115_1_intcharloan_`i'=.m if (inlist(q1114_giveloankha11_`i',2,.r,.n) & !mi(q1115_1_intcharloan_`i'))
+{txt}  6{com}.         replace q1116_totvalcolforloan_`i'=.m if (inlist(q1114_giveloankha11_`i',2,.r,.n) & !mi(q1116_totvalcolforloan_`i'))
+{txt}  7{com}. {c )-}
+{txt}(6 real changes made, 6 to missing)
+(3348 real changes made, 3348 to missing)
+(7 real changes made, 7 to missing)
+(6 real changes made, 6 to missing)
+(6 real changes made, 6 to missing)
+(10 real changes made, 10 to missing)
+(4215 real changes made, 4215 to missing)
+(9 real changes made, 9 to missing)
+(8 real changes made, 8 to missing)
+(7 real changes made, 7 to missing)
+(19 real changes made, 19 to missing)
+(3214 real changes made, 3214 to missing)
+(10 real changes made, 10 to missing)
+(10 real changes made, 10 to missing)
+(9 real changes made, 9 to missing)
+(14 real changes made, 14 to missing)
+(3718 real changes made, 3718 to missing)
+(5 real changes made, 5 to missing)
+(4 real changes made, 4 to missing)
+(4 real changes made, 4 to missing)
+(13 real changes made, 13 to missing)
+(3445 real changes made, 3445 to missing)
+(11 real changes made, 11 to missing)
+(9 real changes made, 9 to missing)
+(8 real changes made, 8 to missing)
+(8 real changes made, 8 to missing)
+(4062 real changes made, 4062 to missing)
+(7 real changes made, 7 to missing)
+(2 real changes made, 2 to missing)
+(2 real changes made, 2 to missing)
+(6 real changes made, 6 to missing)
+(4512 real changes made, 4512 to missing)
+(9 real changes made, 9 to missing)
+(9 real changes made, 9 to missing)
+(10 real changes made, 10 to missing)
+(2 real changes made, 2 to missing)
+(4509 real changes made, 4509 to missing)
+(6 real changes made, 6 to missing)
+(6 real changes made, 6 to missing)
+(6 real changes made, 6 to missing)
+(4 real changes made, 4 to missing)
+(4515 real changes made, 4515 to missing)
+(9 real changes made, 9 to missing)
+(7 real changes made, 7 to missing)
+(8 real changes made, 8 to missing)
+(6 real changes made, 6 to missing)
+(4517 real changes made, 4517 to missing)
+(11 real changes made, 11 to missing)
+(6 real changes made, 6 to missing)
+(8 real changes made, 8 to missing)
+(3 real changes made, 3 to missing)
+(4518 real changes made, 4518 to missing)
+(4 real changes made, 4 to missing)
+(1 real change made, 1 to missing)
+(2 real changes made, 2 to missing)
+(4 real changes made, 4 to missing)
+(4518 real changes made, 4518 to missing)
+(4 real changes made, 4 to missing)
+(2 real changes made, 2 to missing)
+(2 real changes made, 2 to missing)
+(6 real changes made, 6 to missing)
+(4486 real changes made, 4486 to missing)
+(8 real changes made, 8 to missing)
+(8 real changes made, 8 to missing)
+(8 real changes made, 8 to missing)
+(0 real changes made)
+(4515 real changes made, 4515 to missing)
+(3 real changes made, 3 to missing)
+(1 real change made, 1 to missing)
+(2 real changes made, 2 to missing)
+
+{com}. *
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionI1_Financial_Assistance_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionI1_Financial_Assistance_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

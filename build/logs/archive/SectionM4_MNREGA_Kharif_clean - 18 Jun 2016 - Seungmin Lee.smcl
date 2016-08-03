@@ -1,0 +1,640 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM4_MNREGA_Kharif_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Jun 2016, 15:21:27
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q300_AgrCoop q301_lastyeahhcropownrent-q302_2_AreaUnit_oth_4
+{txt}
+{com}. 
+. /// Destring & recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q300_AgrCoop already numeric; no {res}replace
+{txt}q301_lastyeahhcropownrent already numeric; no {res}replace
+{txt}q301_1_1_AreaCult_1 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_1 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_oth_1 contains nonnumeric characters; no {res}replace
+{txt}q301_1_1_AreaCult_2 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_2 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_oth_2 contains nonnumeric characters; no {res}replace
+{txt}q301_1_1_AreaCult_3 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_3 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_oth_3 already numeric; no {res}replace
+{txt}q301_1_1_AreaCult_4 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_4 already numeric; no {res}replace
+{txt}q301_2_AreaUnit_oth_4 already numeric; no {res}replace
+{txt}q301_lastyeahhIrrcropownrent already numeric; no {res}replace
+{txt}q302_1_AreaCult_1 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_1 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_oth_1 already numeric; no {res}replace
+{txt}q302_1_AreaCult_2 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_2 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_oth_2 already numeric; no {res}replace
+{txt}q302_1_AreaCult_3 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_3 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_oth_3 already numeric; no {res}replace
+{txt}q302_1_AreaCult_4 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_4 already numeric; no {res}replace
+{txt}q302_2_AreaUnit_oth_4 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q300_AgrCoop{col 15}q301_1_1_A~2{col 29}q301_2_A~h_3{col 43}q~Irrcropo~t{col 57}q302_1_Are~2{col 71}q302_2_A~t_3{col 85}q302_2_A~h_4
+{col 1}q301_lasty..{col 15}q301_2_A~t_2{col 29}q301_1_1_A~4{col 43}q302_1_Are~1{col 57}q302_2_A~t_2{col 71}q302_2_A~h_3
+{col 1}q301_1_1_A~1{col 15}q301_1_1_A~3{col 29}q301_2_A~t_4{col 43}q302_2_A~t_1{col 57}q302_2_A~h_2{col 71}q302_1_Are~4
+{col 1}q301_2_A~t_1{col 15}q301_2_A~t_3{col 29}q301_2_A~h_4{col 43}q302_2_A~h_1{col 57}q302_1_Are~3{col 71}q302_2_A~t_4
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. 
+. tempfile q30X
+{txt}
+{com}. save `q30X'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. // Section D1 (Part 1)
+. use "${c -(}followup_data{c )-}/AP Raw/SectionDP2_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionDP2_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q300_1_listname was 
+str46, now str53 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionDP2_1.dta" 
+{txt}
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Variable cleaning
+> //// q300_4_MemFee
+> replace q300_4_MemFee="200" if (q300_4_MemFee=="200-")
+{txt}(1 real change made)
+
+{com}. 
+. /// Destring & recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q300_1_listname contains nonnumeric characters; no {res}replace
+{txt}q300_2_MM has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q300_3_YYYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q300_4_MemFee has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q300_5_EstBen has all characters numeric; {res}replaced {txt}as {res}long
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q300_2_MM{col 29}q300_3_YYYY{col 43}q300_4_Mem~e{col 57}q300_5_Est~n
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Reshape 
+. /// Since q300.X is a long dataset and the rest of dataset is wide, we can reshape q300.X from wide into long (there are only 3 different subids, which makes easier to reshape)
+> reshape wide q300*, i(Id) j(subid)
+{txt}(note: j = 1 2 3)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}     449   {txt}->{res}     421
+{txt}Number of variables            {res}       7   {txt}->{res}      16
+{txt}j variable (3 values)             {res}subid   {txt}->   (dropped)
+xij variables:
+                        {res}q300_1_listname   {txt}->   {res}q300_1_listname1 q300_1_listname2 q300_1_listname3
+                              q300_2_MM   {txt}->   {res}q300_2_MM1 q300_2_MM2 q300_2_MM3
+                            q300_3_YYYY   {txt}->   {res}q300_3_YYYY1 q300_3_YYYY2 q300_3_YYYY3
+                          q300_4_MemFee   {txt}->   {res}q300_4_MemFee1 q300_4_MemFee2 q300_4_MemFee3
+                          q300_5_EstBen   {txt}->   {res}q300_5_EstBen1 q300_5_EstBen2 q300_5_EstBen3
+{txt}{hline 77}
+
+{com}. 
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. 
+. forval subid=1/3 {c -(}
+{txt}  2{com}.         label var  q300_1_listname`subid' "Name of Cooperative, HH member `subid'"
+{txt}  3{com}.         label var  q300_2_MM`subid' "Month of Joining, HH member `subid'"
+{txt}  4{com}.         label var  q300_3_YYYY`subid' "Year of Joining, HH member `subid'"
+{txt}  5{com}.         label var  q300_4_MemFee`subid' "Membership Fee of 2014, HH member `subid'"
+{txt}  6{com}.         label var  q300_5_EstBen`subid' "Estimated Benefit in Kharif 2015 (July - Dec 2014), HH member `subid'"
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. 
+. tempfile q300_X
+{txt}
+{com}. save `q300_X'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. use `q30X', clear
+{txt}
+{com}. merge 1:1 Id using `q300_X', keep(1 3) gen(q300_X_answered) // Drop households exist in D1 but NOT in master data
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,616
+{txt}{col 9}from master{col 30}{res}           4,616{txt}  (q300_X_answered==1)
+{col 9}from using{col 30}{res}               0{txt}  (q300_X_answered==2)
+
+{col 5}matched{col 30}{res}             419{txt}  (q300_X_answered==3)
+{col 5}{hline 41}
+
+{com}. recode q300_X_answered (1=2) (3=1)
+{txt}(q300_X_answered: 5035 changes made)
+
+{com}. label value q300_X_answered yesno
+{txt}
+{com}. label var q300_X_answered "Did this household answer questions q300_X? (Editor generated)"
+{txt}
+{com}. 
+. // Check & correct data entry error
+. tab q300_AgrCoop q300_X_answered, m
+
+           {txt}{c |}  Did this household
+           {c |}   answer questions
+           {c |}    q300_X? (Editor
+Part of an {c |}      generated)
+Agri-Coop? {c |}       Yes         No {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+       Yes {c |}{res}       390          4 {txt}{c |}{res}       394 
+{txt}        No {c |}{res}         6      4,564 {txt}{c |}{res}     4,570 
+{txt}        .b {c |}{res}        23         48 {txt}{c |}{res}        71 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       419      4,616 {txt}{c |}{res}     5,035 
+
+{txt}
+{com}. 
+. list q300* if (q300_AgrCoop==2 & q300_X_answered==1) // List households who answered "NO" in q300 but answered the rest of D1 questions.
+
+      {txt}{c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+ 734. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}  SADHAN SARKARI SIMITI  {txt}{c |} {res}       2  {txt}{c |} {res}    2014  {txt}{c |} {res}     150  {txt}{c |} {res}    1000  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+      {c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+1505. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}       PRASHANTHI GROUP  {txt}{c |} {res}       4  {txt}{c |} {res}    2008  {txt}{c |} {res}    1000  {txt}{c |} {res}   20000  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+      {c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+1547. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}   BHARATIYA STATE BANK  {txt}{c |} {res}       2  {txt}{c |} {res}    2014  {txt}{c |} {res}     500  {txt}{c |} {res}       0  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+      {c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+2517. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}   ANDHRA BANK MOGULTUR  {txt}{c |} {res}       1  {txt}{c |} {res}    1995  {txt}{c |} {res}       0  {txt}{c |} {res}   10000  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+      {c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+3073. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}            ANDHRA BANK  {txt}{c |} {res}       2  {txt}{c |} {res}    2000  {txt}{c |} {res}       0  {txt}{c |} {res}       0  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+      {c TLC}{hline 11}{c TT}{hline 26}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TT}{hline 11}{c TRC}
+3278. {c |} q300_A~p  {c |}        q300_1_listname1  {c |} q300_2~1  {c |} q300_3~1  {c |} q300_4~1  {c |} q300_5~1  {c |} q300_1~2  {c |}
+      {c |} {res}      No  {txt}{c |} {res}C0-0PARETIV BANK TANUKU  {txt}{c |} {res}       1  {txt}{c |} {res}    1989  {txt}{c |} {res}       0  {txt}{c |} {res}       0  {txt}{c |} {res}          {txt}{c |}
+      {c LT}{hline 10}{c TT}{c BT}{hline 9}{c TT}{hline 10}{c TT}{hline 5}{c BT}{hline 4}{c TT}{hline 6}{c BT}{hline 3}{c TT}{hline 7}{c BT}{hline 2}{c TT}{hline 8}{c BT}{hline 1}{c TT}{hline 9}{c BT}{c TT}{hline 10}{c RT}
+      {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |} q300_3~3 {c |} q300_4~3 {c |} q300_5~3 {c |}
+      {c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}                                             q300_X~d                                             {c |}
+      {c |}                                             {res}     Yes                                             {txt}{c |}
+      {c BLC}{hline 98}{c BRC}
+
+{com}. list q300* if (q300_AgrCoop==.b & q300_X_answered==1) // List households who did not answer q300 but answered the rest of D1 questions.
+
+      {txt}{c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+   1. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                         AGRICULTURE {txt}{c |} {res}       5 {txt}{c |} {res}    2005 {txt}{c |} {res}      50 {txt}{c |} {res}    2000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+  31. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                 ANDHRA VAVSAYA BANK {txt}{c |} {res}       3 {txt}{c |} {res}    2014 {txt}{c |} {res}     250 {txt}{c |} {res}      90 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+  41. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                                     {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}ANDRAPRAGATHISAHAKARABANK {txt}{c |} {res}       4 {txt}{c |} {res}    2012 {txt}{c |} {res}     600 {txt}{c |} {res}       0 {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+  44. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                                     {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                 KLKFNLNL {txt}{c |} {res}       7 {txt}{c |} {res}    2005 {txt}{c |} {res}       1 {txt}{c |} {res}       2 {txt}{c |} {res}    KKKL {txt}{c |} {res}       2 {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}    2000       {txt}{c |}       {res}       2       {txt}{c |}       {res}       2        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+ 372. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}      KAKATIYA GRAMEENA VIKASA  BANK {txt}{c |} {res}       2 {txt}{c |} {res}    2011 {txt}{c |} {res}     500 {txt}{c |} {res}       0 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+ 416. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                        GRAMINA BANK {txt}{c |} {res}       7 {txt}{c |} {res}    2003 {txt}{c |} {res}       0 {txt}{c |} {res}       0 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+1158. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                        GRAMINAVIKAS {txt}{c |} {res}       3 {txt}{c |} {res}    1985 {txt}{c |} {res}     500 {txt}{c |} {res}   15000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+1179. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                                   1 {txt}{c |} {res}      11 {txt}{c |} {res}    2000 {txt}{c |} {res}     200 {txt}{c |} {res}    1000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+1292. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                         GRAMINVIKAS {txt}{c |} {res}       3 {txt}{c |} {res}    1985 {txt}{c |} {res}     300 {txt}{c |} {res}   35000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+1432. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                GRAMEENA SOCITY BANK {txt}{c |} {res}       6 {txt}{c |} {res}    1985 {txt}{c |} {res}     500 {txt}{c |} {res}    5000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2099. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                ANNA THOTAKKA AGGIRI {txt}{c |} {res}       1 {txt}{c |} {res}    2005 {txt}{c |} {res}       0 {txt}{c |} {res}    2000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2145. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                                     {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}            RAITHU MITHRA {txt}{c |} {res}       1 {txt}{c |} {res}    1997 {txt}{c |} {res}       0 {txt}{c |} {res}    1400 {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2146. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}      ANDRA SADAKARA SAHAKARA SANGAM {txt}{c |} {res}      12 {txt}{c |} {res}    2000 {txt}{c |} {res}    1000 {txt}{c |} {res}     300 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2152. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                    SIVNNAGUDAM BANK {txt}{c |} {res}       8 {txt}{c |} {res}    2000 {txt}{c |} {res}    1000 {txt}{c |} {res}    4000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2160. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}KENDRA VEVASAYA GRAMINA VIKASA BANKA {txt}{c |} {res}      12 {txt}{c |} {res}    1994 {txt}{c |} {res}     100 {txt}{c |} {res}    1000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2734. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                            KAKATIYA {txt}{c |} {res}      12 {txt}{c |} {res}    2005 {txt}{c |} {res}      25 {txt}{c |} {res}     500 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2828. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                 GRHAMIN SHAKAR BANK {txt}{c |} {res}      12 {txt}{c |} {res}    2014 {txt}{c |} {res}     500 {txt}{c |} {res}    1000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2842. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                       GRAMINA VIKAS {txt}{c |} {res}       3 {txt}{c |} {res}    1986 {txt}{c |} {res}     200 {txt}{c |} {res}   35000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2916. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                   VIVEK RAITH MITRA {txt}{c |} {res}       6 {txt}{c |} {res}    2000 {txt}{c |} {res}     200 {txt}{c |} {res}    3000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}     GRAMEENA VIKASA BANK {txt}{c |} {res}       4 {txt}{c |} {res}    2005 {txt}{c |} {res}     500 {txt}{c |} {res}    5000 {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+2920. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                  SAHAKARASANGAMBANK {txt}{c |} {res}       1 {txt}{c |} {res}    1979 {txt}{c |} {res}       5 {txt}{c |} {res}     100 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+3196. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                                   1 {txt}{c |} {res}      10 {txt}{c |} {res}    2000 {txt}{c |} {res}     200 {txt}{c |} {res}    1000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+3221. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}                        GRAMINA BANK {txt}{c |} {res}      12 {txt}{c |} {res}    2012 {txt}{c |} {res}     100 {txt}{c |} {res}    1000 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+      {c TLC}{hline 10}{c TT}{hline 38}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TT}{hline 10}{c TRC}
+4934. {c |} q300_A~p {c |}                     q300_1_listname1 {c |} q300_2~1 {c |} q300_3~1 {c |} q300_4~1 {c |} q300_5~1 {c |}
+      {c |} {res}      .b {txt}{c |} {res}   PRIMARY AGRI CO-OPERATIVE SOCIETY {txt}{c |} {res}       3 {txt}{c |} {res}    2004 {txt}{c |} {res}      10 {txt}{c |} {res}       0 {txt}{c |}
+      {c LT}{hline 10}{c BT}{hline 16}{c TT}{hline 10}{c TT}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c +}{hline 10}{c RT}
+      {c |}          q300_1_listname2 {c |} q300_2~2 {c |} q300_3~2 {c |} q300_4~2 {c |} q300_5~2 {c |} q300_1~3 {c |} q300_2~3 {c |}
+      {c |} {res}                          {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}       . {txt}{c |} {res}         {txt}{c |} {res}       . {txt}{c |}
+      {c LT}{hline 22}{c TT}{hline 4}{c BT}{hline 10}{c BT}{hline 6}{c TT}{hline 3}{c BT}{hline 10}{c BT}{hline 8}{c TT}{hline 1}{c BT}{hline 10}{c BT}{hline 10}{c RT}
+      {c |}       q300_3~3       {c |}       q300_4~3       {c |}       q300_5~3        {c |}       q300_X~d        {c |}
+      {c |}       {res}       .       {txt}{c |}       {res}       .       {txt}{c |}       {res}       .        {txt}{c |}       {res}     Yes        {txt}{c |}
+      {c BLC}{hline 22}{c BT}{hline 22}{c BT}{hline 23}{c BT}{hline 23}{c BRC}
+
+{com}. // It seems they are all valid observation, indicating they answered q300 "No" by mistake. Need to correct them.
+. replace q300_AgrCoop=1 if (q300_AgrCoop==2 & q300_X_answered==1)
+{txt}(6 real changes made)
+
+{com}. replace q300_AgrCoop=1 if (q300_AgrCoop==.b & q300_X_answered==1)
+{txt}(23 real changes made)
+
+{com}. 
+. 
+. // Land unit (q301)
+. replace q301_lastyeahhcropownrent=1 if ( q301_lastyeahhcropownrent==2 & q301_1_1_AreaCult_1>=0 & !mi( q301_1_1_AreaCult_1))
+{txt}(38 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_1="" if regexm(q301_2_AreaUnit_oth_1,"555") // Valid skip
+{txt}(4947 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_1="" if (inrange(q301_2_AreaUnit_1,1,8) & inlist(q301_2_AreaUnit_oth_1,"-666","0"))
+{txt}(10 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_1="" if (mi(q301_2_AreaUnit_1) & inlist(q301_2_AreaUnit_oth_1,"-666","0"))
+{txt}(3 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_1="blank" if (q301_2_AreaUnit_1==-888 & q301_2_AreaUnit_oth_1=="")
+{txt}(3 real changes made)
+
+{com}. 
+. replace q301_lastyeahhcropownrent=1 if ( q301_lastyeahhcropownrent==2 & q301_1_1_AreaCult_2>=0 & !mi( q301_1_1_AreaCult_2))
+{txt}(5 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_2="" if regexm(q301_2_AreaUnit_oth_2,"555") // Valid skip
+{txt}(4956 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_2="" if regexm(q301_2_AreaUnit_oth_2,"-")
+{txt}(2 real changes made)
+
+{com}. replace q301_2_AreaUnit_oth_2="" if regexm(q301_2_AreaUnit_oth_2,"XXD")
+{txt}(1 real change made)
+
+{com}. replace q301_2_AreaUnit_2=.n if (q301_2_AreaUnit_2==-888)
+{txt}(4 real changes made, 4 to missing)
+
+{com}. replace q301_2_AreaUnit_oth_2="" if inlist(q301_2_AreaUnit_oth_2,"0","1")
+{txt}(5 real changes made)
+
+{com}. 
+. replace q301_lastyeahhcropownrent=1 if ( q301_lastyeahhcropownrent==2 & q301_1_1_AreaCult_3>=0 & !mi( q301_1_1_AreaCult_3))
+{txt}(3 real changes made)
+
+{com}. replace q301_2_AreaUnit_3=.n if q301_2_AreaUnit_3==-888
+{txt}(1 real change made, 1 to missing)
+
+{com}. replace q301_2_AreaUnit_oth_3=. if q301_2_AreaUnit_oth_3==0
+{txt}(2 real changes made, 2 to missing)
+
+{com}. *replace q301_2_AreaUnit_oth_3=. if q301_2_AreaUnit_oth_3==.b
+. 
+. replace q301_lastyeahhcropownrent=1 if ( q301_lastyeahhcropownrent==2 & q301_1_1_AreaCult_4>=0 & !mi( q301_1_1_AreaCult_4))
+{txt}(0 real changes made)
+
+{com}. replace q301_2_AreaUnit_4=.n if (q301_2_AreaUnit_4==-888)
+{txt}(2 real changes made, 2 to missing)
+
+{com}. replace q301_2_AreaUnit_oth_4=. if (q301_2_AreaUnit_oth_4==0)
+{txt}(2 real changes made, 2 to missing)
+
+{com}. *replace q301_2_AreaUnit_oth_4=. if (q301_2_AreaUnit_oth_4==.b)
+. 
+. // Land unit (q302)
+. replace q301_lastyeahhIrrcropownrent=1 if ( q301_lastyeahhIrrcropownrent==2 & q302_1_AreaCult_1>=0 & !mi( q302_1_AreaCult_1))
+{txt}(22 real changes made)
+
+{com}. replace q302_2_AreaUnit_oth_1=. if (q302_2_AreaUnit_oth_1==0)
+{txt}(1 real change made, 1 to missing)
+
+{com}. *replace q302_2_AreaUnit_oth_1=. if (q302_2_AreaUnit_oth_1==.b)
+. 
+. replace q301_lastyeahhIrrcropownrent=1 if ( q301_lastyeahhIrrcropownrent==2 & q302_1_AreaCult_2>=0 & !mi( q302_1_AreaCult_2))
+{txt}(2 real changes made)
+
+{com}. replace q302_2_AreaUnit_oth_2=. if (q302_2_AreaUnit_oth_2==0)
+{txt}(1 real change made, 1 to missing)
+
+{com}. *replace q302_2_AreaUnit_oth_2=. if (q302_2_AreaUnit_oth_2==.b)
+. 
+. replace q301_lastyeahhIrrcropownrent=1 if ( q301_lastyeahhIrrcropownrent==2 & q302_1_AreaCult_3>=0 & !mi( q302_1_AreaCult_3))
+{txt}(2 real changes made)
+
+{com}. replace q301_lastyeahhIrrcropownrent=1 if ( q301_lastyeahhIrrcropownrent==2 & q302_1_AreaCult_4>=0 & !mi( q302_1_AreaCult_4))
+{txt}(0 real changes made)
+
+{com}. 
+. 
+. // Rename & relabel some variables for clarification
+. label var q301_lastyeahhcropownrent "Cultivate crop on own land/rented land - Kharif 2014"
+{txt}
+{com}. rename q301_lastyeahhIrrcropownrent q302_lastyeahhIrrcropownrent
+{res}{txt}
+{com}. labe var q302_lastyeahhIrrcropownrent "Cultivate irregular crops on either owned or rented land - Last year (Jan - Dec 2014)"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. // Order variables
+. order q300_1_listname1-q300_5_EstBen3, after(q300_AgrCoop)
+{txt}
+{com}. order q300_X_answered, after(q300_AgrCoop)
+{txt}
+{com}. 
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionD1_CultivationDetail_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionD1_CultivationDetail_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

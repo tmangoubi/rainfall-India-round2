@@ -1,0 +1,451 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/logs/IN_rainfall_round2_compile.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}28 Jan 2016, 15:04:56
+{txt}
+{com}. 
+. global mk "${c -(}r2_data{c )-}"
+{txt}
+{com}. cap mkdir "$mk\Intervention Analysis"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import cleaned round 2 datasets from each state
+> ****************************************************************/
+. 
+. // 1.1 AP
+. 
+. use "${c -(}dta{c )-}/round2/IN_rainfall_r2_cleaned_AP.dta"
+{txt}
+{com}. gen states = "Andhra Pradesh"
+{txt}
+{com}. tostring g_a_6chooseincent d_1_c_other d_1_c_other e_4_other g_a_4whymigcity g_a_4otherwhycity d_4_nomigrate4, replace
+{txt}g_a_6chooseincent already string; no {res}replace
+{txt}d_1_c_other was {res:byte} now {res:str1}
+d_1_c_other already string; no {res}replace
+{txt}e_4_other was {res:byte} now {res:str1}
+g_a_4whymigcity already string; no {res}replace
+{txt}g_a_4otherwhycity was {res:byte} now {res:str1}
+d_4_nomigrate4 has value label; no {res}replace
+{txt}
+{com}. 
+. /* // Disabled my SLee, 2016-1-25
+> foreach var in d_4_nomigrate4  {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         label values `var' nomigrate
+>         {c )-}
+> */
+. save "$mk\Intervention Analysis\APData.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\APData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. 
+. // 1.2 UP
+. 
+. use "${c -(}dta{c )-}/round2/IN_rainfall_r2_cleaned_UP.dta"
+{txt}
+{com}. // destring d_4_nomigrate4 , replace
+. foreach var in g_a_6chooseincent d_1_k_findjob g_a_4whymigcity /* d_4_nomigrate4 */ {c -(}
+{txt}  2{com}.         tostring `var', gen(`var's)
+{txt}  3{com}.         drop `var'
+{txt}  4{com}.         // gen `var' = `var's
+.         // drop `var's
+.         rename `var's `var'
+{txt}  5{com}.         {c )-}
+{txt}g_a_6chooseincents generated as {res:str1}
+{res}{txt}d_1_k_findjobs generated as {res:str2}
+{res}{txt}g_a_4whymigcitys generated as {res:str2}
+{res}{txt}
+{com}. // gen state = "Uttar Pradesh" // Added by SLee - 2016-1-22
+. gen states = "Uttar Pradesh"
+{txt}
+{com}. save "$mk\Intervention Analysis\UPdata.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\UPdata.dta saved
+
+{com}. append using "$mk\Intervention Analysis\APData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distname was 
+str11, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+villname was 
+str19, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+stname was 
+str48, now str82 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+prevresp was 
+str34, now str45 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a_1hhid was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a1_2other was 
+str11, now str35 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_1findecmaker was 
+str27, now str40 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_3hhheadreplace was 
+str26, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4other was 
+str13, now str28 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_6_3surveyorname was 
+str19, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str5, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str47, now str52 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_3landmark was 
+str44, now str69 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_4fathersname was 
+str29, now str38 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_other was 
+str25, now str43 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_6_3cent was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_11_shocktype was 
+str7, now str10 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_c_migmember was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_district was 
+str11, now str17 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_towncity was 
+str15, now str18 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_whymigdest was 
+str4, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_other was 
+str16, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_f_other was 
+str10, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_k_findjob was 
+str2, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_k_other was 
+str16, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_4_nomigrate was 
+str11, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_1_kilometers was 
+byte, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_3_insurance was 
+str4, now str8 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+metainstancename was 
+str11, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+f_4choosedest was 
+str7, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_a_4whymigcity was 
+str2, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_a_6chooseincent was 
+str1, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str5, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+monthly_income was 
+int, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_4_whybuyins1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+states was 
+str13, now str14 to accommodate using data's values)
+{p_end}
+(label category1 already defined)
+(label yesno already defined)
+(label nolocate already defined)
+(label relationship already defined)
+(label consent already defined)
+(label phone already defined)
+(label income_source already defined)
+(label land_cultivated already defined)
+(label last_kharif already defined)
+(label shock already defined)
+(label mig_member already defined)
+(label india_abroad already defined)
+(label why_mig_dest already defined)
+(label transport already defined)
+(label alone_group already defined)
+(label mig_group already defined)
+(label find_job already defined)
+(label occupation already defined)
+(label income already defined)
+(label earning_level already defined)
+(label mig_success already defined)
+(label send_money already defined)
+(label nomigrate already defined)
+(label distance_opinion already defined)
+(label insurance already defined)
+
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. // 1.3 TN
+. 
+. use "${c -(}dta{c )-}/round2/IN_rainfall_r2_cleaned_TN.dta"
+{txt}
+{com}. destring backch_accompsupervisor_other1, replace
+{txt}backch_accompsupervisor_other1 contains nonnumeric characters; no {res}replace
+{txt}
+{com}. tostring _7_othernobuy g_a_4otherwhycity  , replace
+{txt}_7_othernobuy was {res:byte} now {res:str1}
+g_a_4otherwhycity was {res:byte} now {res:str1}
+
+{com}. 
+. foreach var in g_a_6chooseincent /* d_1_o_sendmoney3 d_4_nomigrate4 */ {c -(}
+{txt}  2{com}.         tostring `var', gen(`var's)
+{txt}  3{com}.         drop `var'
+{txt}  4{com}.         // gen `var' = `var's
+.         // drop `var's
+.         rename `var's `var'
+{txt}  5{com}.         {c )-}
+{txt}g_a_6chooseincents generated as {res:str1}
+{res}{txt}
+{com}. // gen state="Tamil Nadu" // Added by SLee - 2016-1-22
+. gen states = "Tamil Nadu"
+{txt}
+{com}. save "$mk\Intervention Analysis\TNData.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\TNData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 2: Compile, Save and Exit
+> ****************************************************************/
+. 
+. use "$mk\Intervention Analysis\Round2.dta"
+{txt}
+{com}. foreach var in backch_accompsupervisor_other1 backch_accompsupervisor_other2 backch_accompsupervisor_other3 backch_accompmonitor_other2 {c -(}
+{txt}  2{com}.         tostring `var', gen(`var's)
+{txt}  3{com}.         drop `var'
+{txt}  4{com}.         gen `var' = `var's
+{txt}  5{com}.         drop `var's
+{txt}  6{com}.         {c )-}
+{txt}backch_accompsupervisor_other1s generated as {res:str1}
+backch_accompsupervisor_other2s generated as {res:str1}
+backch_accompsupervisor_other3s generated as {res:str1}
+backch_accompmonitor_other2s generated as {res:str1}
+
+{com}. 
+. append using "$mk\Intervention Analysis\TNData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distid was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+distname was 
+str13, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str12, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str52, now str55 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other1 was 
+str1, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other2 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other3 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompmonitor_other2 was 
+str1, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str9, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept2 was 
+byte, now int to accommodate using data's values)
+{p_end}
+(label noaccept already defined)
+(label month already defined)
+(label member already defined)
+(label migmember already defined)
+(label migaaccept already defined)
+(label category1 already defined)
+(label yesno already defined)
+(label nolocate already defined)
+(label relationship already defined)
+(label consent already defined)
+(label phone already defined)
+(label income_source already defined)
+(label land_cultivated already defined)
+(label last_kharif already defined)
+(label shock already defined)
+(label mig_member already defined)
+(label india_abroad already defined)
+(label why_mig_dest already defined)
+(label transport already defined)
+(label alone_group already defined)
+(label mig_group already defined)
+(label find_job already defined)
+(label occupation already defined)
+(label income already defined)
+(label earning_level already defined)
+(label mig_success already defined)
+(label send_money already defined)
+(label nomigrate already defined)
+(label distance_opinion already defined)
+(label insurance already defined)
+(label whybuy2 already defined)
+(label nobuyings already defined)
+
+{com}. label var states "State of Survey"
+{txt}
+{com}. rename states state
+{res}{txt}
+{com}. compress
+{txt}  (0 bytes saved)
+
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. save "${c -(}dta{c )-}/round2/IN_rainfall_r2_compiled.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/output/datasets/round2/IN_rainfall_r2_compiled.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

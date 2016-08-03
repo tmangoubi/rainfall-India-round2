@@ -1,0 +1,96 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionH8_IrregularCrops_Byproduct_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:11:59
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Section H8
+. use "${c -(}followup_data{c )-}/AP Raw/SectionH4byproduct_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionH4byproduct_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q761_1_byprodsaleval11 was 
+str4, now str5 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionH4byproduct_1.dta" 
+{txt}
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q758_prod~11{col 29}q758_2_pro~n{col 43}q761_bypr~11{col 57}q762_bypr~11{col 71}q764_bypr~11
+{col 1}q757_bypro~e{col 15}q758_1_by~11{col 29}q760_bypr~11{col 43}q761_1_by~11{col 57}q763_bypr~11{col 71}q759_bypr~10
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label Variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label var q757_byprodcode "By Product Code"
+{txt}
+{com}. label define byproduct 204 "Rice Straw/Fodder"       205 "Wheat Straw"        206 "OTHER byproducts"        207 "Plantain leaves"         208 "Arecanut leaves"           209 "Coconut leaves" 
+{txt}
+{com}. label value q757_byprodcode byproduct
+{txt}
+{com}. label var q757_byprodcode_oth "Other By product"
+{txt}
+{com}. label var q758_prodquanirr11 "Quantity Produced"
+{txt}
+{com}. label var q758_1_byprodunitirr11 "Unit"
+{txt}
+{com}. label var q758_1_byprodunit11oth "Other-Unit"
+{txt}
+{com}. label var q758_2_proirrbypro11kgsun "Kg/Unit"
+{txt}
+{com}. label var q760_byprodgiftquan11 "Qty given as gift"
+{txt}
+{com}. label var q761_byprodsalequan11 "Sale in last 12 months - Qty"
+{txt}
+{com}. label var q761_1_byprodsaleval11 "Sale in last 12 months - Value"
+{txt}
+{com}. label var q762_byprodanifeed11 "Qty kept for animal feed"
+{txt}
+{com}. label var q763_byprodhomecons11 "Qty kept for home consumption"
+{txt}
+{com}. label var q764_byprodinve11 "Qty for Inventory and Further Processing"
+{txt}
+{com}. label var q759_byproquanirr10 "Production in 2013"
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionH8_IrregularCrops_Byproduct_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionH8_IrregularCrops_Byproduct_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

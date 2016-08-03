@@ -1,0 +1,65 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionJ2_Asset_part2_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:12:07
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Raw data (* It is already cleaned by Rupika)
+. use "${c -(}followup_data{c )-}/Final Data/20.04.2016/J2 Section/SectionJ2_1_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}subid already numeric; no {res}replace
+{txt}q922_ownitemnow already numeric; no {res}replace
+{txt}q923_mostrecmodacq already numeric; no {res}replace
+{txt}q924_YYofitem already numeric; no {res}replace
+{txt}q925_numownwquant already numeric; no {res}replace
+{txt}q925_1_valownitem already numeric; no {res}replace
+{txt}q926_itempurquankha11 already numeric; no {res}replace
+{txt}q926_1_itempurkha11val already numeric; no {res}replace
+{txt}q926_2_PlanPur already numeric; no {res}replace
+{txt}q927_quanplanpurbfkha11 already numeric; no {res}replace
+{txt}q927_1_valplanpurbfkha11 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q923_mostr~q{col 29}q925_numow~t{col 43}q926_item~11{col 57}q926_2_Pla~r{col 71}q927_1_va~11
+{col 1}q922_ownit~w{col 15}q924_YYofi~m{col 29}q925_1_val~m{col 43}q926_1_ite~l{col 57}q927_quan~11
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Label variables
+. labe var Id "Household ID"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionJ2_Asset_part2_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionJ2_Asset_part2_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

@@ -1,0 +1,142 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionH6_IrregularCrops_Labor_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:39
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Section H6
+. use "${c -(}followup_data{c )-}/AP Raw/SectionH4Labor4_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionH4Labor4_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q732_procpermlabdaym was 
+str1, now str2 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q734_procpermlabdayc was 
+str1, now str2 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q735_procfamlabdayM was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q740_markcaslabdayC was 
+str1, now str2 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q745_markfamlabdayF was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionH4Labor4_1.dta" 
+{txt}
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q722_postc~C{col 29}q726_postf~M{col 43}q730_procc~F{col 57}q734_procp~c{col 71}q738_markc~M{col 85}q742_markp~F
+{col 1}q719_cropc~e{col 15}q723_postp~M{col 29}q727_postf~F{col 43}q731_procc~c{col 57}q735_procf~M{col 71}q739_markc~F{col 85}q744_markf~M
+{col 1}q720_postc~M{col 15}q724_postp~F{col 29}q728_postf~C{col 43}q732_procp~m{col 57}q736_procf~f{col 71}q740_markc~C{col 85}q745_markf~F
+{col 1}q721_postc~F{col 15}q725_postp~c{col 29}q729_procc~M{col 43}q733_procp~F{col 57}q737_procf~c{col 71}q741_markp~m{col 85}q746_markf~C
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label Variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label var q720_postcaslabdayM "Casual  M Threshing/Winnowing.."
+{txt}
+{com}. label var q721_postcaslabdayF "Casual  F Threshing/Winnowing.."
+{txt}
+{com}. label var q722_postcaslabdayC "Casual  C Threshing/Winnowing.."
+{txt}
+{com}. label var q723_postpermlabdayM "Permanent M Threshing/Winnowing.."
+{txt}
+{com}. label var q724_postpermlabdayF "Permanent F Threshing/Winnowing.."
+{txt}
+{com}. label var q725_postpermlabdayc "Permanent C Threshing/Winnowing.."
+{txt}
+{com}. label var q726_postfamlabdayM "Family M Threshing/Winnowing.."
+{txt}
+{com}. label var q727_postfamlabdayF "Family F Threshing/Winnowing.."
+{txt}
+{com}. label var q728_postfamlabdayC "Family C Threshing/Winnowing.."
+{txt}
+{com}. label var q729_proccaslabdayM "Casual  M Additional Processing"
+{txt}
+{com}. label var q730_proccaslabdayF "Casual  F Additional Processing"
+{txt}
+{com}. label var q731_proccaslabdayc "Casual  C Additional Processing"
+{txt}
+{com}. label var q732_procpermlabdaym "Permanent M Additional Processing"
+{txt}
+{com}. label var q733_procpermlabdayF "Permanent F Additional Processing"
+{txt}
+{com}. label var q734_procpermlabdayc "Permanent C Additional Processing"
+{txt}
+{com}. label var q735_procfamlabdayM "Family M Additional Processing"
+{txt}
+{com}. label var q736_procfamlabdayf "Family F Additional Processing"
+{txt}
+{com}. label var q737_procfamlabdayc "Family C Additional Processing"
+{txt}
+{com}. label var q738_markcaslabdayM "Casual  M Marketing"
+{txt}
+{com}. label var q739_markcaslabdayF "Casual  F Marketing"
+{txt}
+{com}. label var q740_markcaslabdayC "Casual  C Marketing"
+{txt}
+{com}. label var q741_markpermlabdaym "Permanent M Marketing"
+{txt}
+{com}. label var q742_markpermlabdayF "Permanent F Marketing"
+{txt}
+{com}. label var q743_markpermlabdayC "Permanent C Marketing"
+{txt}
+{com}. label var q744_markfamlabdayM "Family M Marketing"
+{txt}
+{com}. label var q745_markfamlabdayF "Family F Marketing"
+{txt}
+{com}. label var q746_markfamlabdayC "Family C Marketing"
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionH6_IrregularCrops_Labor_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionH6_IrregularCrops_Labor_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

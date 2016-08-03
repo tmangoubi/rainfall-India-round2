@@ -1,0 +1,717 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_round2_compile.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Feb 2016, 15:59:16
+{txt}
+{com}. 
+. global mk "${c -(}r2_data{c )-}"
+{txt}
+{com}. cap mkdir "$mk\Intervention Analysis"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import cleaned round 2 datasets from each state
+> ****************************************************************/
+. 
+. // 1.1 AP
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_AP.dta"
+{txt}
+{com}. gen states = "Andhra Pradesh"
+{txt}
+{com}. tostring g_a_6chooseincent1 d_1_c_other d_1_c_other e_4_other /*g_a_4whymigcity*/ g_a_4otherwhycity d_4_nomigrate4, replace
+{txt}g_a_6chooseincent1 has value label; no {res}replace
+{txt}d_1_c_other was {res:byte} now {res:str1}
+d_1_c_other already string; no {res}replace
+{txt}e_4_other was {res:byte} now {res:str1}
+g_a_4otherwhycity was {res:byte} now {res:str1}
+d_4_nomigrate4 has value label; no {res}replace
+{txt}
+{com}. 
+. /* // Disabled my SLee, 2016-1-25
+> foreach var in d_4_nomigrate4  {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         label values `var' nomigrate
+>         {c )-}
+> */
+. save "$mk\Intervention Analysis\APData.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\APData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. 
+. // 1.2 UP
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_UP.dta"
+{txt}
+{com}. // destring d_4_nomigrate4 , replace
+. /*
+> foreach var in g_a_6chooseincent1 /*d_1_k_findjob g_a_4whymigcity d_4_nomigrate4 */ {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         {c )-}
+> */
+. // gen state = "Uttar Pradesh" // Added by SLee - 2016-1-22
+. gen states = "Uttar Pradesh"
+{txt}
+{com}. save "$mk\Intervention Analysis\UPdata.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\UPdata.dta saved
+
+{com}. append using "$mk\Intervention Analysis\APData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distname was 
+str11, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+villname was 
+str19, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+stname was 
+str48, now str82 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+prevresp was 
+str34, now str45 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a_1hhid was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+a1_2other was 
+str11, now str35 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_1findecmaker was 
+str27, now str40 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_3hhheadreplace was 
+str26, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_4other was 
+str13, now str28 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_6_3surveyorname was 
+str19, now str29 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str5, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str47, now str52 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_3landmark was 
+str44, now str69 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_4fathersname was 
+str29, now str38 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_1_other was 
+str25, now str43 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_6_3cent was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+c_11_shocktype was 
+str7, now str10 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_c_migmember was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_district was 
+str11, now str17 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_d_1_d_towncity was 
+str15, now str18 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_whymigdest was 
+str4, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_e_other was 
+str16, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_f_other was 
+str10, now str11 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_k_other was 
+str16, now str27 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str3, now str5 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_4_nomigrate was 
+str11, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_1_kilometers was 
+byte, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_3_insurance was 
+str4, now str8 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+metainstancename was 
+str11, now str12 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+f_4choosedest was 
+str7, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str5, now str9 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+monthly_income was 
+int, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+e_4_whybuyins1 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept2 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+states was 
+str13, now str14 to accommodate using data's values)
+{p_end}
+(label noaccept already defined)
+(label chooseincent already defined)
+(label month already defined)
+(label migmember already defined)
+(label migaaccept already defined)
+(label nobuyings already defined)
+(label noyesdontknow already defined)
+(label insurance already defined)
+(label distance_opinion already defined)
+(label nomigrate already defined)
+(label send_money already defined)
+(label mig_success already defined)
+(label earning_level already defined)
+(label income already defined)
+(label occupation already defined)
+(label find_job already defined)
+(label mig_group already defined)
+(label alone_group already defined)
+(label transport already defined)
+(label why_mig_dest already defined)
+(label india_abroad already defined)
+(label mig_member already defined)
+(label shock already defined)
+(label last_kharif already defined)
+(label land_cultivated already defined)
+(label income_source already defined)
+(label phone already defined)
+(label consent already defined)
+(label relationship already defined)
+(label nolocate already defined)
+(label yesno already defined)
+(label category1 already defined)
+
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. // 1.3 TN
+. 
+. use "${c -(}builddta{c )-}/round2/IN_rainfall_r2_cleaned_TN.dta"
+{txt}
+{com}. destring backch_accompsupervisor_other1, replace
+{txt}backch_accompsupervisor_other1 contains nonnumeric characters; no {res}replace
+{txt}
+{com}. tostring f_7_othernobuy g_a_4otherwhycity  , replace
+{txt}f_7_othernobuy was {res:byte} now {res:str1}
+g_a_4otherwhycity was {res:byte} now {res:str1}
+
+{com}. /*
+> foreach var in g_a_6chooseincent /* d_1_o_sendmoney3 d_4_nomigrate4 */ {c -(}
+>         tostring `var', gen(`var's)
+>         drop `var'
+>         // gen `var' = `var's
+>         // drop `var's
+>         rename `var's `var'
+>         {c )-}
+> */
+. // gen state="Tamil Nadu" // Added by SLee - 2016-1-22
+. gen states = "Tamil Nadu"
+{txt}
+{com}. save "$mk\Intervention Analysis\TNData.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\TNData.dta saved
+
+{com}. clear
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 2: Compile, Save and Exit
+> ****************************************************************/
+. 
+. use "$mk\Intervention Analysis\Round2.dta"
+{txt}
+{com}. foreach var in backch_accompsupervisor_other1 backch_accompsupervisor_other2 backch_accompsupervisor_other3 backch_accompmonitor_other2 {c -(}
+{txt}  2{com}.         tostring `var', gen(`var's)
+{txt}  3{com}.         drop `var'
+{txt}  4{com}.         gen `var' = `var's
+{txt}  5{com}.         drop `var's
+{txt}  6{com}.         {c )-}
+{txt}backch_accompsupervisor_other1s generated as {res:str1}
+backch_accompsupervisor_other2s generated as {res:str1}
+backch_accompsupervisor_other3s generated as {res:str1}
+backch_accompmonitor_other2s generated as {res:str1}
+
+{com}. 
+. append using "$mk\Intervention Analysis\TNData.dta"
+{txt}{p 0 7 2}
+(note: variable
+distid was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+distname was 
+str13, now str15 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_1doorno was 
+str12, now str23 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+b_7_2stname was 
+str52, now str55 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+d_1_o_sendmoney was 
+str5, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other1 was 
+str1, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other2 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompsupervisor_other3 was 
+str1, now str13 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+backch_accompmonitor_other2 was 
+str1, now str7 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+g_9noaccept was 
+str9, now str11 to accommodate using data's values)
+{p_end}
+(label noaccept already defined)
+(label chooseincent already defined)
+(label whymigcity1 already defined)
+(label month already defined)
+(label migmember already defined)
+(label migaaccept already defined)
+(label category1 already defined)
+(label yesno already defined)
+(label nolocate already defined)
+(label relationship already defined)
+(label consent already defined)
+(label phone already defined)
+(label income_source already defined)
+(label land_cultivated already defined)
+(label last_kharif already defined)
+(label shock already defined)
+(label mig_member already defined)
+(label india_abroad already defined)
+(label why_mig_dest already defined)
+(label transport already defined)
+(label alone_group already defined)
+(label mig_group already defined)
+(label find_job already defined)
+(label occupation already defined)
+(label income already defined)
+(label earning_level already defined)
+(label mig_success already defined)
+(label send_money already defined)
+(label nomigrate already defined)
+(label distance_opinion already defined)
+(label insurance already defined)
+(label noyesdontknow already defined)
+(label whybuy2 already defined)
+(label nobuyings already defined)
+
+{com}. label var states "State of Survey"
+{txt}
+{com}. rename states state
+{res}{txt}
+{com}. drop backch*
+{txt}
+{com}. 
+. do "${c -(}builddo{c )-}/round2/IN_rainfall_round2_label.do" // Apply variable labels.
+{txt}
+{com}. 
+.                           
+. label variable a1_1locatehh "Able to Locate Household"
+{txt}
+{com}. label variable a1_2reasonfornofind "Reasons For Not Locating"
+{txt}
+{com}. label variable a1_2other "Other Reasons for Not Locating"
+{txt}
+{com}. label variable starttime "Start Time"
+{txt}
+{com}. label variable endtime "End Time"
+{txt}
+{com}. label variable a_1hhid "Household ID"
+{txt}
+{com}. 
+. *SECTION B
+. 
+. label variable b_1findecmaker "Name of Decision Maker"
+{txt}
+{com}. label variable b_2availability "Was Decision Maker Availabe?"
+{txt}
+{com}. label variable b_3hhheadreplace "Replacement Decision Maker"
+{txt}
+{com}. label variable b_4hhmember "Relationship of Respondent to Decision Maker"
+{txt}
+{com}. label variable b_4other "Other Relationship"
+{txt}
+{com}. label variable b_5consent "Consent"
+{txt}
+{com}. label variable b_6_1_respondentsign "Signature of Respondent"
+{txt}
+{com}. label variable b_6_2surveyorsign "Signature of Surveyor"
+{txt}
+{com}. label variable b_6_3surveyorname "Surveyor name"
+{txt}
+{com}. label variable b_7_4address "Address"   
+{txt}
+{com}. label variable b_7_1doorno "Door No"
+{txt}
+{com}. label variable b_7_2stname "Street Name"
+{txt}
+{com}. label variable b_7_3landmark "Landmark"
+{txt}
+{com}. label variable b_7_4fathersname "Father/Husband's Name"
+{txt}
+{com}. label variable b_8_contactno "Contact Number"
+{txt}
+{com}. label variable b_8_1confirmno "Contact Confirmation"
+{txt}
+{com}. 
+. *SECION C
+. 
+. label var c_1_incomesource "Primary Income Source Last Year"
+{txt}
+{com}. label var c_1_other "Other Income Source"
+{txt}
+{com}. label var c_2_weeksworked "Weeks worked during the last Kharif season"
+{txt}
+{com}. label var c_3_daysworked "Days worked during the last Kharif season"
+{txt}
+{com}. label var c_4_hoursworked "Hours worked during the last Kharif season"
+{txt}
+{com}. label var c_5_dailywage "Daily Wage during the last Kharif season"
+{txt}
+{com}. label var c_6_landcultivated "Unit of Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_1acre "(Acre) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_2bigha "(Bigha) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_3cent "(Cent) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_4kuzhi "(Kuzhi) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_5biswa "(Biswa) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_6_6hectare "(Hectare) Land Area Cultivated during the last Kharif season"
+{txt}
+{com}. label var c_7_kharifearnings "Total earning during the last Kharif season"
+{txt}
+{com}. label var c_8_annualincome "Total household income last year(2013)"
+{txt}
+{com}. label var c_9_bankaccount "Do you have a bank account?"
+{txt}
+{com}. label var c_10_lastkharif "Do you have a bank account?"
+{txt}
+{com}. label var c_11_shock "Since 2011 did the household experience a bad shock?"
+{txt}
+{com}. label var c_11_shocktype "What type of shock did your household face?"
+{txt}
+{com}. label var c_11_shockother "Other type of shock your household faced"
+{txt}
+{com}. 
+. *SECTION D
+. label var d_1_migrant "Any household member migrated during the lean season"
+{txt}
+{com}. label var d_1_a_daysaway "Days Migrated during the lean season"
+{txt}
+{com}. label var d_1_b_migincome "Total Migration Income during the lean season"
+{txt}
+{com}. label var d_1_c_migmember "Household member migrated during the lean season"
+{txt}
+{com}. label var d_1_c_other "Other household member migrated during the lean season"
+{txt}
+{com}. label var d_1_d_indiaabroad "Migrated to Domestic/Abroad during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_state "Migrated State during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_district "Migrated District during the lean season"
+{txt}
+{com}. label var d_1_d_1_d_towncity "Migrated town/city during the lean season"
+{txt}
+{com}. label var d_1_e_whymigdest "Reason for Choosing Destination"
+{txt}
+{com}. label var d_1_e_other "Other Reasons for Destination"
+{txt}
+{com}. label var d_1_f_transport "Transportation to migration destination"
+{txt}
+{com}. label var d_1_g_transcost "Trasnportation cost (round-trip)"
+{txt}
+{com}. label var d_1_h_alonegroup "Migrated alone/in a group"
+{txt}
+{com}. label var d_1_i_miggroup "With whom migrated"
+{txt}
+{com}. label var d_1_j_success "Found a job at migration destination"
+{txt}
+{com}. *label var d_1_k_findjob "How did you find your job?"
+. label var d_1_k_other "Other ways of Finding Job"
+{txt}
+{com}. label var d_1_l_occupation "Occupation at migration destination"
+{txt}
+{com}. label var d_1_l_other "Other occupation at migration destination"
+{txt}
+{com}. label var d_1_m_earnings "Total earning from migration"
+{txt}
+{com}. label var d_1_m1_earninglevel "Were the earnings higher or lower than average?"
+{txt}
+{com}. label var d_1_m2_success "Was the migration episode successful?"
+{txt}
+{com}. label var d_1_n_earnmore "Did s/he make more money from migration than at-home wage?"
+{txt}
+{com}. label var d_1_o_sendmoney "How did s/he send migration income to home?"
+{txt}
+{com}. label var d_1_o_other "Other way to send money home"
+{txt}
+{com}. label var d_2_migrabi "Any household member migrated during the Rabi season"
+{txt}
+{com}. label var d_2_a_daysaway "Days Migrated during the Rabi season"
+{txt}
+{com}. label var d_2_b_rabiincome "Total Migration Income during the Rabi season"
+{txt}
+{com}. label var d_3_migkharif "Any household member migrated during the Kharif season"
+{txt}
+{com}. label var d_3_a_daysaway "Days Migrated during the Kharif season"
+{txt}
+{com}. label var d_3_b_kharifincome "Total Migration Income during the Kharif season"
+{txt}
+{com}. label var d_4_nomigrate "Reason for Not Migrating"
+{txt}
+{com}. label var d_4_other "Other Reason for Not Migration"
+{txt}
+{com}. 
+. *SECTION E
+. label var e_1_kilometers "(In kilometers) Distance b/w village and AWS"
+{txt}
+{com}. label var e_2_distanceopinion "(In opinion) Distance b/w village and AWS"
+{txt}
+{com}. label var e_3_insurance "Previously purchased insurance scheme"
+{txt}
+{com}. label var e_4_whybuyins "Reason for buying insurance"
+{txt}
+{com}. label var e_4_other "Other Reason for buying insurance"
+{txt}
+{com}. label var e_5_payout "Have ever received payout before"
+{txt}
+{com}. label var e_6_deservepayout "Have not received payout when you think you deserved it"
+{txt}
+{com}. 
+. 
+. *Section F-Insurance
+. label var f_1insexplain "Proceed with insurance explanation and offer"
+{txt}
+{com}. label var f_2purchasins "(First Visit) Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var f_3unitsins "(First Visit) How many units would you like to purchase?"
+{txt}
+{com}. label var f_4datesecvisit "Date of Second Visit"
+{txt}
+{com}. label var f_5purchasins "(Second Visit) Do you want to purchase Delayed Monsoon Onset Kharif 2014 Insurance?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var f_6unitsins "(Second Visit) How many units would you like to purchase?"
+{txt}
+{com}. label var f_7nobuyins "Reason for NOT buying insurance"
+{txt}
+{com}. label var f_7_othernobuy "Other Reason for NOT buying insurance"
+{txt}
+{com}. 
+. 
+. *Section F & G-Migration
+. label var f_1mig "Proceed with migration explanation and offer"
+{txt}
+{com}. label var f_2migaccep "(First Visit) Accept Migration Offer or NOT"
+{txt}
+{com}. label var f_3migmember "(Frist Visit) Household member who will migrate"
+{txt}
+{com}. label var f_3migother "(First Visit) Other household member who will migrate"
+{txt}
+{com}. label var f_4choosedest "(First Visit) Migration destination"
+{txt}
+{com}. label var f_migfirstvisitend1 "Record End Time"
+{txt}
+{com}. label var g_datesecvisit "Date of Second Visit"
+{txt}
+{com}. label var g_1migaccep "(Final) Accept Migration Offer or NOT"
+{txt}
+{com}. label var g_a_2migmember "(Final) Household member who will migrate"
+{txt}
+{com}. label var g_a_2migother "(Final) Other household member who will migrate"
+{txt}
+{com}. label var g_a_2cellphone "Does a migrating hosuehold member have a cell phone?"
+{txt}
+{com}. label var g_a_2cellnumber "Migrating household member's cell phone number"
+{txt}
+{com}. label var g_a_b_1migmonthleave "Migration Departure Month"
+{txt}
+{com}. label var g_a_b_1migdateleave "Migration Departure Date"
+{txt}
+{com}. label var g_a_b_2migmonthreturn "Migration Return Month"
+{txt}
+{com}. label var g_a_b_2migdayreturn "Migration Return Date"
+{txt}
+{com}. label var g_a_3destconfirm "Destination Confirmation"
+{txt}
+{com}. *label var g_a_4whymigcity "Reason for choosing migration destination"
+. label var g_a_4otherwhycity "Other reason for choosing migration destination"
+{txt}
+{com}. label var g_a_5migwithout "Would you migrate without incentive?"
+{txt}
+{com}. label var g_a_6chooseincent "Reason for Accepting Incentive"
+{txt}
+{com}. label var g_a_6otherincent "Other reason for accepting incentive"
+{txt}
+{com}. label var g_7cashovertick "Would you have accepted the incentive if it was cash rather than a round-trip ticket?"
+{txt}note: label truncated to 80 characters
+
+{com}. label var g_8anydestoffer "Would you have accepted the incentive if other destinations were offered?"
+{txt}
+{com}. label var g_9noaccept "Reason for not accepting incentive"
+{txt}
+{com}. label var g_9other "Other reason for not accepting offer"
+{txt}
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. 
+. foreach x of varlist _all {c -(}
+{txt}  2{com}.         rename `x' r2_`x'
+{txt}  3{com}. {c )-}
+{res}{txt}
+{com}. 
+. rename (r2_a_1hhid r2_state) (a_1hhid state)
+{res}{txt}
+{com}. 
+. compress
+{txt}  (0 bytes saved)
+
+{com}. save "$mk\Intervention Analysis\Round2.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data/Marketing_Intervention_2014\Intervention Analysis\Round2.dta saved
+
+{com}. save "${c -(}builddta{c )-}/round2/IN_rainfall_r2_compiled.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/round2/IN_rainfall_r2_compiled.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

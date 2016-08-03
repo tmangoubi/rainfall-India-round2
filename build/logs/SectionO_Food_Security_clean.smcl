@@ -1,0 +1,355 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionO_Food_Security_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:56
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. /// Keep ID and Section O
+> keep Id q1306_exp_1-q1316_Familycope_oth_24
+{txt}
+{com}. order *, alphabetic
+{txt}
+{com}. /*
+> loc vars        q1102_recgiftKha11 q1103_totvalallgiftrs q1104_totvalmarrgift q1105_recloankha11 q1106_amtloanrec ///
+>                         q1107_totmonownloan q1108_1_totMMloanper q1108_numpayloanper q1109_1_totvalcol q1109_totpaidwitint
+> foreach var of loc vars {c -(}
+>         order `var'_10-`var'_14, after(`var'_9)
+> {c )-}
+> *                       
+> */
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q1306_exp_1 already numeric; no {res}replace
+{txt}q1306_exp_10 already numeric; no {res}replace
+{txt}q1306_exp_11 already numeric; no {res}replace
+{txt}q1306_exp_12 already numeric; no {res}replace
+{txt}q1306_exp_13 already numeric; no {res}replace
+{txt}q1306_exp_14 already numeric; no {res}replace
+{txt}q1306_exp_15 already numeric; no {res}replace
+{txt}q1306_exp_16 already numeric; no {res}replace
+{txt}q1306_exp_17 already numeric; no {res}replace
+{txt}q1306_exp_18 already numeric; no {res}replace
+{txt}q1306_exp_19 already numeric; no {res}replace
+{txt}q1306_exp_2 already numeric; no {res}replace
+{txt}q1306_exp_20 already numeric; no {res}replace
+{txt}q1306_exp_21 already numeric; no {res}replace
+{txt}q1306_exp_22 already numeric; no {res}replace
+{txt}q1306_exp_23 already numeric; no {res}replace
+{txt}q1306_exp_24 already numeric; no {res}replace
+{txt}q1306_exp_3 already numeric; no {res}replace
+{txt}q1306_exp_4 already numeric; no {res}replace
+{txt}q1306_exp_5 already numeric; no {res}replace
+{txt}q1306_exp_6 already numeric; no {res}replace
+{txt}q1306_exp_7 already numeric; no {res}replace
+{txt}q1306_exp_8 already numeric; no {res}replace
+{txt}q1306_exp_9 already numeric; no {res}replace
+{txt}q1307_NoofTimes_1 already numeric; no {res}replace
+{txt}q1307_NoofTimes_10 already numeric; no {res}replace
+{txt}q1307_NoofTimes_11 already numeric; no {res}replace
+{txt}q1307_NoofTimes_12 already numeric; no {res}replace
+{txt}q1307_NoofTimes_13 already numeric; no {res}replace
+{txt}q1307_NoofTimes_14 already numeric; no {res}replace
+{txt}q1307_NoofTimes_15 already numeric; no {res}replace
+{txt}q1307_NoofTimes_16 already numeric; no {res}replace
+{txt}q1307_NoofTimes_17 already numeric; no {res}replace
+{txt}q1307_NoofTimes_18 already numeric; no {res}replace
+{txt}q1307_NoofTimes_19 already numeric; no {res}replace
+{txt}q1307_NoofTimes_2 already numeric; no {res}replace
+{txt}q1307_NoofTimes_20 already numeric; no {res}replace
+{txt}q1307_NoofTimes_21 already numeric; no {res}replace
+{txt}q1307_NoofTimes_22 already numeric; no {res}replace
+{txt}q1307_NoofTimes_23 already numeric; no {res}replace
+{txt}q1307_NoofTimes_24 already numeric; no {res}replace
+{txt}q1307_NoofTimes_3 already numeric; no {res}replace
+{txt}q1307_NoofTimes_4 already numeric; no {res}replace
+{txt}q1307_NoofTimes_5 already numeric; no {res}replace
+{txt}q1307_NoofTimes_6 already numeric; no {res}replace
+{txt}q1307_NoofTimes_7 already numeric; no {res}replace
+{txt}q1307_NoofTimes_8 already numeric; no {res}replace
+{txt}q1307_NoofTimes_9 already numeric; no {res}replace
+{txt}q1308_2014_1 already numeric; no {res}replace
+{txt}q1308_2014_10 contains nonnumeric characters; no {res}replace
+{txt}q1308_2014_11 already numeric; no {res}replace
+{txt}q1308_2014_12 already numeric; no {res}replace
+{txt}q1308_2014_13 already numeric; no {res}replace
+{txt}q1308_2014_14 already numeric; no {res}replace
+{txt}q1308_2014_15 already numeric; no {res}replace
+{txt}q1308_2014_16 already numeric; no {res}replace
+{txt}q1308_2014_17 already numeric; no {res}replace
+{txt}q1308_2014_18 already numeric; no {res}replace
+{txt}q1308_2014_19 already numeric; no {res}replace
+{txt}q1308_2014_2 already numeric; no {res}replace
+{txt}q1308_2014_20 already numeric; no {res}replace
+{txt}q1308_2014_21 already numeric; no {res}replace
+{txt}q1308_2014_22 already numeric; no {res}replace
+{txt}q1308_2014_23 already numeric; no {res}replace
+{txt}q1308_2014_24 already numeric; no {res}replace
+{txt}q1308_2014_3 already numeric; no {res}replace
+{txt}q1308_2014_4 already numeric; no {res}replace
+{txt}q1308_2014_5 already numeric; no {res}replace
+{txt}q1308_2014_6 already numeric; no {res}replace
+{txt}q1308_2014_7 already numeric; no {res}replace
+{txt}q1308_2014_8 already numeric; no {res}replace
+{txt}q1308_2014_9 already numeric; no {res}replace
+{txt}q1309_2013_1 already numeric; no {res}replace
+{txt}q1309_2013_10 contains nonnumeric characters; no {res}replace
+{txt}q1309_2013_11 already numeric; no {res}replace
+{txt}q1309_2013_12 already numeric; no {res}replace
+{txt}q1309_2013_13 already numeric; no {res}replace
+{txt}q1309_2013_14 already numeric; no {res}replace
+{txt}q1309_2013_15 already numeric; no {res}replace
+{txt}q1309_2013_16 already numeric; no {res}replace
+{txt}q1309_2013_17 already numeric; no {res}replace
+{txt}q1309_2013_18 already numeric; no {res}replace
+{txt}q1309_2013_19 already numeric; no {res}replace
+{txt}q1309_2013_2 already numeric; no {res}replace
+{txt}q1309_2013_20 already numeric; no {res}replace
+{txt}q1309_2013_21 already numeric; no {res}replace
+{txt}q1309_2013_22 already numeric; no {res}replace
+{txt}q1309_2013_23 already numeric; no {res}replace
+{txt}q1309_2013_24 already numeric; no {res}replace
+{txt}q1309_2013_3 already numeric; no {res}replace
+{txt}q1309_2013_4 already numeric; no {res}replace
+{txt}q1309_2013_5 already numeric; no {res}replace
+{txt}q1309_2013_6 already numeric; no {res}replace
+{txt}q1309_2013_7 already numeric; no {res}replace
+{txt}q1309_2013_8 already numeric; no {res}replace
+{txt}q1309_2013_9 already numeric; no {res}replace
+{txt}q1310_2012_1 already numeric; no {res}replace
+{txt}q1310_2012_10 already numeric; no {res}replace
+{txt}q1310_2012_11 already numeric; no {res}replace
+{txt}q1310_2012_12 already numeric; no {res}replace
+{txt}q1310_2012_13 already numeric; no {res}replace
+{txt}q1310_2012_14 already numeric; no {res}replace
+{txt}q1310_2012_15 already numeric; no {res}replace
+{txt}q1310_2012_16 already numeric; no {res}replace
+{txt}q1310_2012_17 already numeric; no {res}replace
+{txt}q1310_2012_18 already numeric; no {res}replace
+{txt}q1310_2012_19 already numeric; no {res}replace
+{txt}q1310_2012_2 already numeric; no {res}replace
+{txt}q1310_2012_20 already numeric; no {res}replace
+{txt}q1310_2012_21 already numeric; no {res}replace
+{txt}q1310_2012_22 already numeric; no {res}replace
+{txt}q1310_2012_23 already numeric; no {res}replace
+{txt}q1310_2012_24 already numeric; no {res}replace
+{txt}q1310_2012_3 already numeric; no {res}replace
+{txt}q1310_2012_4 already numeric; no {res}replace
+{txt}q1310_2012_5 already numeric; no {res}replace
+{txt}q1310_2012_6 already numeric; no {res}replace
+{txt}q1310_2012_7 already numeric; no {res}replace
+{txt}q1310_2012_8 already numeric; no {res}replace
+{txt}q1310_2012_9 already numeric; no {res}replace
+{txt}q1314_Familycope_1 already numeric; no {res}replace
+{txt}q1314_Familycope_10 already numeric; no {res}replace
+{txt}q1314_Familycope_11 already numeric; no {res}replace
+{txt}q1314_Familycope_12 already numeric; no {res}replace
+{txt}q1314_Familycope_13 already numeric; no {res}replace
+{txt}q1314_Familycope_14 already numeric; no {res}replace
+{txt}q1314_Familycope_15 already numeric; no {res}replace
+{txt}q1314_Familycope_16 already numeric; no {res}replace
+{txt}q1314_Familycope_17 already numeric; no {res}replace
+{txt}q1314_Familycope_18 already numeric; no {res}replace
+{txt}q1314_Familycope_19 already numeric; no {res}replace
+{txt}q1314_Familycope_2 already numeric; no {res}replace
+{txt}q1314_Familycope_20 already numeric; no {res}replace
+{txt}q1314_Familycope_21 already numeric; no {res}replace
+{txt}q1314_Familycope_22 already numeric; no {res}replace
+{txt}q1314_Familycope_23 already numeric; no {res}replace
+{txt}q1314_Familycope_24 already numeric; no {res}replace
+{txt}q1314_Familycope_3 already numeric; no {res}replace
+{txt}q1314_Familycope_4 already numeric; no {res}replace
+{txt}q1314_Familycope_5 already numeric; no {res}replace
+{txt}q1314_Familycope_6 already numeric; no {res}replace
+{txt}q1314_Familycope_7 already numeric; no {res}replace
+{txt}q1314_Familycope_8 already numeric; no {res}replace
+{txt}q1314_Familycope_9 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_1 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_10 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_11 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_12 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_13 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_14 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_15 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_16 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_17 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_18 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_19 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_2 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_20 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_21 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_22 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_23 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_24 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_3 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_4 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_5 already numeric; no {res}replace
+{txt}q1314_Familycope_oth_6 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_7 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_8 contains nonnumeric characters; no {res}replace
+{txt}q1314_Familycope_oth_9 already numeric; no {res}replace
+{txt}q1315_Familycope_1 already numeric; no {res}replace
+{txt}q1315_Familycope_10 already numeric; no {res}replace
+{txt}q1315_Familycope_11 already numeric; no {res}replace
+{txt}q1315_Familycope_12 already numeric; no {res}replace
+{txt}q1315_Familycope_13 already numeric; no {res}replace
+{txt}q1315_Familycope_14 already numeric; no {res}replace
+{txt}q1315_Familycope_15 already numeric; no {res}replace
+{txt}q1315_Familycope_16 already numeric; no {res}replace
+{txt}q1315_Familycope_17 already numeric; no {res}replace
+{txt}q1315_Familycope_18 already numeric; no {res}replace
+{txt}q1315_Familycope_19 already numeric; no {res}replace
+{txt}q1315_Familycope_2 already numeric; no {res}replace
+{txt}q1315_Familycope_20 already numeric; no {res}replace
+{txt}q1315_Familycope_21 already numeric; no {res}replace
+{txt}q1315_Familycope_22 already numeric; no {res}replace
+{txt}q1315_Familycope_23 already numeric; no {res}replace
+{txt}q1315_Familycope_24 already numeric; no {res}replace
+{txt}q1315_Familycope_3 already numeric; no {res}replace
+{txt}q1315_Familycope_4 already numeric; no {res}replace
+{txt}q1315_Familycope_5 already numeric; no {res}replace
+{txt}q1315_Familycope_6 already numeric; no {res}replace
+{txt}q1315_Familycope_7 already numeric; no {res}replace
+{txt}q1315_Familycope_8 already numeric; no {res}replace
+{txt}q1315_Familycope_9 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_1 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_10 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_11 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_12 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_13 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_14 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_15 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_16 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_17 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_18 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_19 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_2 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_20 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_21 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_22 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_23 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_24 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_3 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_4 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_5 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_6 already numeric; no {res}replace
+{txt}q1315_Familycope_oth_7 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_8 contains nonnumeric characters; no {res}replace
+{txt}q1315_Familycope_oth_9 already numeric; no {res}replace
+{txt}q1316_Familycope_1 already numeric; no {res}replace
+{txt}q1316_Familycope_10 already numeric; no {res}replace
+{txt}q1316_Familycope_11 already numeric; no {res}replace
+{txt}q1316_Familycope_12 already numeric; no {res}replace
+{txt}q1316_Familycope_13 already numeric; no {res}replace
+{txt}q1316_Familycope_14 already numeric; no {res}replace
+{txt}q1316_Familycope_15 already numeric; no {res}replace
+{txt}q1316_Familycope_16 already numeric; no {res}replace
+{txt}q1316_Familycope_17 already numeric; no {res}replace
+{txt}q1316_Familycope_18 already numeric; no {res}replace
+{txt}q1316_Familycope_19 already numeric; no {res}replace
+{txt}q1316_Familycope_2 already numeric; no {res}replace
+{txt}q1316_Familycope_20 already numeric; no {res}replace
+{txt}q1316_Familycope_21 already numeric; no {res}replace
+{txt}q1316_Familycope_22 already numeric; no {res}replace
+{txt}q1316_Familycope_23 already numeric; no {res}replace
+{txt}q1316_Familycope_24 already numeric; no {res}replace
+{txt}q1316_Familycope_3 already numeric; no {res}replace
+{txt}q1316_Familycope_4 already numeric; no {res}replace
+{txt}q1316_Familycope_5 already numeric; no {res}replace
+{txt}q1316_Familycope_6 already numeric; no {res}replace
+{txt}q1316_Familycope_7 already numeric; no {res}replace
+{txt}q1316_Familycope_8 already numeric; no {res}replace
+{txt}q1316_Familycope_9 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_1 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_10 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_11 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_12 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_13 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_14 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_15 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_16 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_17 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_18 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_19 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_2 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_20 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_21 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_22 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_23 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_24 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_3 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_4 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_5 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_6 already numeric; no {res}replace
+{txt}q1316_Familycope_oth_7 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_8 contains nonnumeric characters; no {res}replace
+{txt}q1316_Familycope_oth_9 already numeric; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q1306_exp_1{col 15}q1307_Noo~15{col 29}q1308_201~21{col 43}q1309_2013_6{col 57}q1314_F~e_11{col 71}q1314_Fa~h_3{col 85}q1315_F~h_11{col 99}q1316_Fa~e_3
+{col 1}q1306_exp_10{col 15}q1307_Noo~16{col 29}q1308_201~22{col 43}q1309_2013_7{col 57}q1314_F~e_12{col 71}q1314_Fa~h_4{col 85}q1315_F~h_13{col 99}q1316_Fa~e_4
+{col 1}q1306_exp_11{col 15}q1307_Noo~17{col 29}q1308_201~23{col 43}q1309_2013_8{col 57}q1314_F~e_13{col 71}q1314_Fa~h_5{col 85}q1315_F~h_14{col 99}q1316_Fa~e_5
+{col 1}q1306_exp_12{col 15}q1307_Noo~18{col 29}q1308_201~24{col 43}q1309_2013_9{col 57}q1314_F~e_14{col 71}q1314_Fa~h_9{col 85}q1315_F~h_15{col 99}q1316_Fa~e_6
+{col 1}q1306_exp_13{col 15}q1307_Noo~19{col 29}q1308_2014_3{col 43}q1310_2012_1{col 57}q1314_F~e_15{col 71}q1315_Fa~e_1{col 85}q1315_F~h_16{col 99}q1316_Fa~e_7
+{col 1}q1306_exp_14{col 15}q1307_Noo~_2{col 29}q1308_2014_4{col 43}q1310_201~10{col 57}q1314_F~e_16{col 71}q1315_F~e_10{col 85}q1315_F~h_21{col 99}q1316_Fa~e_8
+{col 1}q1306_exp_15{col 15}q1307_Noo~20{col 29}q1308_2014_5{col 43}q1310_201~11{col 57}q1314_F~e_17{col 71}q1315_F~e_11{col 85}q1315_F~h_22{col 99}q1316_Fa~e_9
+{col 1}q1306_exp_16{col 15}q1307_Noo~21{col 29}q1308_2014_6{col 43}q1310_201~12{col 57}q1314_F~e_18{col 71}q1315_F~e_12{col 85}q1315_F~h_23{col 99}q1316_Fa~h_1
+{col 1}q1306_exp_17{col 15}q1307_Noo~22{col 29}q1308_2014_7{col 43}q1310_201~13{col 57}q1314_F~e_19{col 71}q1315_F~e_13{col 85}q1315_Fa~h_3{col 99}q1316_F~h_10
+{col 1}q1306_exp_18{col 15}q1307_Noo~23{col 29}q1308_2014_8{col 43}q1310_201~14{col 57}q1314_Fa~e_2{col 71}q1315_F~e_14{col 85}q1315_Fa~h_4{col 99}q1316_F~h_11
+{col 1}q1306_exp_19{col 15}q1307_Noo~24{col 29}q1308_2014_9{col 43}q1310_201~15{col 57}q1314_F~e_20{col 71}q1315_F~e_15{col 85}q1315_Fa~h_5{col 99}q1316_F~h_12
+{col 1}q1306_exp_2{col 15}q1307_Noo~_3{col 29}q1309_2013_1{col 43}q1310_201~16{col 57}q1314_F~e_21{col 71}q1315_F~e_16{col 85}q1315_Fa~h_6{col 99}q1316_F~h_13
+{col 1}q1306_exp_20{col 15}q1307_Noo~_4{col 29}q1309_201~11{col 43}q1310_201~17{col 57}q1314_F~e_22{col 71}q1315_F~e_17{col 85}q1315_Fa~h_9{col 99}q1316_F~h_14
+{col 1}q1306_exp_21{col 15}q1307_Noo~_5{col 29}q1309_201~12{col 43}q1310_201~18{col 57}q1314_F~e_23{col 71}q1315_F~e_18{col 85}q1316_Fa~e_1{col 99}q1316_F~h_15
+{col 1}q1306_exp_22{col 15}q1307_Noo~_6{col 29}q1309_201~13{col 43}q1310_201~19{col 57}q1314_F~e_24{col 71}q1315_F~e_19{col 85}q1316_F~e_10{col 99}q1316_F~h_16
+{col 1}q1306_exp_23{col 15}q1307_Noo~_7{col 29}q1309_201~14{col 43}q1310_2012_2{col 57}q1314_Fa~e_3{col 71}q1315_Fa~e_2{col 85}q1316_F~e_11{col 99}q1316_F~h_17
+{col 1}q1306_exp_24{col 15}q1307_Noo~_8{col 29}q1309_201~15{col 43}q1310_201~20{col 57}q1314_Fa~e_4{col 71}q1315_F~e_20{col 85}q1316_F~e_12{col 99}q1316_F~h_21
+{col 1}q1306_exp_3{col 15}q1307_Noo~_9{col 29}q1309_201~16{col 43}q1310_201~21{col 57}q1314_Fa~e_5{col 71}q1315_F~e_21{col 85}q1316_F~e_13{col 99}q1316_F~h_23
+{col 1}q1306_exp_4{col 15}q1308_2014_1{col 29}q1309_201~17{col 43}q1310_201~22{col 57}q1314_Fa~e_6{col 71}q1315_F~e_22{col 85}q1316_F~e_14{col 99}q1316_F~h_24
+{col 1}q1306_exp_5{col 15}q1308_201~11{col 29}q1309_201~18{col 43}q1310_201~23{col 57}q1314_Fa~e_7{col 71}q1315_F~e_23{col 85}q1316_F~e_15{col 99}q1316_Fa~h_3
+{col 1}q1306_exp_6{col 15}q1308_201~12{col 29}q1309_201~19{col 43}q1310_201~24{col 57}q1314_Fa~e_8{col 71}q1315_F~e_24{col 85}q1316_F~e_16{col 99}q1316_Fa~h_4
+{col 1}q1306_exp_7{col 15}q1308_201~13{col 29}q1309_2013_2{col 43}q1310_2012_3{col 57}q1314_Fa~e_9{col 71}q1315_Fa~e_3{col 85}q1316_F~e_17{col 99}q1316_Fa~h_5
+{col 1}q1306_exp_8{col 15}q1308_201~14{col 29}q1309_201~20{col 43}q1310_2012_4{col 57}q1314_Fa~h_1{col 71}q1315_Fa~e_4{col 85}q1316_F~e_18{col 99}q1316_Fa~h_6
+{col 1}q1306_exp_9{col 15}q1308_201~15{col 29}q1309_201~21{col 43}q1310_2012_5{col 57}q1314_F~h_11{col 71}q1315_Fa~e_5{col 85}q1316_F~e_19{col 99}q1316_Fa~h_9
+{col 1}q1307_Noo~_1{col 15}q1308_201~16{col 29}q1309_201~22{col 43}q1310_2012_6{col 57}q1314_F~h_13{col 71}q1315_Fa~e_6{col 85}q1316_Fa~e_2
+{col 1}q1307_Noo~10{col 15}q1308_201~17{col 29}q1309_201~23{col 43}q1310_2012_7{col 57}q1314_F~h_14{col 71}q1315_Fa~e_7{col 85}q1316_F~e_20
+{col 1}q1307_Noo~11{col 15}q1308_201~18{col 29}q1309_201~24{col 43}q1310_2012_8{col 57}q1314_F~h_15{col 71}q1315_Fa~e_8{col 85}q1316_F~e_21
+{col 1}q1307_Noo~12{col 15}q1308_201~19{col 29}q1309_2013_3{col 43}q1310_2012_9{col 57}q1314_F~h_21{col 71}q1315_Fa~e_9{col 85}q1316_F~e_22
+{col 1}q1307_Noo~13{col 15}q1308_2014_2{col 29}q1309_2013_4{col 43}q1314_Fa~e_1{col 57}q1314_F~h_22{col 71}q1315_Fa~h_1{col 85}q1316_F~e_23
+{col 1}q1307_Noo~14{col 15}q1308_201~20{col 29}q1309_2013_5{col 43}q1314_F~e_10{col 57}q1314_F~h_24{col 71}q1315_F~h_10{col 85}q1316_F~e_24
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionO_Food_Security_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionO_Food_Security_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

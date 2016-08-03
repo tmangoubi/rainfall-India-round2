@@ -1,0 +1,101 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionE9_KharifCrop_ByProduct_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:11:51
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Section E8
+. use "${c -(}followup_data{c )-}/AP Raw/SectionELabor7_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionELabor7_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q571_byprodcode was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionELabor7_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q572_1_byprodunit11oth was 
+str12, now str40 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. order Id subid
+{txt}
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q572_prod~11{col 29}q572_2_byp~s{col 43}q574_bypr~11{col 57}q575_1_by~11{col 71}q577_bypr~11
+{col 1}q571_bypro~e{col 15}q572_1_by~11{col 29}q573_bypr~10{col 43}q575_bypr~11{col 57}q576_bypr~11{col 71}q578_bypr~11
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label var q571_byprodcode "ByProduct Code"
+{txt}
+{com}. label var q571_byprodcode_oth "ByProduct Code - Other"
+{txt}
+{com}. label define byprod 204 "Rice Straw/Fodder" 205 "Wheat Straw" 206 "OTHER byproducts" 207 "Plantain leaves" 208 "Arecanut leaves" 209 "Coconut leaves" -888 "Others"
+{txt}
+{com}. 
+. label   var     q572_prodquankha11      "Kh14 ByProduct - Quantity"
+{txt}
+{com}. label   var     q572_1_byprodunitkha11  "Kh14 ByProduct - Units"
+{txt}
+{com}. label   var     q572_1_byprodunit11oth  "Kh14 ByProduct - Units (Other)"
+{txt}
+{com}. label   var     q572_2_byprodunitkgs    "Kh14 ByProduct - KG/Unit"
+{txt}
+{com}. label   var     q573_byproquankha10     "Kh13 - ByProduct Qty"
+{txt}
+{com}. label   var     q574_byprodgiftquan11   "Kh14 ByProduct - Given as gift/payment?"
+{txt}
+{com}. label   var     q575_byprodsalequan11   "Kh14 ByProduct - Sale Quantity"
+{txt}
+{com}. label   var     q575_1_byprodsaleval11  "Kh14 ByProduct - Sale Value"
+{txt}
+{com}. label   var     q576_byprodanifeed11    "Kh14 ByProduct - Animal Feed Qty"
+{txt}
+{com}. label   var     q577_byprodhomecons11   "Kh14 ByProduct - Home Consumption Qty"
+{txt}
+{com}. label   var     q578_byprodinve11       "Kh14 ByProduct -Inventory/further processing Qty"
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionE9_KharifCrop_ByProduct_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionE9_KharifCrop_ByProduct_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

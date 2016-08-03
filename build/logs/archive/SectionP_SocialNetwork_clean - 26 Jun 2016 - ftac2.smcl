@@ -1,0 +1,170 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionP_SocialNetwork_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:12:22
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q1501_relresinvill q1501_relresinvill_count
+{txt}
+{com}. tempfile q1501
+{txt}
+{com}. save `q1501'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. // Section P
+. use "${c -(}followup_data{c )-}/AP Raw/SectionPRoster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionPRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q1504_relwitresp_oth was 
+str14, now str16 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionPRoster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q1506_landmark was 
+str59, now str62 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Destring and recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q1502_namerelHHinvil contains nonnumeric bytes; no {res}replace
+{txt}q1503_fathnamepriHH contains nonnumeric bytes; no {res}replace
+{txt}q1504_relwitresp has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q1504_relwitresp_oth contains nonnumeric bytes; no {res}replace
+{txt}q1505_streetadd contains nonnumeric bytes; no {res}replace
+{txt}q1506_landmark contains nonnumeric bytes; no {res}replace
+{txt}q1507_percult has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q1505_phnumber contains nonnumeric bytes; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q1504_relw~p{col 29}q1507_perc~t
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var q1502_namerelHHinvil "Name of relative"
+{txt}
+{com}. label var q1503_fathnamepriHH "Relative's Father's Name"
+{txt}
+{com}. label var q1504_relwitresp "Relationship with respondent"
+{txt}
+{com}. label var q1504_relwitresp_oth "Relationship with respondent - Other"
+{txt}
+{com}. label var q1505_streetadd "Relative - Street Address"
+{txt}
+{com}. label var q1506_landmark "Relative - Landmark"
+{txt}
+{com}. label var q1507_percult "Is relative a cultivator?"
+{txt}
+{com}. label var q1505_phnumber "Relative - Phone Number"
+{txt}
+{com}. 
+. label value q1507_percult yesno
+{txt}
+{com}. 
+. label define relationship 1 "Head of Household" 2 "Spouse" 3 "Son/Daughter" 4 "Daughter-in-law/son-in-law" 5 "Grand son/daughter"  ///
+>         6 "Parents" 7 "Father/mother-in-law" 8 "Brother/sister" 9 "Brother/sister-in-law" 10 "Uncle/aunt" 11 "Nephew/niece" ///
+>         12 "Foster child/step child" 13 "Other" 14 "Grandmother/father"
+{txt}
+{com}. label value q1504_relwitresp relationship
+{txt}
+{com}. 
+. tempfile SecP
+{txt}
+{com}. save `SecP'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. 
+. // Merge q1501 and section P
+. use `q1501', clear
+{txt}
+{com}. merge 1:m Id using `SecP', nogen keep(3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           3,733{txt}  
+{col 5}{hline 41}
+
+{com}. order Id subid, alphabetic
+{txt}
+{com}. 
+. /// Logic check
+> ds subid-q1505_phnumber, has(type numeric)
+{txt}{col 1}subid{col 15}q1501_relr~l{col 29}q1501_relr~t{col 43}q1504_relw~p{col 57}q1507_perc~t
+
+{com}. loc numvars `r(varlist)'
+{txt}
+{com}. ds subid-q1505_phnumber, has(type string)
+{txt}{col 1}q1502_name~l{col 15}q1503_fath~H{col 29}q1504_relw~h{col 43}q1505_stre~d{col 57}q1506_land~k{col 71}q1505_phnu~r
+
+{com}. loc strvars `r(varlist)'
+{txt}
+{com}. 
+. foreach var of loc numvars {c -(}
+{txt}  2{com}.         replace `var'=.b if ((q1501_relresinvill==2) & !mi(`var'))
+{txt}  3{com}. {c )-}
+{txt}(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+{com}. foreach var of loc strvars {c -(}
+{txt}  2{com}.         replace `var'="Mistake" if ((q1501_relresinvill==2) & !mi(`var'))
+{txt}  3{com}. {c )-}
+{txt}(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+{com}. *
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionP_SocialNetwork_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionP_SocialNetwork_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

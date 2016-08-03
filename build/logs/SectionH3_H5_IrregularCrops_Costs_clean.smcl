@@ -1,0 +1,124 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionH3_H5_IrregularCrops_Costs_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 7 Jul 2016, 14:17:36
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q600_culirrcrop-q709_supfamlabdayC
+{txt}
+{com}. label var q600_culirrcrop "DID your household cultivate irregular crops in 2014 OR PLAN to cultivate by May 2015?"
+{txt}note: label truncated to 80 characters
+
+{com}. 
+. /// Destring and recode variables
+> qui destring *, replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q600_culir~p{col 15}q630_2_che~5{col 29}q630_2_che~9{col 43}q635_usekh~3{col 57}q634_pestq~8{col 71}q644_famdayF{col 85}q669_sowpe~C{col 99}q685_irrma~M
+{col 1}q600_culir~t{col 15}q631_usekh~5{col 29}q631_usekh~9{col 43}q635_1_pla~3{col 57}q634_1_pes~8{col 71}q646_trapl~M{col 85}q670_sowfa~M{col 99}q686_irrma~F
+{col 1}q630_chemf~1{col 15}q632_plaus~5{col 29}q632_plaus~9{col 43}q634_pestq~4{col 57}q634_1_oth~8{col 71}q647_trapl~F{col 85}q671_sowfa~F{col 99}q687_irrma~C
+{col 1}q630_1_che~1{col 15}q630_chemf~6{col 29}q629_chem~10{col 43}q634_1_pes~4{col 57}q634_2_pes~8{col 71}q648_trapl~C{col 85}q672_sowfa~C{col 99}q688_irrma~M
+{col 1}q630_2_che~1{col 15}q630_1_che~6{col 29}q630_chem~10{col 43}q634_2_pes~4{col 57}q635_usekh~8{col 71}q648_1_tra~M{col 85}q672_1_fer~M{col 99}q689_irrma~F
+{col 1}q631_usekh~1{col 15}q630_2_che~6{col 29}q630_1_ch~10{col 43}q635_usekh~4{col 57}q635_1_pla~8{col 71}q649_trape~F{col 85}q672_2_fer~F{col 99}q690_irrma~C
+{col 1}q632_plaus~1{col 15}q631_usekh~6{col 29}q630_1_ot~10{col 43}q635_1_pla~4{col 57}q634_pestq~9{col 71}q650_trape~c{col 85}q672_3_fer~C{col 99}q691_harca~M
+{col 1}q630_chemf~2{col 15}q632_plaus~6{col 29}q630_2_ch~10{col 43}q634_pestq~5{col 57}q634_1_pes~9{col 71}q651_trafa~M{col 85}q672_4_fer~M{col 99}q692_harca~F
+{col 1}q630_1_che~2{col 15}q630_chemf~7{col 29}q631_usek~10{col 43}q634_1_pes~5{col 57}q634_1_oth~9{col 71}q652_trafa~C{col 85}q672_5_fer~F{col 99}q693_harca~C
+{col 1}q630_2_che~2{col 15}q630_1_che~7{col 29}q632_plau~10{col 43}q634_2_pes~5{col 57}q634_2_pes~9{col 71}q653_trafa~C{col 85}q672_6_fer~C{col 99}q694_harpe~M
+{col 1}q631_usekh~2{col 15}q630_1_oth~7{col 29}q634_pestq~1{col 43}q635_usekh~5{col 57}q635_usekh~9{col 71}q654_weedc~M{col 85}q672_7_fer~M{col 99}q695_harpe~F
+{col 1}q632_plaus~2{col 15}q630_2_che~7{col 29}q634_1_pes~1{col 43}q635_1_pla~5{col 57}q635_1_pla~9{col 71}q655_weedc~F{col 85}q672_8_fer~F{col 99}q696_harpe~C
+{col 1}q630_chemf~3{col 15}q631_usekh~7{col 29}q634_2_pes~1{col 43}q634_pestq~6{col 57}q634_pest~10{col 71}q656_weedc~C{col 85}q672_9_fer~C{col 99}q697_harfa~M
+{col 1}q630_1_che~3{col 15}q632_plaus~7{col 29}q635_usekh~1{col 43}q634_1_pes~6{col 57}q634_1_pe~10{col 71}q657_weedp~M{col 85}q673_1_pes~M{col 99}q698_harfa~F
+{col 1}q630_2_che~3{col 15}q630_chemf~8{col 29}q635_1_pla~1{col 43}q634_1_oth~6{col 57}q634_1_ot~10{col 71}q658_weedp~F{col 85}q674_pestc~F{col 99}q699_harfa~C
+{col 1}q631_usekh~3{col 15}q630_1_che~8{col 29}q634_pestq~2{col 43}q634_2_pes~6{col 57}q634_2_pe~10{col 71}q659_weedp~C{col 85}q675_pestc~C{col 99}q701_supca~M
+{col 1}q632_plaus~3{col 15}q630_1_oth~8{col 29}q634_1_pes~2{col 43}q635_usekh~6{col 57}q635_usek~10{col 71}q660_weedf~M{col 85}q676_pestp~M{col 99}q702_supca~F
+{col 1}q630_chemf~4{col 15}q630_2_che~8{col 29}q634_2_pes~2{col 43}q635_1_pla~6{col 57}q635_1_pl~10{col 71}q661_weedf~F{col 85}q677_pestp~F{col 99}q703_supca~C
+{col 1}q630_1_che~4{col 15}q631_usekh~8{col 29}q635_usekh~2{col 43}q634_pestq~7{col 57}q637_casla~M{col 71}q662_weedf~C{col 85}q678_pestp~C{col 99}q704_suppe~M
+{col 1}q630_2_che~4{col 15}q632_plaus~8{col 29}q635_1_pla~2{col 43}q634_1_pes~7{col 57}q638_casla~F{col 71}q664_sowca~M{col 85}q679_pestf~M{col 99}q705_suppe~F
+{col 1}q631_usekh~4{col 15}q629_chemf~9{col 29}q634_pestq~3{col 43}q634_1_oth~7{col 57}q639_casla~C{col 71}q665_sowca~F{col 85}q680_pestf~F{col 99}q706_suppe~C
+{col 1}q632_plaus~4{col 15}q630_chemf~9{col 29}q634_1_pes~3{col 43}q634_2_pes~7{col 57}q640_perml~M{col 71}q666_sowca~C{col 85}q682_irrma~M{col 99}q707_supfa~M
+{col 1}q630_chemf~5{col 15}q630_1_che~9{col 29}q634_1_oth~3{col 43}q635_usekh~7{col 57}q641_perml~f{col 71}q667_sowpe~M{col 85}q683_irrma~F{col 99}q708_supfa~F
+{col 1}q630_1_che~5{col 15}q630_1_oth~9{col 29}q634_2_pes~3{col 43}q635_1_pla~7{col 57}q643_famdayM{col 71}q668_sowpe~F{col 85}q684_irrma~C{col 99}q709_supfa~C
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Logic check
+. ds q600_culirrcrop_count-q709_supfamlabdayC, has(type numeric)
+{txt}{col 1}q600_culir~t{col 15}q631_usekh~5{col 29}q631_usekh~9{col 43}q635_1_pla~3{col 57}q634_1_pes~8{col 71}q646_trapl~M{col 85}q670_sowfa~M{col 99}q686_irrma~F
+{col 1}q630_chemf~1{col 15}q632_plaus~5{col 29}q632_plaus~9{col 43}q634_pestq~4{col 57}q634_1_oth~8{col 71}q647_trapl~F{col 85}q671_sowfa~F{col 99}q687_irrma~C
+{col 1}q630_1_che~1{col 15}q630_chemf~6{col 29}q629_chem~10{col 43}q634_1_pes~4{col 57}q634_2_pes~8{col 71}q648_trapl~C{col 85}q672_sowfa~C{col 99}q688_irrma~M
+{col 1}q630_2_che~1{col 15}q630_1_che~6{col 29}q630_chem~10{col 43}q634_2_pes~4{col 57}q635_usekh~8{col 71}q648_1_tra~M{col 85}q672_1_fer~M{col 99}q689_irrma~F
+{col 1}q631_usekh~1{col 15}q630_2_che~6{col 29}q630_1_ch~10{col 43}q635_usekh~4{col 57}q635_1_pla~8{col 71}q649_trape~F{col 85}q672_2_fer~F{col 99}q690_irrma~C
+{col 1}q632_plaus~1{col 15}q631_usekh~6{col 29}q630_1_ot~10{col 43}q635_1_pla~4{col 57}q634_pestq~9{col 71}q650_trape~c{col 85}q672_3_fer~C{col 99}q691_harca~M
+{col 1}q630_chemf~2{col 15}q632_plaus~6{col 29}q630_2_ch~10{col 43}q634_pestq~5{col 57}q634_1_pes~9{col 71}q651_trafa~M{col 85}q672_4_fer~M{col 99}q692_harca~F
+{col 1}q630_1_che~2{col 15}q630_chemf~7{col 29}q631_usek~10{col 43}q634_1_pes~5{col 57}q634_1_oth~9{col 71}q652_trafa~C{col 85}q672_5_fer~F{col 99}q693_harca~C
+{col 1}q630_2_che~2{col 15}q630_1_che~7{col 29}q632_plau~10{col 43}q634_2_pes~5{col 57}q634_2_pes~9{col 71}q653_trafa~C{col 85}q672_6_fer~C{col 99}q694_harpe~M
+{col 1}q631_usekh~2{col 15}q630_1_oth~7{col 29}q634_pestq~1{col 43}q635_usekh~5{col 57}q635_usekh~9{col 71}q654_weedc~M{col 85}q672_7_fer~M{col 99}q695_harpe~F
+{col 1}q632_plaus~2{col 15}q630_2_che~7{col 29}q634_1_pes~1{col 43}q635_1_pla~5{col 57}q635_1_pla~9{col 71}q655_weedc~F{col 85}q672_8_fer~F{col 99}q696_harpe~C
+{col 1}q630_chemf~3{col 15}q631_usekh~7{col 29}q634_2_pes~1{col 43}q634_pestq~6{col 57}q634_pest~10{col 71}q656_weedc~C{col 85}q672_9_fer~C{col 99}q697_harfa~M
+{col 1}q630_1_che~3{col 15}q632_plaus~7{col 29}q635_usekh~1{col 43}q634_1_pes~6{col 57}q634_1_pe~10{col 71}q657_weedp~M{col 85}q673_1_pes~M{col 99}q698_harfa~F
+{col 1}q630_2_che~3{col 15}q630_chemf~8{col 29}q635_1_pla~1{col 43}q634_1_oth~6{col 57}q634_1_ot~10{col 71}q658_weedp~F{col 85}q674_pestc~F{col 99}q699_harfa~C
+{col 1}q631_usekh~3{col 15}q630_1_che~8{col 29}q634_pestq~2{col 43}q634_2_pes~6{col 57}q634_2_pe~10{col 71}q659_weedp~C{col 85}q675_pestc~C{col 99}q701_supca~M
+{col 1}q632_plaus~3{col 15}q630_1_oth~8{col 29}q634_1_pes~2{col 43}q635_usekh~6{col 57}q635_usek~10{col 71}q660_weedf~M{col 85}q676_pestp~M{col 99}q702_supca~F
+{col 1}q630_chemf~4{col 15}q630_2_che~8{col 29}q634_2_pes~2{col 43}q635_1_pla~6{col 57}q635_1_pl~10{col 71}q661_weedf~F{col 85}q677_pestp~F{col 99}q703_supca~C
+{col 1}q630_1_che~4{col 15}q631_usekh~8{col 29}q635_usekh~2{col 43}q634_pestq~7{col 57}q637_casla~M{col 71}q662_weedf~C{col 85}q678_pestp~C{col 99}q704_suppe~M
+{col 1}q630_2_che~4{col 15}q632_plaus~8{col 29}q635_1_pla~2{col 43}q634_1_pes~7{col 57}q638_casla~F{col 71}q664_sowca~M{col 85}q679_pestf~M{col 99}q705_suppe~F
+{col 1}q631_usekh~4{col 15}q629_chemf~9{col 29}q634_pestq~3{col 43}q634_1_oth~7{col 57}q639_casla~C{col 71}q665_sowca~F{col 85}q680_pestf~F{col 99}q706_suppe~C
+{col 1}q632_plaus~4{col 15}q630_chemf~9{col 29}q634_1_pes~3{col 43}q634_2_pes~7{col 57}q640_perml~M{col 71}q666_sowca~C{col 85}q682_irrma~M{col 99}q707_supfa~M
+{col 1}q630_chemf~5{col 15}q630_1_che~9{col 29}q634_1_oth~3{col 43}q635_usekh~7{col 57}q641_perml~f{col 71}q667_sowpe~M{col 85}q683_irrma~F{col 99}q708_supfa~F
+{col 1}q630_1_che~5{col 15}q630_1_oth~9{col 29}q634_2_pes~3{col 43}q635_1_pla~7{col 57}q643_famdayM{col 71}q668_sowpe~F{col 85}q684_irrma~C{col 99}q709_supfa~C
+{col 1}q630_2_che~5{col 15}q630_2_che~9{col 29}q635_usekh~3{col 43}q634_pestq~8{col 57}q644_famdayF{col 71}q669_sowpe~C{col 85}q685_irrma~M
+
+{com}. loc H3vars_num `r(varlist)'
+{txt}
+{com}. ds q600_culirrcrop_count-q709_supfamlabdayC, has(type string)
+{txt}{col 1}q629_chemf~1{col 15}q629_chemf~3{col 29}q629_chemf~5{col 43}q629_chemf~7{col 57}q633_pestn~2{col 71}q634_1_oth~4{col 85}q633_pestn~7{col 99}q642_perml~C
+{col 1}q630_1_oth~1{col 15}q630_1_oth~3{col 29}q630_1_oth~5{col 43}q629_chemf~8{col 57}q634_1_oth~2{col 71}q633_pestn~5{col 85}q633_pestn~8{col 99}q645_famdayC
+{col 1}q629_chemf~2{col 15}q629_chemf~4{col 29}q629_chemf~6{col 43}q633_pestn~1{col 57}q633_pestn~3{col 71}q634_1_oth~5{col 85}q633_pestn~9{col 99}q681_pestf~C
+{col 1}q630_1_oth~2{col 15}q630_1_oth~4{col 29}q630_1_oth~6{col 43}q634_1_oth~1{col 57}q633_pestn~4{col 71}q633_pestn~6{col 85}q633_pest~10
+
+{com}. loc H3vars_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local H3vars_num {c -(}
+{txt}  2{com}.         qui replace `var'=.m if ((q600_culirrcrop==2) & (!mi(`var')))
+{txt}  3{com}. {c )-}
+{txt}
+{com}. foreach var of local H3vars_str {c -(}
+{txt}  2{com}.         qui replace `var'="Valid Skip" if (q600_culirrcrop==2)
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionH3_H5_IrregularCrops_Costs_cleaned.dta", replace
+{txt}file C:/Users/mbrooks/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionH3_H5_IrregularCrops_Costs_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

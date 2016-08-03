@@ -1,0 +1,381 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/IN_rainfall_intervention.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}20 May 2016, 10:31:45
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import datasets
+> ****************************************************************/
+. 
+. // Round 3 data
+. 
+. use "${c -(}IN_rainfall_r2r3{c )-}/Sample/Randomization/pii_data/round 3/insur_final.dta", clear
+{txt}
+{com}. gen hhid =  a_1hhid
+{txt}
+{com}. label var hhid "Household ID"
+{txt}
+{com}. sort hhid
+{txt}
+{com}. tempfile temp1
+{txt}
+{com}. save `temp1'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000001.tmp saved
+
+{com}. 
+. // Opening Data from Round1
+. 
+. use "${c -(}IN_rainfall_r2r3{c )-}/Sample/Randomization/pii_data/Final/all_mig_ins_final.dta", clear
+{txt}
+{com}. sort hhid
+{txt}
+{com}. 
+. //Merging
+. merge 1:1 hhid using `temp1', assert(1 3) nogen
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           2,731
+{txt}{col 9}from master{col 30}{res}           2,731{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}matched{col 30}{res}           2,824{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. /****************************************************************
+>         SECTION 2: Generate intervention variables
+> ****************************************************************/
+. 
+. 
+. //Creating variable for Round 1 
+. gen r1_treatment = baseline_hhd
+{txt}
+{com}. label var r1_treatment "Intervention in Round 1"
+{txt}
+{com}. drop baseline_hhd
+{txt}
+{com}. 
+. //Creating & renaming variable for Round 2
+. gen r2_treatment = 0
+{txt}
+{com}. label var r2_treatment "Intervention in Round 2"
+{txt}
+{com}. replace r2_treatment = 1 if migration == 1
+{txt}(1215 real changes made)
+
+{com}. replace r2_treatment = 2 if migration == 2
+{txt}(524 real changes made)
+
+{com}. replace r2_treatment = 3 if insur_offer == 1
+{txt}(1624 real changes made)
+
+{com}. tab r2_treatment
+
+{txt}Interventio {c |}
+ n in Round {c |}
+          2 {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}      2,192       39.46       39.46
+{txt}          1 {c |}{res}      1,215       21.87       61.33
+{txt}          2 {c |}{res}        524        9.43       70.77
+{txt}          3 {c |}{res}      1,624       29.23      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      5,555      100.00
+{txt}
+{com}. 
+. rename insur_offer r2_insurance
+{res}{txt}
+{com}. label var r2_insurance "Offered insurance in round 2"
+{txt}
+{com}. rename migration r2_migration
+{res}{txt}
+{com}. label var r2_migration "Offered migration in round 2"
+{txt}
+{com}. 
+. //Creating & renaming variable for Round 3
+. rename insurance_r3 r3_insurance
+{res}{txt}
+{com}. 
+. // Apply Round 3 intervention modification
+. replace r3_insurance=1 if (r3_insurance==2 & state=="TN") // TN did NOT receive IMD forecast.
+{txt}(192 real changes made)
+
+{com}. note r3_insurance: Tamil Nadu did NOT receive IMD forecast
+{res}{txt}
+{com}. 
+. gen r3_treatment =.
+{txt}(5555 missing values generated)
+
+{com}. label var r3_treatment "Intervention in Round 3"
+{txt}
+{com}. *replace r3_treatment = 1 if r3_insurance == 0
+. *tab r3_insurance, nolabel
+. replace r3_treatment = 1 if r3_insurance == 1
+{txt}(1602 real changes made)
+
+{com}. replace r3_treatment = 2 if r3_insurance == 2
+{txt}(1222 real changes made)
+
+{com}. note r3_treatment: Tamil Nadu did NOT receive IMD forecast
+{res}{txt}
+{com}. 
+. // Label variables
+. label define round11 0 "Control" 1 "Insurance"
+{txt}
+{com}. label define round22 0 "Control" 1 "Mig-Ticket" 2 "Mig-Cash" 3 "Insurance"
+{txt}
+{com}. label define round33 1 "Insurance" 2 "Insurance+IMD"
+{txt}
+{com}. label value r1_treatment round11
+{txt}
+{com}. label value r2_treatment round22
+{txt}
+{com}. label value r3_treatment round33
+{txt}
+{com}. 
+. tab r1_treatment r2_treatment
+
+{txt}Interventi {c |}
+     on in {c |}           Intervention in Round 2
+   Round 1 {c |}   Control  Mig-Ticke   Mig-Cash  Insurance {c |}     Total
+{hline 11}{c +}{hline 44}{c +}{hline 10}
+   Control {c |}{res}       659        333        151        479 {txt}{c |}{res}     1,622 
+{txt} Insurance {c |}{res}     1,533        882        373      1,145 {txt}{c |}{res}     3,933 
+{txt}{hline 11}{c +}{hline 44}{c +}{hline 10}
+     Total {c |}{res}     2,192      1,215        524      1,624 {txt}{c |}{res}     5,555 
+
+{txt}
+{com}. tab r1_treatment r3_treatment
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 1 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       405        403 {txt}{c |}{res}       808 
+{txt} Insurance {c |}{res}     1,197        819 {txt}{c |}{res}     2,016 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,602      1,222 {txt}{c |}{res}     2,824 
+
+{txt}
+{com}. tab r2_treatment r3_treatment
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 2 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       218        135 {txt}{c |}{res}       353 
+{txt}Mig-Ticket {c |}{res}       358        244 {txt}{c |}{res}       602 
+{txt}  Mig-Cash {c |}{res}       162         98 {txt}{c |}{res}       260 
+{txt} Insurance {c |}{res}       864        745 {txt}{c |}{res}     1,609 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,602      1,222 {txt}{c |}{res}     2,824 
+
+{txt}
+{com}. 
+. // This gives us "Pure Control"tab round1 round2 if state == "AP"
+. 
+. count if r1_treatment == 0 & r2_treatment == 0 & r3_treatment ==0
+{res}    0
+{txt}
+{com}. 
+. tab r1_treatment r2_treatment if state == "AP"
+
+{txt}Interventi {c |}
+     on in {c |}           Intervention in Round 2
+   Round 1 {c |}   Control  Mig-Ticke   Mig-Cash  Insurance {c |}     Total
+{hline 11}{c +}{hline 44}{c +}{hline 10}
+   Control {c |}{res}       471        311        136        182 {txt}{c |}{res}     1,100 
+{txt} Insurance {c |}{res}       601        509        204        276 {txt}{c |}{res}     1,590 
+{txt}{hline 11}{c +}{hline 44}{c +}{hline 10}
+     Total {c |}{res}     1,072        820        340        458 {txt}{c |}{res}     2,690 
+
+{txt}
+{com}. tab r1_treatment r2_treatment if state == "TN"
+
+{txt}Interventi {c |}
+     on in {c |}           Intervention in Round 2
+   Round 1 {c |}   Control  Mig-Ticke   Mig-Cash  Insurance {c |}     Total
+{hline 11}{c +}{hline 44}{c +}{hline 10}
+   Control {c |}{res}         1          0          0          0 {txt}{c |}{res}         1 
+{txt} Insurance {c |}{res}       298        230        110        135 {txt}{c |}{res}       773 
+{txt}{hline 11}{c +}{hline 44}{c +}{hline 10}
+     Total {c |}{res}       299        230        110        135 {txt}{c |}{res}       774 
+
+{txt}
+{com}. tab r1_treatment r2_treatment if state == "UP"
+
+{txt}Interventi {c |}
+     on in {c |}           Intervention in Round 2
+   Round 1 {c |}   Control  Mig-Ticke   Mig-Cash  Insurance {c |}     Total
+{hline 11}{c +}{hline 44}{c +}{hline 10}
+   Control {c |}{res}       187         22         15        297 {txt}{c |}{res}       521 
+{txt} Insurance {c |}{res}       634        143         59        734 {txt}{c |}{res}     1,570 
+{txt}{hline 11}{c +}{hline 44}{c +}{hline 10}
+     Total {c |}{res}       821        165         74      1,031 {txt}{c |}{res}     2,091 
+
+{txt}
+{com}. 
+. tab r1_treatment r3_treatment if state == "AP"
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 1 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       239        255 {txt}{c |}{res}       494 
+{txt} Insurance {c |}{res}       376        394 {txt}{c |}{res}       770 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       615        649 {txt}{c |}{res}     1,264 
+
+{txt}
+{com}. tab r1_treatment r3_treatment if state == "AP"
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 1 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       239        255 {txt}{c |}{res}       494 
+{txt} Insurance {c |}{res}       376        394 {txt}{c |}{res}       770 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       615        649 {txt}{c |}{res}     1,264 
+
+{txt}
+{com}. tab r1_treatment r3_treatment if state == "UP"
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 1 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       166        148 {txt}{c |}{res}       314 
+{txt} Insurance {c |}{res}       424        425 {txt}{c |}{res}       849 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       590        573 {txt}{c |}{res}     1,163 
+
+{txt}
+{com}. 
+. tab r2_treatment r3_treatment if state == "AP"
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 2 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}       122        119 {txt}{c |}{res}       241 
+{txt}Mig-Ticket {c |}{res}       203        199 {txt}{c |}{res}       402 
+{txt}  Mig-Cash {c |}{res}        85         84 {txt}{c |}{res}       169 
+{txt} Insurance {c |}{res}       205        247 {txt}{c |}{res}       452 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       615        649 {txt}{c |}{res}     1,264 
+
+{txt}
+{com}. tab r2_treatment r3_treatment if state == "TN"
+
+           {txt}{c |} Interventi
+Interventi {c |}   on in
+     on in {c |}  Round 3
+   Round 2 {c |} Insurance {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+   Control {c |}{res}        84 {txt}{c |}{res}        84 
+{txt}Mig-Ticket {c |}{res}       120 {txt}{c |}{res}       120 
+{txt}  Mig-Cash {c |}{res}        58 {txt}{c |}{res}        58 
+{txt} Insurance {c |}{res}       135 {txt}{c |}{res}       135 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}       397 {txt}{c |}{res}       397 
+
+{txt}
+{com}. tab r2_treatment r3_treatment if state == "UP"
+
+{txt}Interventi {c |} Intervention in Round
+     on in {c |}           3
+   Round 2 {c |} Insurance  Insurance {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+   Control {c |}{res}        12         16 {txt}{c |}{res}        28 
+{txt}Mig-Ticket {c |}{res}        35         45 {txt}{c |}{res}        80 
+{txt}  Mig-Cash {c |}{res}        19         14 {txt}{c |}{res}        33 
+{txt} Insurance {c |}{res}       524        498 {txt}{c |}{res}     1,022 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}       590        573 {txt}{c |}{res}     1,163 
+
+{txt}
+{com}. 
+. tab r2_insurance r2_migration
+{txt}no observations
+
+{com}. 
+. /****************************************************************
+>         SECTION 3: Clean dataset
+> ****************************************************************/
+. 
+. // Change variable type
+. destring blockid districtid tehsilid blockid stateid villageid, replace
+{txt}blockid already numeric; no {res}replace
+{txt}districtid already numeric; no {res}replace
+{txt}tehsilid has all characters numeric; {res}replaced {txt}as {res}int
+{txt}blockid already numeric; no {res}replace
+{txt}stateid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}villageid already numeric; no {res}replace
+{txt}
+{com}. 
+. // Merging ID variables
+. // There are two differet id variables which need to be merged
+. // "${c -(}IN_rainfall_r2r3{c )-}/Sample/Randomization/pii_data/Final/all_mig_ins_final.dta" has more complete information, so we will use id variable from this data
+. drop bkchk-blockname
+{txt}
+{com}. drop b_1findecmaker-b_8_contactno
+{txt}
+{com}. 
+. // Label values to State ID
+. label define statevalue 10 "Uttar Pradesh" 16 "Andhra Pradesh" 17 "Tamil Nadu"
+{txt}
+{com}. label value stateid statevalue
+{txt}
+{com}. 
+. // Rename state variable
+. replace state = "Andhra Pradesh" if state == "AP"
+{txt}(2690 real changes made)
+
+{com}. replace state = "Uttar Pradesh" if state == "UP"
+{txt}(2091 real changes made)
+
+{com}. replace state = "Tamil Nadu" if state == "TN"
+{txt}(774 real changes made)
+
+{com}. 
+. // Rename household Id variable name to be merged with round 2/3 datasets
+. rename hhid a_1hhid
+{res}{txt}
+{com}. replace a_1hhid=upper(a_1hhid)
+{txt}(1 real change made)
+
+{com}. 
+. // Drop unnecessary variables
+. drop respondentname-streetname
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 4: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}r3_insurance was {res}float{txt} now {res}byte
+  {txt}r1_treatment was {res}float{txt} now {res}byte
+  {txt}r2_treatment was {res}float{txt} now {res}byte
+  {txt}r3_treatment was {res}float{txt} now {res}byte
+  {txt}r2_insurance was {res}double{txt} now {res}byte
+  {txt}r2_migration was {res}double{txt} now {res}byte
+  {txt}reds_vill was {res}str9{txt} now {res}str8
+  {txt}district was {res}str19{txt} now {res}str15
+  {txt}tehsil was {res}str19{txt} now {res}str17
+{txt}  (183,315 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/intervention/IN_rainfall_intervention.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/intervention/IN_rainfall_intervention.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

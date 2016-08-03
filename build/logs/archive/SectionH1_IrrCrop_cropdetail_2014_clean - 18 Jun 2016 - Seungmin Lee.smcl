@@ -1,0 +1,332 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionH1_IrrCrop_cropdetail_2014_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Jun 2016, 22:04:27
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. // Q304
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q304_culirrcropyear q304_count
+{txt}
+{com}. lab var q304_culirrcropyear "Cultivated irregular crop in 2014 (or plan to cultivate in 2015)"
+{txt}
+{com}. 
+. tempfile q304
+{txt}
+{com}. save `q304'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. 
+. // H1 Roster data
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionH1Roster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionH1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q306_cropvarseed was 
+str15, now str16 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+q308_plancropmay11 was 
+str1, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionH1Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q307_cropcode was 
+str3, now str4 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Destring and recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q305_namcrop contains nonnumeric characters; no {res}replace
+{txt}q306_cropvarseed contains nonnumeric characters; no {res}replace
+{txt}q306_1_SeedVariety contains nonnumeric characters; no {res}replace
+{txt}q307_cropcode has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q308_plancropmay11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q309_mstrecplanMM has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q309_1_mstrecplantYY has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q310_areaplaqua has all characters numeric; {res}replaced {txt}as {res}double
+{txt}q310_1_areaplaunit has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(90 missing values generated)
+q310_1_areaplaunit_oth contains nonnumeric characters; no {res}replace
+{txt}q313_harcropmay11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q314_harmm has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q314_1haryy has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q312_areaplanquant has all characters numeric; {res}replaced {txt}as {res}double
+{txt}q312_1_areaplanunit has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(163 missing values generated)
+q312_1_areaplanunit_oth contains nonnumeric characters; no {res}replace
+{txt}q310_2_planplantmm has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q311_planplantcropmm has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q311_1_planplantcropyy has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q315_numharvcroplasthr has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q309_mstre~M{col 29}q310_1_are~t{col 43}q314_1haryy{col 57}q310_2_pla~m{col 71}q315_numha~r
+{col 1}q307_cropc~e{col 15}q309_1_mst~Y{col 29}q313_harc~11{col 43}q312_areap~t{col 57}q311_planp~m
+{col 1}q308_plan~11{col 15}q310_areap~a{col 29}q314_harmm{col 43}q312_1_are~t{col 57}q311_1_pla~y
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Label variables
+. label var q305_namcrop "Name of crop grown"
+{txt}
+{com}. label var q306_cropvarseed "Crop variety, seed variety"
+{txt}
+{com}. label var q306_1_SeedVariety "Seed variety generation"
+{txt}
+{com}. label var q307_cropcode "Crop code"
+{txt}
+{com}. label var q308_plancropmay11 "Planted this crop since June 2014?"
+{txt}
+{com}. rename q308_plancropmay11 q308_plancropjune14
+{res}{txt}
+{com}. label var q309_mstrecplanMM "Month of planting"
+{txt}
+{com}. label var q309_1_mstrecplantYY "Year of planting"
+{txt}
+{com}. label var q310_areaplaqua "Area of crop"
+{txt}
+{com}. label var q310_1_areaplaunit "Unit for area of crop"
+{txt}
+{com}. label var q310_1_areaplaunit_oth "Other unit for area of crop"
+{txt}
+{com}. label var q313_harcropmay11 "Harvested crop since January 2014"
+{txt}
+{com}. rename q313_harcropmay11 q313_harcropjan14
+{res}{txt}
+{com}. label var q314_harmm "Month of harvest"
+{txt}
+{com}. label var q314_1haryy "Year of harvest"
+{txt}
+{com}. label var q312_areaplanquant "Area PLAN to plant crop"
+{txt}
+{com}. label var q312_1_areaplanunit "Unit for area PLAN to plant crop"
+{txt}
+{com}. label var q312_1_areaplanunit_oth "Other unit for area PLAN to plant crop"
+{txt}
+{com}. label var q310_2_planplantmm "Plan to plant crop again before May 2015"
+{txt}
+{com}. label var q311_planplantcropmm "Expected month of planting"
+{txt}
+{com}. label var q311_1_planplantcropyy "Expected year of planting"
+{txt}
+{com}. label var q315_numharvcroplasthr "Number of harvests of this crop in last three years"
+{txt}
+{com}. 
+. // Clean q305_namcrop
+. replace q305_namcrop="NA" if q305_namcrop=="-666"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="POTATO" if q305_namcrop=="ALOO" | q305_namcrop=="ALOOU" | q305_namcrop=="ALUO" | q305_namcrop=="P0TAT0" | q305_namcrop=="P0TATO" | q305_namcrop=="PATATO" | q305_namcrop=="PATOTO" | q305_namcrop=="POPTATO" | q305_namcrop=="POTATOO" | q305_namcrop=="POTETO"
+{txt}(12 real changes made)
+
+{com}. replace q305_namcrop="ARALI" if q305_namcrop=="ARALLI"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="BLACK GRAM" if q305_namcrop=="BLACKGRAM" | q305_namcrop=="BALACK GRAM" | q305_namcrop=="BALCK GRAM"
+{txt}(6 real changes made)
+
+{com}. replace q305_namcrop="CAULIFLOWER" if q305_namcrop=="BHOL GOBHI"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="COCONUT" if q305_namcrop=="C0C0NUT" | q305_namcrop=="C0C0UNT" | q305_namcrop=="CO-CONUT" | q305_namcrop=="COCONET" | q305_namcrop=="COCONUTS" | q305_namcrop=="COCOUNET" | q305_namcrop=="COCOUNT" | q305_namcrop=="COCUNUT"
+{txt}(29 real changes made)
+
+{com}. replace q305_namcrop="COTTON" if q305_namcrop=="PARUTHI" | q305_namcrop=="COOTON" | q305_namcrop=="COTON" | q305_namcrop=="COTTAN" | q305_namcrop=="CTTON"
+{txt}(7 real changes made)
+
+{com}. replace q305_namcrop="SUGARCANE" if q305_namcrop=="GANNA"
+{txt}(35 real changes made)
+
+{com}. replace q305_namcrop="GROUNDNUT" if q305_namcrop=="GROUNDENUT"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="SORGHUM" if q305_namcrop=="GUVAR KI FALI" | q305_namcrop=="JWAR"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="BITTER GOURD" if q305_namcrop=="KARELA"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="GARLIC" if q305_namcrop=="LAHSOON"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="BOTTLE GUARD" if q305_namcrop=="LOUKI"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="MAIZE" if q305_namcrop=="MAIZA" | q305_namcrop=="MAZIA" | q305_namcrop=="MAZINE"
+{txt}(3 real changes made)
+
+{com}. replace q305_namcrop="PEAS" if q305_namcrop=="MATAR"
+{txt}(4 real changes made)
+
+{com}. replace q305_namcrop="CHILLI" if q305_namcrop=="MERICHI" | q305_namcrop=="MIRCHI"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="RED GRAM" if q305_namcrop=="KANDI" | q305_namcrop=="ARAHAR" | q305_namcrop=="ARHAR"
+{txt}(8 real changes made)
+
+{com}. replace q305_namcrop="TAPIOCA" if q305_namcrop=="KAPPAKKILANGU"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="PADDY" if q305_namcrop=="PA" | q305_namcrop=="PATTI" | q305_namcrop=="PEEDY"
+{txt}(3 real changes made)
+
+{com}. replace q305_namcrop="GREEN POTATO" if q305_namcrop=="PARWAL"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="PIGEON PEA" if q305_namcrop=="PEGION PEA" | q305_namcrop=="PIGEON" | q305_namcrop=="PIGEONPEA"
+{txt}(9 real changes made)
+
+{com}. replace q305_namcrop="PEPPERMINT" if q305_namcrop=="PIPERMINT"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="PUMPKIN" if q305_namcrop=="PUMKIN"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="MARIGOLD" if q305_namcrop=="SAMANTHI"
+{txt}(1 real change made)
+
+{com}. replace q305_namcrop="MUSTARD LEAVES" if q305_namcrop=="SARS0" | q305_namcrop=="SASRSO" | q305_namcrop=="SARSOAN"
+{txt}(2 real changes made)
+
+{com}. replace q305_namcrop="SESAME" if q305_namcrop=="SESAMAM"
+{txt}(3 real changes made)
+
+{com}. replace q305_namcrop="SUGAR CANE" if q305_namcrop=="SHUGAR CANE" | q305_namcrop=="SHUGARCANE" | q305_namcrop=="SUGAR CANCE" | q305_namcrop=="SUGARCAIN" | q305_namcrop=="SUGARCAN" | q305_namcrop=="SUGARCANA" | q305_namcrop=="SUGARCANE" | q305_namcrop=="SUGARHAND" | q305_namcrop=="SUGARCARN" | q305_namcrop=="SUGARGAN" | q305_namcrop=="SUGER CANE" | q305_namcrop=="SUGERCANE" | q305_namcrop=="SUGGARCANE" | q305_namcrop=="SUGGER CANE" | q305_namcrop=="SUGSRCANR" | q305_namcrop=="SUGAR" | q305_namcrop=="\SUGARCANE"
+{txt}(105 real changes made)
+
+{com}. replace q305_namcrop="TOBACCO" if q305_namcrop=="TAMBAKU" | q305_namcrop=="TOBACCCO" | q305_namcrop=="TOBACCCO.TAMBAKU" | q305_namcrop=="TOBACCO" | q305_namcrop=="TOBACCOO" | q305_namcrop=="TOBBACCCO" | q305_namcrop=="TOBBACCO"
+{txt}(20 real changes made)
+
+{com}. replace q305_namcrop="TOMATO" if q305_namcrop=="TOMOTO"
+{txt}(1 real change made)
+
+{com}. 
+. label value q308_plancropjune14 yesno
+{txt}
+{com}. label value q309_mstrecplanMM months
+{txt}
+{com}. label value q310_1_areaplaunit units
+{txt}
+{com}. 
+. replace q310_1_areaplaunit_oth="-555" if q310_1_areaplaunit_oth=="0"
+{txt}(2 real changes made)
+
+{com}. replace q310_areaplaqua=-666 if q310_1_areaplaunit_oth=="NO CROP"
+{txt}(1 real change made)
+
+{com}. replace q310_1_areaplaunit=-555 if missing( q310_1_areaplaunit)
+{txt}(97 real changes made)
+
+{com}. replace q310_1_areaplaunit_oth="-666" if q310_1_areaplaunit_oth=="NO CROP"
+{txt}(1 real change made)
+
+{com}. destring q310_1_areaplaunit_oth, replace
+{txt}q310_1_areaplaunit_oth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. label value q310_1_areaplaunit_oth general
+{txt}
+{com}. 
+. replace q312_1_areaplanunit_oth="-666" if q312_1_areaplanunit_oth=="N0" | q312_1_areaplanunit_oth=="ALLRADY CONTINUE COCUNUT." | q312_1_areaplanunit_oth=="ALLRADY CULTIVATION" | q312_1_areaplanunit_oth=="0" | q312_1_areaplanunit_oth=="NO LAND" | q312_1_areaplanunit_oth=="AB NHI BUWAI KRENGE" | q312_1_areaplanunit_oth=="NO YEILDING"
+{txt}(16 real changes made)
+
+{com}. destring q312_1_areaplanunit_oth, replace
+{txt}q312_1_areaplanunit_oth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. replace q312_1_areaplanunit=-555 if missing( q312_1_areaplanunit)
+{txt}(209 real changes made)
+
+{com}. label value q312_1_areaplanunit_oth general
+{txt}
+{com}. 
+. label value q313_harcropjan14 yesno
+{txt}
+{com}. label value q314_harmm months
+{txt}
+{com}. label value q310_2_planplantmm yesno
+{txt}
+{com}. label value q311_planplantcropmm months
+{txt}
+{com}. 
+. // Merge
+. merge m:1 Id using `q304', nogen keep(2 3)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           4,628
+{txt}{col 9}from master{col 30}{res}               0{txt}  
+{col 9}from using{col 30}{res}           4,628{txt}  
+
+{col 5}matched{col 30}{res}             507{txt}  
+{col 5}{hline 41}
+
+{com}. order q304_culirrcropyear q304_count, after(Id)
+{txt}
+{com}. 
+. 
+. 
+. // Apply logic check
+. ds q304_count-q315_numharvcroplasthr, has(type numeric)
+{txt}{col 1}q304_count{col 15}q308_plan~14{col 29}q310_areap~a{col 43}q313_harc~14{col 57}q312_areap~t{col 71}q310_2_pla~m{col 85}q315_numha~r
+{col 1}subid{col 15}q309_mstre~M{col 29}q310_1_are~t{col 43}q314_harmm{col 57}q312_1_are~t{col 71}q311_planp~m
+{col 1}q307_cropc~e{col 15}q309_1_mst~Y{col 29}q310_1_are~h{col 43}q314_1haryy{col 57}q312_1_are~h{col 71}q311_1_pla~y
+
+{com}. loc H1vars_num `r(varlist)'
+{txt}
+{com}. ds q304_count-q315_numharvcroplasthr, has(type string)
+{txt}{col 1}q305_namcrop{col 15}q306_cropv~d{col 29}q306_1_See~y
+
+{com}. loc H1vars_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local E2vars_num {c -(}
+{txt}  2{com}.         replace `var'=.m if ((q304_culirrcropyear==2) & (!mi(`var')))
+{txt}  3{com}. {c )-}
+{txt}
+{com}. foreach var of local E2vars_str {c -(}
+{txt}  2{com}.         replace `var'="Valid Skip" if (q304_culirrcropyear==2)
+{txt}  3{com}. {c )-}
+{txt}
+{com}. *
+. 
+. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. qui compress
+{txt}
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionH1_IrrCrop_cropdetail_2014_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionH1_IrrCrop_cropdetail_2014_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

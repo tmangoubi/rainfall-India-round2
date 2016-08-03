@@ -1,0 +1,379 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM3_Migration_CropSeason_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}15 Jun 2016, 23:49:41
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. keep Id q218_4_migratetemper q218_5_reasonmig q218_5_reasonmig_oth
+{txt}
+{com}. order Id q218_4_migratetemper q218_5_reasonmig q218_5_reasonmig_oth
+{txt}
+{com}. * keep if (q218_2_mwl==1) // Only those who answered "Yes" answered the rest of M2 section.
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}q218_4_migratetemper already numeric; no {res}replace
+{txt}q218_5_reasonmig already numeric; no {res}replace
+{txt}q218_5_reasonmig_oth contains nonnumeric characters; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}q218_4_mig~r{col 15}q218_5_rea~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}.         if ("`var'" == "q218_4_migratetemper") {c -(}
+{txt}  5{com}.                 qui recode `var' (-222=.n)
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. // Label variable
+. label define yesno 1 "Yes" 2 "No", replace
+{txt}
+{com}. label value q218_4_migratetemper yesno
+{txt}
+{com}. 
+. // Save
+. tempfile q218
+{txt}
+{com}. save `q218'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000001.tmp saved
+
+{com}. 
+. // M3 - Cropping Season Migration (Roster)
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM3Roster_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM3Roster_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM3Roster_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+qM3_BHHID was 
+str4, now str30 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring & recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}qM3_BHHID contains nonnumeric characters; no {res}replace
+{txt}qM3_HHRID contains nonnumeric characters; no {res}replace
+{txt}q218_6_migsearwor has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q218_7_timesmig has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q218_6_mig~r{col 29}q218_7_tim~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid skip)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /// Label variables
+> label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var qM3_BHHID "Baseline HH Roster ID"
+{txt}
+{com}. label var qM3_HHRID "Current HH Roster ID"
+{txt}
+{com}. label var q218_6_migsearwor "Did this sperson Migrate in search of work? - Cropping Season"
+{txt}
+{com}. label value q218_6_migsearwor yesno
+{txt}
+{com}. label var q218_7_timesmig "How many times did this person migrated during Cropping Season?"
+{txt}
+{com}. 
+. /// Save
+> tempfile SecM3_Roster
+{txt}
+{com}. save `SecM3_Roster'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000002.tmp saved
+
+{com}. 
+. 
+. // M3 - Cropping Season Migration (q218.8 ~ q218.14)
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM2B_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM2B_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM2B_1.dta" 
+{txt}
+{com}. isid Id subid q218_8_migepisode
+{txt}
+{com}. 
+. 
+. /// Destring and recode variables
+> /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric characters; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q218_8_migepisode has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q218_9_migweek has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_10_migmonth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_11_daysepisode has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_12_priresonmig has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_12_priresonmig_oth contains nonnumeric characters; no {res}replace
+{txt}q218_12_industrywork has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_12_industrywork_oth contains nonnumeric characters; no {res}replace
+{txt}q218_13_priactivity has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_13_priactivity_oth contains nonnumeric characters; no {res}replace
+{txt}q218_14_avgdailywage has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_15_avgmthlyinc has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q218_16_totearning has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q218_17_relation has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_17_relation_oth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_18_knewanyone has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q218_19_rel1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(272 missing values generated)
+q218_20_rel2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(271 missing values generated)
+q218_21_rel3 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(272 missing values generated)
+q218_22_mnrega has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(480 missing values generated)
+q218_23_daysempl has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(480 missing values generated)
+q218_24_totearning has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(480 missing values generated)
+
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q218_10_mi~h{col 29}q218_12_in~k{col 43}q218_15_av~c{col 57}q218_17_re~h{col 71}q218_20_rel2{col 85}q218_23_da~l
+{col 1}q218_8_mig~e{col 15}q218_11_da~e{col 29}q218_13_pr~y{col 43}q218_16_to~g{col 57}q218_18_kn~e{col 71}q218_21_rel3{col 85}q218_24_to~g
+{col 1}q218_9_mig~k{col 15}q218_12_pr~g{col 29}q218_14_av~e{col 43}q218_17_re~n{col 57}q218_19_rel1{col 71}q218_22_mn~a
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /// Clean variables
+> 
+. //// q218_9_migweek
+> //// Couple of observations have values greater than 5. 
+> replace q218_9_migweek=.m if !mi(q218_9_migweek) & !inrange(q218_9_migweek,1,5) // ".m" indicates "Failure to follow direction"
+{txt}(35 real changes made, 35 to missing)
+
+{com}. 
+. //// q218_10_migmonth
+> //// Some obserations have values outside 1 to 12.
+> replace q218_10_migmonth=.m if !mi(q218_10_migmonth) & !inrange(q218_10_migmonth,1,12) // ".m" indicates "Failure to follow direction"
+{txt}(4 real changes made, 4 to missing)
+
+{com}. 
+. //// MNREGA variables (q218_22 ~ q218_24)
+> //// They are measured in different data (M4) so it will be dropped.
+> drop q218_22_mnrega q218_23_daysempl q218_24_totearning
+{txt}
+{com}. 
+. /// Label variables
+> label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var q218_8_migepisode "Migration Episode SL number"
+{txt}
+{com}. label var q218_9_migweek "Migration - Week"
+{txt}
+{com}. label var q218_10_migmonth "Migration - Month"
+{txt}
+{com}. label var q218_11_daysepisode "Days out in migration episode"
+{txt}
+{com}. label var q218_12_priresonmig "Primary reason for migration" //coding for reasons for migration is not defined in questionnaire
+{txt}
+{com}. label var q218_12_priresonmig_oth "Primary reason for migration - Other"
+{txt}
+{com}. label var q218_12_industrywork "Industry after migration"
+{txt}
+{com}. label var q218_12_industrywork_oth "Industry after migration - Other"
+{txt}
+{com}. label var q218_13_priactivity "Activities for work"
+{txt}
+{com}. label var q218_13_priactivity_oth "Activities for work - Other"
+{txt}
+{com}. label var q218_14_avgdailywage "Average daily wage"
+{txt}
+{com}. label var q218_15_avgmthlyinc "Average monthly income"
+{txt}
+{com}. label var q218_16_totearning "Total earnings at migration destination"
+{txt}
+{com}. label var q218_17_relation "Relationship to employer"
+{txt}
+{com}. label var q218_17_relation_oth "Relationship to employer - Other"
+{txt}
+{com}. label var q218_18_knewanyone "Knew someone at migration destination?"
+{txt}
+{com}. label var q218_19_rel1 "Relationship with people at migration destination_1"
+{txt}
+{com}. label var q218_20_rel2 "Relationship with people at migration destination_2"
+{txt}
+{com}. label var q218_21_rel3 "Relationship with people at migration destination_3"
+{txt}
+{com}. *label var q218_22_mnrega "Employed under MNREGA"
+. *label var q218_23_daysempl "Days employed under MNREGA"
+. *label var q218_24_totearning "Total earnings - MNREGA"
+. 
+. //codes for industry, primary activity, relationships not defined in questionnaire
+. 
+. *label value q218_18_knewanyone q218_22_mnrega yesno
+. 
+. // Save
+. tempfile SecM3_main
+{txt}
+{com}. save `SecM3_main'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000003.tmp saved
+
+{com}. 
+. // Merge roster and main questions
+. use `SecM3_Roster', clear
+{txt}
+{com}. merge 1:m Id subid using `SecM3_main', gen(match_roster_q218X)
+{res}{txt}{p 0 7 2}
+(note: variable
+Id was 
+str6, now str244 to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              58
+{txt}{col 9}from master{col 30}{res}              51{txt}  (match_roster_q218X==1)
+{col 9}from using{col 30}{res}               7{txt}  (match_roster_q218X==2)
+
+{col 5}matched{col 30}{res}             480{txt}  (match_roster_q218X==3)
+{col 5}{hline 41}
+
+{com}. label define match_roster_q218X 1 "No, Roster Only" 2 "No, q218.X Only" 3 "Yes - both roster and q218.X"
+{txt}
+{com}. label value match_roster_q218X match_roster_q218X
+{txt}
+{com}. label var match_roster_q218X "Does this household member have a complete answer for Section M3?"
+{txt}
+{com}. note match_roster_q218X:        In the raw data, section M3 is separated into two different datasets (SectionM3Roster_1 (roster), SectionM2B_1 (q218.X)).
+{res}{txt}
+{com}. tempfile SecM3
+{txt}
+{com}. save `SecM3'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_02000004.tmp saved
+
+{com}.                 
+. // Merge q218 and M3
+. use `q218', clear
+{txt}
+{com}. merge 1:m Id using `SecM3', nogen keep(3)
+{res}{txt}{p 0 7 2}
+(note: variable
+Id was 
+str6, now str244 to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}             535{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. 
+. /* This code may be used if we want to keep ALL households in Master Data
+> merge 1:m Id using `SecM3', gen(SecM3_answered) keep(1 3)
+> label define SecM3_answered 1 "No" 3 "Yes"
+> label value SecM3_answered SecM3_answered
+> label var SecM3_answered "Did this household answer Section M3?"
+> */
+. 
+. /*
+> // Generate variables for analyses
+> bys Id: egen migrant_cropseason_HH = min(q218_6_migsearwor) // If there's any migrant worker, then min(q218_6_migsearwor) should equal to 1. 2 otherwise.
+> label var migrant_cropseason_HH "Any household member migrated for work during cropping season"
+> label value migrant_cropseason_HH yesno
+> 
+> // Total migration income during cropping season - HH level
+> bys Id: egen Tot_migincome_cropseason_HH = sum(q218_16_totearning) if (q218_6_migsearwor==1)
+> label var Tot_migincome_cropseason_HH "Total income at migration destination - HH level"
+> 
+> // Total migration day during cropping season - HH level
+> bys Id: egen Tot_migdays_cropseason_HH = sum(q218_11_daysepisode) if (q218_6_migsearwor==1)
+> label var Tot_migdays_cropseason_HH "Total # days migrated during cropping season, HH level"
+> 
+> // Average daily migration average
+> gen Avg_daily_migwage_cropseason_HH = (Tot_migincome_cropseason_HH / Tot_migdays_cropseason_HH)
+> label var Avg_daily_migwage_cropseason_HH "Daily migration wage - HH level average"
+> 
+> /*
+> /// Individual-level
+> clonevar migrate_work_cropseason_ind = q218_6_migsearwor // Migrated for work or NOT
+> clonevar migrate_episodes_cropseaon_indiv = q218_7_timesmig if (migrate_work_cropseason_ind==1) // # of migration episodes
+> bys Id subid: egen migrate_days_cropseason_indiv = sum(q218_11_daysepisode) if (migrate_work_cropseason_ind==1) // # of days migrated
+> 
+> 
+> 
+> clonevar migrant_cropseason_HH = q218_4_migratetemper // Any migrant during cropping season
+> clonevar migrant_worker_cropseason_ind = q218_6_migsearwor // Any migrant-worker during cropping season (i
+> clonevar 
+> 
+> clonevar migrant_episodes_cropseason = q218_7_timesmig // # of migrant episodes
+> clonevar migrant_daysout_cropseason = q218_11_daysepisode
+> 
+> */
+> */
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q218_4_migratetemper was {res}int{txt} now {res}byte
+  {txt}q218_7_timesmig was {res}int{txt} now {res}byte
+  {txt}q218_9_migweek was {res}int{txt} now {res}byte
+  {txt}q218_10_migmonth was {res}int{txt} now {res}byte
+  {txt}q218_17_relation_oth was {res}int{txt} now {res}byte
+  {txt}q218_19_rel1 was {res}int{txt} now {res}byte
+  {txt}q218_20_rel2 was {res}int{txt} now {res}byte
+  {txt}q218_21_rel3 was {res}int{txt} now {res}byte
+  {txt}Id was {res}str244{txt} now {res}str6
+  {txt}q218_5_reasonmig_oth was {res}str49{txt} now {res}str7
+  {txt}q218_12_priresonmig_oth was {res}str244{txt} now {res}str26
+  {txt}q218_12_industrywork_oth was {res}str244{txt} now {res}str16
+  {txt}q218_13_priactivity_oth was {res}str244{txt} now {res}str17
+{txt}  (514,135 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionM3_CropSeason_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionM3_CropSeason_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

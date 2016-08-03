@@ -1,0 +1,506 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionM1_LeanPeriod_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Jun 2016, 02:12:15
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import & Clean Data                                                                                                  
+> ****************************************************************/
+. 
+. // Master Data
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. 
+. keep Id q218_2_mwl q218_3_mwl q218_3_oth_mwl
+{txt}
+{com}. order Id q218_2_mwl q218_3_mwl q218_3_oth_mwl
+{txt}
+{com}. * keep if (q218_2_mwl==1) // Only those who answered "Yes" answered the rest of M2 section.
+. tempfile q218_part1
+{txt}
+{com}. save `q218_part1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000001.tmp saved
+
+{com}. 
+. // M2A - Migration Wage labor, Part 1 (q213, q219)
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM2A_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM2A_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM2A_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q213_2_bhhid was 
+str4, now str30 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. /// Destring & recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q213_2_bhhid contains nonnumeric bytes; no {res}replace
+{txt}q213_3_hhrid contains nonnumeric bytes; no {res}replace
+{txt}q219_migserwork has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q219_1_timesmig has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q219_migse~k{col 29}q219_1_tim~g
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}.         if ("`var'" == "q224_destearning") {c -(}
+{txt}  5{com}.                 qui recode `var' (-222=.n)
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Label variables
+. label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var q213_2_bhhid "Baseline HH Roster ID"
+{txt}
+{com}. label var q213_3_hhrid "Current HH Roster ID"
+{txt}
+{com}. label var q219_migserwork "Migrate in search of work?"
+{txt}
+{com}. label value q219_migserwork yesno
+{txt}
+{com}. 
+. // q219_1_timesmig
+. /// Oringal question asks "how many times migrated b/w April to June, but lean period is actually from April to July in AP and UP, and from June to Sep in TN"
+> /// I (SL) do not know whether households answered this question based on the period from April to June, or based on actual lean period.
+> /// Final questionnaire might clarified this issue. 
+> label var q219_1_timesmig "How many times migrated during lean period?"
+{txt}
+{com}. note q219_1_timesmig: Lean period is from April to July in UP and AP, and from June to September in TN
+{res}{txt}
+{com}. 
+. tempfile SecM2A_1
+{txt}
+{com}. save `SecM2A_1'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000002.tmp saved
+
+{com}. 
+. 
+. // M2A, Part 2
+. use "${c -(}followup_data{c )-}/AP Raw/SectionM2A1_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionM2A1_1.dta" 
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionM2A1_1.dta" 
+{txt}
+{com}. isid Id subid q213_4_migepisode
+{txt}
+{com}. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q213_4_migepisode has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q220_1_migweek has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q220_1_migmonth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q222_1_days has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q222_2_prireason has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q222_2_prireason_oth contains nonnumeric bytes; no {res}replace
+{txt}q12_costoftravel has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q13_otrcostmig has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q14_daytoreach1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q19_payforcost has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q19_payforcost_oth contains nonnumeric bytes; no {res}replace
+{txt}q20_daytotakejob has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q21_costfoodlodge has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q21_1_savingonreturn has all characters numeric; {res}replaced {txt}as {res}long
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q220_1_mig~h{col 29}q12_costof~l{col 43}q19_payfor~t{col 57}q21_1_savi~n
+{col 1}q213_4_mig~e{col 15}q222_1_days{col 29}q13_otrcos~g{col 43}q20_daytot~b
+{col 1}q220_1_mig~k{col 15}q222_2_pri~n{col 29}q14_daytor~1{col 43}q21_costfo~e
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}.         if ("`var'" == "q224_destearning") {c -(}
+{txt}  5{com}.                 qui recode `var' (-222=.n)
+{txt}  6{com}.         {c )-}
+{txt}  7{com}. {c )-}
+{txt}
+{com}. *
+. 
+. /// Clean variables
+> 
+. /// subid
+> /// Id=="00A22" has only subid==2 in part 1, while only subid==1 in part 2. Need to match this number.
+> replace subid=2 if (Id=="00A22")
+{txt}(3 real changes made)
+
+{com}. 
+. //// q220_1_migweek
+> //// Couple of observations have values greater than 5. 
+> replace q220_1_migweek=.m if !mi(q220_1_migweek) & !inrange(q220_1_migweek,1,5) // ".m" indicates "Failure to follow direction"
+{txt}(3 real changes made, 3 to missing)
+
+{com}. 
+. /// Label variables
+> label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. label var q213_4_migepisode "Migration Episode SL number"
+{txt}
+{com}. label var q220_1_migweek "Migration - Week"
+{txt}
+{com}. label var q220_1_migmonth "Migration - Month"
+{txt}
+{com}. label var q222_1_days "Days out in migration episode"
+{txt}
+{com}. label var q222_2_prireason "Primary reason for migration"
+{txt}
+{com}. label var q222_2_prireason_oth "Primary reason for migration - Other"
+{txt}
+{com}. label var q12_costoftravel "Cost of travel" 
+{txt}
+{com}. label var q13_otrcostmig "Other migration costs"
+{txt}
+{com}. label var q14_daytoreach1 "Travel duration - days"
+{txt}
+{com}. label var q19_payforcost "Pay for migration costs"
+{txt}
+{com}. label var q19_payforcost_oth "Pay for migration costs - Other"
+{txt}
+{com}. label var q20_daytotakejob "Days to get a job"
+{txt}
+{com}. label var q21_costfoodlodge "Cost of food and lodging"
+{txt}
+{com}. label var q21_1_savingonreturn "Total savings from migration episode"
+{txt}
+{com}. 
+. //coding for reasons for migration is not defined in questionnaire
+. 
+. label define migcost 1 "From own/family savings" 2 "Sold land/real estate" 3 "Sold jewellery" 4 "Spouse's family (grant)" 5 "Other Relatives (grants)" ///
+>         6 "Employer in destination" 7 "Credit from money lender" 8 "Credit from NGOs" 9 "Credit from Banks" 10 "Other" 11 "Cash received from NGO"  ///
+>         12 "Credit/money from relatives" 13 "Money from group members"
+{txt}
+{com}. 
+. label value q19_payforcost migcost
+{txt}
+{com}. 
+. 
+. /// Save
+> tempfile SecM2A_2
+{txt}
+{com}. save `SecM2A_2'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000003.tmp saved
+
+{com}. 
+. 
+. /// Merge Part 1 and Part 2
+> use `SecM2A_1', clear
+{txt}
+{com}. merge 1:m Id subid using `SecM2A_2', gen(match_q219_q220X)
+{res}{txt}{p 0 7 2}
+(note: variable
+Id was 
+str6, now str244 to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              34
+{txt}{col 9}from master{col 30}{res}              23{txt}  (match_q219_q220X==1)
+{col 9}from using{col 30}{res}              11{txt}  (match_q219_q220X==2)
+
+{col 5}matched{col 30}{res}             482{txt}  (match_q219_q220X==3)
+{col 5}{hline 41}
+
+{com}. label define match_q219_q220X 1 "q219 Only" 2 "q220.X Only" 3 "Both q219 and q220.X"
+{txt}
+{com}. label value match_q219_q220X match_q219_q220X
+{txt}
+{com}. label var match_q219_q220X "Does this household member have a complete answer for Section M2A?"
+{txt}
+{com}. note match_q219_q220X:  In the raw data, section M2A is separated into two different datasets (SectionM2A_1 (q219), SectionM2A1_1 (q220.X)).
+{res}{txt}
+{com}. note match_q219_q220X:  Not existing in both data at the same time does not necessarily mean that a respondent made mistake. ///
+>                                                 For those who answered "No" in q219, they should skip the rest of Section M2A, thus should not exist in q220.x data
+{res}{txt}
+{com}. 
+. 
+. // Apply logical skip patterns
+. /// If not migrated, then there should be no non-missing responses.
+> ds q213_4_migepisode-q21_1_savingonreturn, has(type numeric)
+{txt}{col 1}q213_4_mig~e{col 15}q220_1_mig~h{col 29}q222_2_pri~n{col 43}q13_otrcos~g{col 57}q19_payfor~t{col 71}q21_costfo~e
+{col 1}q220_1_mig~k{col 15}q222_1_days{col 29}q12_costof~l{col 43}q14_daytor~1{col 57}q20_daytot~b{col 71}q21_1_savi~n
+
+{com}. loc 219vars_num `r(varlist)'
+{txt}
+{com}. ds q213_4_migepisode-q21_1_savingonreturn, has(type string)
+{txt}{col 1}q222_2_pri~h{col 15}q19_payfor~h
+
+{com}. loc 219vars_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local 219vars_num {c -(}
+{txt}  2{com}.         replace `var'=.m if ((q219_migserwork==2) & !mi(`var'))
+{txt}  3{com}. {c )-}
+{txt}(6 real changes made, 6 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(8 real changes made, 8 to missing)
+(8 real changes made, 8 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(7 real changes made, 7 to missing)
+(8 real changes made, 8 to missing)
+
+{com}. *
+. foreach var of local 219vars_str {c -(}
+{txt}  2{com}.         replace `var'="Failure to follow directions" if ((q219_migserwork==2) & !mi(`var'))
+{txt}  3{com}. {c )-}
+{txt}(8 real changes made)
+(8 real changes made)
+
+{com}. *
+. 
+. // Tag observation validity
+. gen valid_lean_migration_sample = 2 // Indicator variable - did this household member answer question properly?
+{txt}
+{com}. replace valid_lean_migration_sample = 1 if (q219_migserwork == 1 & match_q219_q220X == 3) // Those who answered "Yes" in q219 should also answer the rest of M2A section
+{txt}(474 real changes made)
+
+{com}. replace valid_lean_migration_sample = 1 if (q219_migserwork == 2 & match_q219_q220X == 1) // Those who answered "No" in q219 should skip the rest of section M2A
+{txt}(5 real changes made)
+
+{com}. replace valid_lean_migration_sample = 2 if mi(q213_4_migepisode) // Responses with missing migration episode is not a valid observation.
+{txt}(7 real changes made)
+
+{com}. label var valid_lean_migration_sample "Is this lean-season migration observation valid? (i.e. answered questions properly?)"
+{txt}note: label truncated to 80 characters
+
+{com}. label value valid_lean_migration_sample yesno
+{txt}
+{com}. 
+. 
+. tempfile SecM2A
+{txt}
+{com}. save `SecM2A'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000004.tmp saved
+
+{com}. 
+. 
+. // Section M2B
+. ** This data has been later added by Rupika in April 2016. 
+. use "${c -(}followup_data{c )-}/Final Data/20.04.2016/M2B Migration Remittance/SectionM2B_1_cleaned.dta", clear
+{txt}
+{com}. *isid Id subid
+. 
+. /// Destring and recode variables
+> destring *, replace
+{txt}Id contains nonnumeric bytes; no {res}replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q22_support already numeric; no {res}replace
+{txt}q22_support_oth contains nonnumeric bytes; no {res}replace
+{txt}q23_howfindwork already numeric; no {res}replace
+{txt}q23_howfindwork_oth contains nonnumeric bytes; no {res}replace
+{txt}q24_kindofwork already numeric; no {res}replace
+{txt}q24_kindofwork_oth contains nonnumeric bytes; no {res}replace
+{txt}q25_totincome has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q26_sendtohh already numeric; no {res}replace
+{txt}q27_remit already numeric; no {res}replace
+{txt}q27_remit_oth has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q28_daystofundreach already numeric; no {res}replace
+{txt}q29_costofremittance already numeric; no {res}replace
+{txt}q30_freqremittance already numeric; no {res}replace
+{txt}q30_freqremittance_oth contains nonnumeric bytes; no {res}replace
+{txt}q31_oftenvisithh already numeric; no {res}replace
+{txt}q31_oftenvisithh_oth contains nonnumeric bytes; no {res}replace
+{txt}q32_whyreturn already numeric; no {res}replace
+{txt}q32_whyreturn_oth contains nonnumeric bytes; no {res}replace
+{txt}q213_4_migepisode has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q24_kindof~k{col 29}q27_remit{col 43}q29_costof~e{col 57}q32_whyret~n
+{col 1}q22_support{col 15}q25_totinc~e{col 29}q27_remit_~h{col 43}q30_freqre~e{col 57}q213_4_mig~e
+{col 1}q23_howfin~k{col 15}q26_sendtohh{col 29}q28_daysto~h{col 43}q31_often~hh
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. // Apply skip pattern
+. ds q27_remit q27_remit_oth q28_daystofundreach q29_costofremittance q30_freqremittance q30_freqremittance_oth, has(type numeric)
+{txt}{col 1}q27_remit{col 15}q27_remit_~h{col 29}q28_daysto~h{col 43}q29_costof~e{col 57}q30_freqre~e
+
+{com}. loc remittvar_num `r(varlist)'
+{txt}
+{com}. ds q27_remit q27_remit_oth q28_daystofundreach q29_costofremittance q30_freqremittance q30_freqremittance_oth, has(type string)
+{txt}{col 1}q30_freqre~h
+
+{com}. loc remittvar_str `r(varlist)'
+{txt}
+{com}. 
+. foreach var of local remittvar_num {c -(}
+{txt}  2{com}.         replace `var'=.n if (q26_sendtohh==4)
+{txt}  3{com}. {c )-}
+{txt}(131 real changes made, 131 to missing)
+(131 real changes made, 131 to missing)
+(129 real changes made, 129 to missing)
+(129 real changes made, 129 to missing)
+(131 real changes made, 131 to missing)
+
+{com}. *
+. foreach var of local remittvar_str {c -(}
+{txt}  2{com}.         replace `var'="Not Appicable" if (q26_sendtohh==4)
+{txt}  3{com}. {c )-}
+{txt}(131 real changes made)
+
+{com}. *
+. 
+. // Tag outliers
+. loc money_vars q25_totincome q29_costofremittance
+{txt}
+{com}. foreach var of loc money_vars {c -(}
+{txt}  2{com}.         gen byte `var'_outlier=0
+{txt}  3{com}.         order `var'_outlier, after(`var')
+{txt}  4{com}.         qui sum `var', detail
+{txt}  5{com}.         scalar `var'_IQR = r(p75)-r(p25)
+{txt}  6{com}.         replace `var'_outlier=1 if !inrange(`var',r(p25)-(3*`var'_IQR),r(p75)+(3*`var'_IQR))
+{txt}  7{com}.         label var `var'_outlier "=1: this obs is an outlier"
+{txt}  8{com}.         note `var'_outlier: Defined as outlier if x < Q(25)-3IQR  or  x > Q(75)+3IQR
+{txt}  9{com}.         scalar drop `var'_IQR
+{txt} 10{com}. {c )-}
+{txt}(36 real changes made)
+{res}{txt}(231 real changes made)
+{res}{txt}
+{com}. *
+. 
+. // Label variables
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "SubId"
+{txt}
+{com}. 
+. label var q22_support "Means of support"
+{txt}
+{com}. label var q22_support_oth "Other means of support"
+{txt}
+{com}. label var q23_howfindwork "Source of finding work"
+{txt}
+{com}. label var q23_howfindwork_oth "Source of finding work"
+{txt}
+{com}. label var q24_kindofwork "Kind of work"
+{txt}
+{com}. label var q24_kindofwork_oth "Kind of work,other specify"
+{txt}
+{com}. label var q25_totincome "Total lean period migration income"
+{txt}
+{com}. label var q26_sendtohh "Remittance of money or goods to household"
+{txt}
+{com}. label var q27_remit "Source of remittance"
+{txt}
+{com}. label var q27_remit_oth "Source of remittance, other specify"
+{txt}
+{com}. label var q28_daystofundreach "Time taken for remittance to reach"
+{txt}
+{com}. label var q29_costofremittance "Cost of remittance"
+{txt}
+{com}. label var q30_freqremittance "Frequency of remittance"
+{txt}
+{com}. label var q30_freqremittance_oth "Frequency of remittance, other specify"
+{txt}
+{com}. label var q31_oftenvisithh "Frequency of visit to household"
+{txt}
+{com}. label var q31_oftenvisithh_oth "Frequency of visit to household"
+{txt}
+{com}. label var q32_whyreturn "Reason for return"
+{txt}
+{com}. label var q32_whyreturn_oth "Reason for return"
+{txt}
+{com}. label var q213_4_migepisode "Migration episode"
+{txt}
+{com}. 
+. tempfile SecM2B
+{txt}
+{com}. save `SecM2B'
+{txt}file C:\Users\ftac2\AppData\Local\Temp\ST_01000005.tmp saved
+
+{com}. 
+. 
+. 
+. *
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. use `SecM2A'
+{txt}
+{com}. compress
+  {txt}variable {bf}q219_1_timesmig{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q213_4_migepisode{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q220_1_migweek{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q220_1_migmonth{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q14_daytoreach1{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q20_daytotakejob{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}valid_lean_migration_sample{sf} was {bf}{res}float{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}Id{sf} was {bf}{res}str244{sf}{txt} now {bf}{res}str6{sf}
+  {txt}variable {bf}q222_2_prireason_oth{sf} was {bf}{res}str244{sf}{txt} now {bf}{res}str28{sf}
+  {txt}variable {bf}q19_payforcost_oth{sf} was {bf}{res}str244{sf}{txt} now {bf}{res}str28{sf}
+{txt}  (350,364 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionM2A_Migration_LeanPeriod_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionM2A_Migration_LeanPeriod_cleaned.dta saved
+
+{com}. 
+. use `SecM2B'
+{txt}
+{com}. compress
+  {txt}variable {bf}q22_support{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q23_howfindwork{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q26_sendtohh{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q27_remit{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q27_remit_oth{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q28_daystofundreach{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q30_freqremittance{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q31_oftenvisithh{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}q32_whyreturn{sf} was {bf}{res}int{sf}{txt} now {bf}{res}byte{sf}
+  {txt}q31_oftenvisithh_oth is {res}strL{txt} now coalesced
+  variable {bf}q32_whyreturn_oth{sf} was {bf}{res}strL{sf}{txt} now {bf}{res}str27{sf}
+{txt}  (42,743 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionM2B_Migration_LeanPeriod_cleaned.dta", replace
+{txt}file C:/Users/ftac2/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionM2B_Migration_LeanPeriod_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}

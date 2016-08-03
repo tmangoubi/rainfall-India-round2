@@ -1,0 +1,193 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/logs/SectionB_WageIncome_clean.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}31 May 2016, 15:38:30
+{txt}
+{com}. 
+. 
+. /****************************************************************
+>         SECTION 1: Import Raw Data                                                                                                      
+> ****************************************************************/
+. 
+. use "${c -(}builddta{c )-}/followup_2014/MasterData_cleaned.dta", clear
+{txt}
+{com}. keep Id q201_khaagriwageempl
+{txt}
+{com}. tempfile Id_q201
+{txt}
+{com}. save `Id_q201'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_04000001.tmp saved
+
+{com}. 
+. 
+. use "${c -(}followup_data{c )-}/AP Raw/SectionBWageIncomeP2_1.dta", clear
+{txt}
+{com}. append using "${c -(}followup_data{c )-}/TN Raw/SectionBWageIncomeP2_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q212_relemp_oth was 
+str10, now str15 to accommodate using data's values)
+{p_end}
+
+{com}. append using "${c -(}followup_data{c )-}/UP Raw/SectionBWageIncomeP2_1.dta" 
+{txt}{p 0 7 2}
+(note: variable
+q202_1_baseHHrosid was 
+str4, now str28 to accommodate using data's values)
+{p_end}
+
+{com}. isid Id subid
+{txt}
+{com}. 
+. // Destring and recode variables
+. destring subid q*, replace
+{txt}subid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q203_Hhrosid has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}q203_1_wagearname contains nonnumeric characters; no {res}replace
+{txt}q204_prefillname has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q205_curstathhmem has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q205_curstathhmem_oth contains nonnumeric characters; no {res}replace
+{txt}q206_totdaylocagrikhar11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q207_avwagkar11 has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q208_totearnlolagrikha11 has all characters numeric; {res}replaced {txt}as {res}long
+{txt}q209_nonmonlolagriwork11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(1 missing value generated)
+q210_typenonmoncomp has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(4 missing values generated)
+q210_typenonmoncompx1 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(4 missing values generated)
+q210_typenonmoncompx2 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(4 missing values generated)
+q210_typenonmoncompx3 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(4 missing values generated)
+q210_typenonmoncomp_oth contains nonnumeric characters; no {res}replace
+{txt}q211_totvalnonmonkha11 has all characters numeric; {res}replaced {txt}as {res}int
+{txt}q212_relemp has all characters numeric; {res}replaced {txt}as {res}int
+{txt}(1 missing value generated)
+q212_relemp_oth contains nonnumeric characters; no {res}replace
+{txt}q202_1_baseHHrosid contains nonnumeric characters; no {res}replace
+{txt}
+{com}. ds, has(type numeric)
+{txt}{col 1}subid{col 15}q204_prefi~e{col 29}q206_totd~11{col 43}q208_tote~11{col 57}q210_typen~p{col 71}q210_typen~2{col 85}q211_totv~11
+{col 1}q203_Hhrosid{col 15}q205_curst~m{col 29}q207_avwa~11{col 43}q209_nonm~11{col 57}q210_typen~1{col 71}q210_typen~3{col 85}q212_relemp
+
+{com}. local num_var `r(varlist)'
+{txt}
+{com}. foreach var of local num_var {c -(}
+{txt}  2{com}.         qui replace `var'=.b if mi(`var') // Blank response (but not a valid response)
+{txt}  3{com}.         qui recode `var' (-999=.d) (-777=.r) (-666=.n) (-333=.b) (-555=.) // -999 "Don't Know" -888 "Others" -777 "Refuse" -666 "N/A" -333 "Missing" -555 "Valid Skip"
+{txt}  4{com}. {c )-}
+{txt}
+{com}. *
+. 
+. //Label Variables
+. label define yesno 1 "Yes" 2 "No"
+{txt}
+{com}. 
+. label var Id "Household ID"
+{txt}
+{com}. label var subid "Roster ID"
+{txt}
+{com}. label  var q203_Hhrosid "HH Roster ID"
+{txt}
+{com}. label var q203_1_wagearname "Name of Wage Earner"
+{txt}
+{com}. label var  q204_prefillname "Prefilled Or Not"
+{txt}
+{com}. label value q204_prefillname yesno
+{txt}
+{com}. label var q205_curstathhmem "Current Status"
+{txt}
+{com}. label var  q205_curstathhmem_oth "Other Current Status"
+{txt}
+{com}. label var  q206_totdaylocagrikhar11 "Days in Agriculture - Kharif"
+{txt}
+{com}. label var  q207_avwagkar11 "Avg Daily Wage - Kharif"
+{txt}
+{com}. // ~ 1% report more than Rs 400, which seems highly improbable
+. label var  q208_totearnlolagrikha11"Total Agri Earnings - Khairf"
+{txt}
+{com}. label var  q209_nonmonlolagriwork11 "NON-Monetary Compensation Received for agri labour?"
+{txt}
+{com}. label val q209_nonmonlolagriwork11 yesno
+{txt}
+{com}. label var q210_typenonmoncomp "Non-Monetary Compensation 1"
+{txt}
+{com}. label var q210_typenonmoncompx1 "Non-Monetary Compensation 2"
+{txt}
+{com}. label var q210_typenonmoncompx2 "Non-Monetary Compensation 3"
+{txt}
+{com}. label var q210_typenonmoncompx3 "Non-Monetary Compensation 4"
+{txt}
+{com}. 
+. label var  q210_typenonmoncomp_oth "Other Non-Monetary Compensation"
+{txt}
+{com}. label var  q211_totvalnonmonkha11 "Total Value of Non-Monetary Compensation"
+{txt}
+{com}. label var  q212_relemp "Relationship to Employer"
+{txt}
+{com}. label var  q212_relemp_oth "Other Relationship to Employer"
+{txt}
+{com}. label var  q202_1_baseHHrosid "Baseline Roster ID" // SL: Rupika said it is changed from Baseline ID to Follow-up ID. Is this dataset updated version?
+{txt}
+{com}. 
+. //Label Values
+. 
+. label define currentstatus -666 "NA" 1 "Current household member" 2 "Dead" 3 "Temporarily Migrated" 4 "Permanently Migrated" 5 "Away at school" 6 "Away because of marriage/festival" 7 "Away because of sickeness" -999 "Don’t know" -888 "Other" -555 "Valid Skip"
+{txt}
+{com}. label value q205_curstathhmem currentstatus
+{txt}
+{com}. 
+. label define nonmonetary -666 "NA" 1 "Crops" 2 "Labour exchange" 3 "Animal Goods (food/milk)" 4 "Animal Goods (non-food)" 5 "Animal feed (fodder, etc.)" 6 "Loan repayment" 7 "Daily Consumables (tea, snacks)" 8 "Festival gifts" -888 "Other" -777 "Refuse to Answer" -555 "Valid Skip"
+{txt}
+{com}. label value q210_typenonmoncomp q210_typenonmoncompx1 q210_typenonmoncompx2 q210_typenonmoncompx3 nonmonetary
+{txt}
+{com}. 
+. label define relationship -666 "NA" 1 "Immediate family" 2 "Same sub-caste" 3 "Same caste" 4 "Friend" 5 "No Relation" -888 "Other" -777 "Refuse to Answer" -555 "Valid Skip"
+{txt}
+{com}. label value q212_relemp relationship
+{txt}
+{com}. 
+. 
+. tempfile SecB1
+{txt}
+{com}. save `SecB1'
+{txt}file C:\Users\SLee\AppData\Local\Temp\ST_04000002.tmp saved
+
+{com}. 
+. // Merge q201 with B1
+. use `Id_q201', clear
+{txt}
+{com}. merge 1:m Id using `SecB1', keep(3) nogen
+{res}{txt}(label yesno already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}           2,991{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. order q202_1_baseHHrosid, before(q203_Hhrosid)
+{txt}
+{com}. 
+. /****************************************************************
+>         SECTION X: Save and Exit
+> ****************************************************************/
+. 
+. compress
+  {txt}q204_prefillname was {res}int{txt} now {res}byte
+  {txt}q209_nonmonlolagriwork11 was {res}int{txt} now {res}byte
+{txt}  (5,982 bytes saved)
+
+{com}. save "${c -(}builddta{c )-}/followup_2014/SectionB1_WageIncome_cleaned.dta", replace
+{txt}file C:/Users/SLee/Dropbox/Rainfall insurance India - Round 2/Data Analysis/build/output/datasets/followup_2014/SectionB1_WageIncome_cleaned.dta saved
+
+{com}. 
+. cap file close _all
+{txt}
+{com}. cap log close
+{smcl}
+{com}{sf}{ul off}
